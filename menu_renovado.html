@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Menu — Rosa dos Leitões</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #faf6ee;
+    --parchment: #f2ead8;
+    --gold: #8a6c2c;
+    --gold-light: #c4a355;
+    --dark: #1c1a14;
+    --muted: #6b6353;
+    --border: #d8ccb0;
+    --white: #ffffff;
+    --olive: #5a5a2e;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--cream);
+    color: var(--dark);
+    font-family: 'Lato', sans-serif;
+    font-size: 13.5px;
+    line-height: 1.65;
+  }
+
+  /* ── TOP NAV ── */
+  .nav {
+    background: var(--dark);
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    display: flex;
+    overflow-x: auto;
+    scrollbar-width: none;
+    border-bottom: 2px solid var(--gold);
+  }
+  .nav::-webkit-scrollbar { display: none; }
+  .nav-btn {
+    flex-shrink: 0;
+    padding: 13px 20px;
+    color: #999;
+    cursor: pointer;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+    border-bottom: 3px solid transparent;
+    transition: all .2s;
+    white-space: nowrap;
+  }
+  .nav-btn:hover { color: var(--gold-light); }
+  .nav-btn.active { color: var(--gold-light); border-bottom-color: var(--gold-light); }
+
+  /* ── PAGE ── */
+  .page { display: none; animation: fadeIn .3s ease; }
+  .page.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ── HERO ── */
+  .hero {
+    background: var(--dark);
+    text-align: center;
+    padding: 52px 24px 44px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, rgba(138,108,44,.18) 0%, transparent 70%);
+  }
+  .hero-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 46px;
+    font-weight: 700;
+    color: var(--gold-light);
+    letter-spacing: 3px;
+    position: relative;
+  }
+  .hero-sub {
+    font-size: 10px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: #777;
+    margin-top: 8px;
+    position: relative;
+  }
+  .hero-divider {
+    width: 80px;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+    margin: 16px auto 0;
+    position: relative;
+  }
+
+  /* ── WRAPPER ── */
+  .wrapper {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 40px 24px 70px;
+  }
+
+  /* ── SECTION TITLE ── */
+  .section-title {
+    text-align: center;
+    margin-bottom: 38px;
+  }
+  .section-title h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 30px;
+    font-weight: 400;
+    color: var(--dark);
+    letter-spacing: 1.5px;
+  }
+  .section-title p {
+    font-size: 10.5px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 5px;
+  }
+  .title-rule {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 12px auto 0;
+    max-width: 200px;
+  }
+  .title-rule span { flex: 1; height: 1px; background: var(--gold); }
+  .title-rule i { color: var(--gold); font-size: 12px; font-style: normal; }
+
+  /* ── CATEGORY ── */
+  .cat {
+    margin-bottom: 42px;
+  }
+  .cat-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--gold);
+    letter-spacing: .5px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .cat-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, var(--border), transparent);
+  }
+
+  /* ── ITEM ── */
+  .item {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 10px 6px;
+    border-bottom: 1px dotted #ddd5bb;
+    gap: 16px;
+    transition: background .15s;
+  }
+  .item:last-child { border-bottom: none; }
+  .item:hover { background: rgba(138,108,44,.04); }
+
+  .item-info { flex: 1; }
+  .item-name {
+    font-weight: 700;
+    font-size: 13.5px;
+    color: var(--dark);
+  }
+  .item-name em {
+    font-weight: 300;
+    font-style: italic;
+    font-size: 12px;
+    color: var(--muted);
+    margin-left: 6px;
+  }
+  .item-desc {
+    font-size: 11.5px;
+    color: var(--muted);
+    font-style: italic;
+    margin-top: 2px;
+  }
+  .item-price {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--gold);
+    white-space: nowrap;
+  }
+
+  /* badges */
+  .badge {
+    display: inline-block;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 2px;
+    margin-left: 7px;
+    vertical-align: middle;
+  }
+  .badge-star { background: var(--gold); color: #fff; }
+  .badge-new  { background: var(--olive); color: #fff; }
+
+  /* ── 2-COL GRID for bar ── */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 36px;
+  }
+  @media (max-width: 600px) {
+    .two-col { grid-template-columns: 1fr; }
+  }
+
+  /* ── NOTE BOX ── */
+  .note {
+    background: var(--parchment);
+    border-left: 3px solid var(--gold);
+    padding: 13px 18px;
+    font-size: 11.5px;
+    color: var(--muted);
+    font-style: italic;
+    margin-top: 28px;
+    border-radius: 0 3px 3px 0;
+  }
+
+  /* ── PRICE TAG (para doses com volume) ── */
+  .item-price-block { text-align: right; }
+  .item-price-vol {
+    font-size: 9.5px;
+    color: var(--muted);
+    text-align: right;
+    margin-top: 1px;
+    letter-spacing: .5px;
+  }
+
+  /* ── ORNAMENT ── */
+  .ornament {
+    text-align: center;
+    color: var(--gold-light);
+    font-size: 18px;
+    margin: 36px 0;
+    letter-spacing: 10px;
+    opacity: .5;
+  }
+
+  /* footer */
+  .footer {
+    background: var(--dark);
+    text-align: center;
+    padding: 28px 24px;
+    color: #555;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+  .footer span { color: var(--gold); }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-logo">Rosa dos Leitões</div>
+  <div class="hero-sub">Gourmet · Since Always · Quarteira</div>
+  <div class="hero-divider"></div>
+</div>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-btn active" onclick="show('couvert',this)">Couvert</div>
+  <div class="nav-btn" onclick="show('pratos',this)">Pratos</div>
+  <div class="nav-btn" onclick="show('acomp',this)">Acompanhamentos</div>
+  <div class="nav-btn" onclick="show('sobremesas',this)">Sobremesas</div>
+  <div class="nav-btn" onclick="show('vinhos',this)">Vinhos</div>
+  <div class="nav-btn" onclick="show('cervejas',this)">Cervejas</div>
+  <div class="nav-btn" onclick="show('bar',this)">Bar & Licores</div>
+  <div class="nav-btn" onclick="show('cafe',this)">Cafetaria</div>
+</nav>
+
+<!-- ══════════ COUVERT ══════════ -->
+<div class="page active" id="couvert">
+  <div class="wrapper">
+    <div class="section-title">
+      <h2>Couvert</h2>
+      <div class="title-rule"><span></span><i>✦</i><span></span></div>
+    </div>
+    <div class="cat">
+      <div class="item">
+        <div class="item-info"><div class="item-name">Azeitonas <em>Olives</em></div></div>
+        <div class="item-price">—</div>
+      </div>
+      <div class="item">
+        <div class="item-info"><div class="item-name">Manteiga <em>Butter</em></div></div>
+        <div class="item-price">1,50 €</div>
+      </div>
+      <div class="item">
+        <div class="item-info"><div class="item-name">Cesto Pão Pequeno <em>Small Bread Basket</em></div></div>
+        <div class="item-price">0,80 €</div>
+      </div>
+      <div class="item">
+        <div class="item-info"><div class="item-name">Cesto Pão Grande <em>Big Bread Basket</em></div></div>
+        <div class="item-price">1,50 €</div>
+      </div>
+      <div class="item">
+        <div class="item-info"><div class="item-name">Sopa do Dia <em>Soup of the Day</em></div></div>
+        <div class="item-price">2,50 €</div>
+      </div>
+      <div class="item">
+        <div class="item-info">
+          <div class="item-name">Folhados de Leitão</div>
+          <div class="item-desc">Leitão envolvido em massa folhada · Suckling pig wrapped in puff pastry</div>
+        </div>
+        <div class="item-price">3,50 €</div>
+      </div>
+      <div class="item">
+        <div class="item-info">
+          <div class="item-name">Bolas de Leitão c/ Batata Doce</div>
+          <div class="item-desc">Suckling pig balls with sweet potato</div>
+        </div>
+        <div class="item-price">2,45 €</div>
+      </div>
+      <div class="item">
+        <div class="item-info">
+          <div class="item-name">Pézinhos de Coentrada</div>
+          <div class="item-desc">Trotter with coriander</div>
+        </div>
+        <div class="item-price">9,90 €</div>
+      </div>
+    </div>
+    <div class="note">Nenhum item do couvert pode ser cobrado se não for solicitado pelo cliente.</div>
+  </div>
+</div>
+
+<!-- ══════════ PRATOS ══════════ -->
+<div class="page" id="pratos">
+  <div class="wrapper">
+    <div class="section-title">
+      <h2>Menu</h2>
+      <p>Os nossos pratos principais</p>
+      <div class="title-rule"><span></span><i>✦</i><span></span></div>
+    </div>
+    <div class="cat">
+      <div class="item">
+        <div class="item-info">
+          <div class="item-name">Dose de Leitão <span class="badge badge-star">★ Especialidade</span></div>
+          <div class="item-desc">300gr aprox. · Leitão assado, batata frita e laranja · Suckling pig, fries and orange</div>
+        </div>
+        <div class="item-price">19,70 €</div>
+      </div>
+      <div class="item">
+        <div class="item-info">
+          <div class="item-name">Salada de Leitão</div>
+          <div class="item-desc">Maçã, laranja, alface, tomate, sementes de girassol e leitão · Apple, orange, lettuce, tomato, sunflower seeds and suckling pig</div>
+        </div>
+        <div class="item-price">14,70 €</div>
+      </div>
+      <div class="item">
+        <div class="item-info">
+          <div class="item-name">Sandes de Leitão em Pão Tradicional</div>
+          <div class="item-desc">Leitão em pão cozido no forno a lenha · Suckling pig on traditional wood oven bread</div>
+        </div>
+        <div class="item-price">7,50 €</div>
+      </div>
+      <div class="item">
+        <div class="item-info">
+          <div class="item-name">Salada de Frango ou Atum</div>
+          <div class="item-desc">Azeite, maçã, laranja, alface, tomate, sementes e peito de frango ou atum · Chicken breast or tuna salade</div>
+        </div>
+        <div class="item-price">12,95 €</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ ACOMPANHAMENTOS ══════════ -->
+<div class="page" id="acomp">
+  <div class="wrapper">
+    <div class="section-title">
+      <h2>Acompanhamentos</h2>
+      <p>Extra accompaniments</p>
+      <div class="title-rule"><span></span><i>✦</i><span></span></div>
+    </div>
+    <div class="cat">
+      <div class="item">
+        <div class="item-info">
+          <div class="item-name">Arroz Aromatizado de Leitão</div>
+          <div class="item-desc">Rice flavored with suckling pig</div>
+        </div>
+        <div class="item-price">6,50 €</div>
+      </div>
+      <div class="item">
+        <div class="item-info">
+          <div class="item-name">Arroz de Miúdos</div>
+          <div class="item-desc">Rice with suckling pig insides</div>
+        </div>
+        <div class="item-price">7,50 €</div>
+      </div>
+      <div class="item">
+        <div class="item-info">
+          <div class="item-name">Salada Mista — Tomate e Cebola</div>
+          <div class="item-desc">Mixed salad, tomato and onion</div>
+        </div>
+        <div class="item-price">3,90 €</div>
+      </div>
+      <div class="item">
+        <div class="item-info">
+          <div class="item-name">Salada Mista — Alface e Cebola</div>
+          <div class="item-desc">Mixed salad, lettuce and onion</div>
+        </div>
+        <div class="item-price">3,90 €</div>
+      </div>
+      <div class="item">
+        <div class="item-info"><div class="item-name">Batata Frita <em>Chips</em></div></div>
+        <div class="item-price">3,50 €</div>
+      </div>
+      <div class="item">
+        <div class="item-info"><div class="item-name">Batata Doce Frita <em>Sweet Chips</em></div></div>
+        <div class="item-price">3,50 €</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ SOBREMESAS ══════════ -->
+<div class="page" id="sobremesas">
+  <div class="wrapper">
+    <div class="section-title">
+      <h2>Sobremesas</h2>
+      <p>Desserts · Desserts</p>
+      <div class="title-rule"><span></span><i>✦</i><span></span></div>
+    </div>
+    <div class="cat">
+      <div class="item">
+        <div class="item-info"><div class="item-name">Fruta da Época <em>Season Fruit</em></div></div>
+        <div class="item-price">—</div>
+      </div>
+      <div class="item">
+        <div class="item-info"><div class="item-name">Mousse de Chocolate <em>Chocolate Mousse</em></div></div>
+        <div class="item-price">5,50 €</div>
+      </div>
+      <div class="item">
+        <div class="item-info"><div class="item-name">Doce Tradicional <em>Traditional Sweet</em></div></div>
+        <div class="item-price">5,50 €</div>
+      </div>
+      <div class="item">
+        <div class="item-info">
+          <div class="item-name">Brownie de Chocolate c/ Bola de Gelado</div>
+          <div class="item-desc">Baunilha ou Pistacho · Chocolate brownie with vanilla or pistachio ice cream</div>
+        </div>
+        <div class="item-price">5,50 €</div>
+      </div>
+      <div class="item">
+        <div class="item-info">
+          <div class="item-name">Bola de Gelado — 2 Bolas</div>
+          <div class="item-desc">Baunilha e/ou Pistacho · Vanilla and/or pistachio</div>
+        </div>
+        <div class="item-price">5,50 €</div>
+      </div>
+      <div class="item">
+        <div class="item-info">
+          <div class="item-name">Cheesecake de Frutos Vermelhos</div>
+          <div class="item-desc">Cheesecake with red fruits</div>
+        </div>
+        <div class="item-price">5,50 €</div>
+      </div>
+      <div class="item">
+        <div class="item-info">
+          <div class="item-name">Petit Gâteau com Bola de Gelado</div>
+          <div class="item-desc">Warm chocolate fondant with ice cream ball</div>
+        </div>
+        <div class="item-price">5,50 €</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ VINHOS ══════════ -->
+<div class="page" id="vinhos">
+  <div class="wrapper">
+    <div class="section-title">
+      <h2>Vinhos</h2>
+      <p>Wines · Vins</p>
+      <div class="title-rule"><span></span><i>✦</i><span></span></div>
+    </div>
+
+    <div class="cat">
+      <div class="cat-title">Vinhos Frisantes</div>
+      <div class="item">
+        <div class="item-info">
+          <div class="item-name">Rosa dos Leitões Frisante Branco / Rosé / Tinto</div>
+          <div class="item-desc">75cl</div>
+        </div>
+        <div class="item-price">16,90 €</div>
+      </div>
+    </div>
+
+    <div class="cat">
+      <div class="cat-title">Espumantes & Champanhe</div>
+      <div class="item">
+        <div class="item-info"><div class="item-name">Rosa dos Leitões Tinto</div><div class="item-desc">75cl</div></div>
+        <div class="item-price">16,90 €</div>
+      </div>
+      <div class="item">
+        <div class="item-info"><div class="item-name">Murganheira Tinto Bruto Távora Varosa</div><div class="item-desc">75cl</div></div>
+        <div class="item-price">27,50 €</div>
+      </div>
+      <div class="item">
+        <div class="item-info"><div class="item-name">Terras do Demo Rosé Bruto</div><div class="item-desc">75cl</div></div>
+        <div class="item-price">22,50 €</div>
+      </div>
+      <div class="item">
+        <div class="item-info"><div class="item-name">Laurent Perrier Champanhe Branco <span class="badge badge-star">Prestige</span></div><div class="item-desc">75cl</div></div>
+        <div class="item-price">110,00 €</div>
+      </div>
+    </div>
+
+    <div class="cat">
+      <div class="cat-title">Vinho Tinto</div>
+      <div class="item">
+        <div class="item-info"><div class="item-name">Copo Tinto</div><div class="item-desc">15cl</div></div>
+        <div class="item-price">4,50 €</div>
+      </div>
+      <div class="item">
+        <div class="item-info"><div class="item-name">Copo Tinto — Escolha da Casa</div><div class="item-desc">15cl</div></div>
+        <div class="item-price">5,50 €</div>
+      </div>
+      <div class="item">
+        <div class="item-info"><div class="item-name">Ouro do Meio Douro</div><div class="item-desc">75cl</div></div>
+        <div class="item-price">25,00 €</div>
+      </div>
+      <div class="item">
+        <div class="item-info"><div class="item-name">Herdade do Grous 2020</div><div class="item-desc">75cl</div></div>
+        <div class="item-price">26,50 €</div>
+      </div>
+      <div class="item">
+        <div class="item-info"><div class="item-name">Belmiro Cruz Douro Tinto</div><div class="item-desc">75cl</div></div>
+        <div class="item-price">20,50 €</div>
+      </div>
+      <div class="item">
+        <div class="item-info"><div class="item-name">Belmiro Bairrada Tinto 2011</div><div class="item-desc">75cl</div></div>
+        <div class="item-price">39,50 €</div>
+      </div>
+      <div class="item">
+        <div class="item-info"><div class="item-name">Folha do Meio Tinto Gr. Reserva</div><div class="item-desc">75cl</div></div>
+        <div class="item-price">59,00 €</div>
+      </div>
+    </div>
+
+    <div class="cat">
+      <div class="cat-title">Vinho Branco</div>
+      <div class="item">
+        <div class="item-info"><div class="item-name">Copo Branco Frisante</div><div class="item-desc">15cl</div></div>
+        <div class="item-price">4,50 €</div>
+      </div>
+      <div class="item">
+        <div class="item-info"><div class="item-name">Copo Branco — Escolha da Casa</div><div class="item-desc">15cl</div></div>
+        <div class="item-price">5,50 €</div>
+      </div>
+      <div class="item">
+        <div class="item-info"><div class="item-name">Coelheiros 2022 Alentejo</div><div class="item-desc">75cl</div></div>
+        <div class="item-price">— €</div>
+      </div>
+      <div class="item">
+        <div class="item-info"><div class="item-name">Belmiro Cruz Douro Seco Branco</div><div class="item-desc">75cl</div></div>
+        <div class="item-price">24,90 €</div>
+      </div>
+      <div class="item">
+        <div class="item-info"><div class="item-name">Ouro do Meio Branco</div><div class="item-desc">75cl</div></div>
+        <div class="item-price">25,00 €</div>
+      </div>
+    </div>
+
+    <div class="cat">
+      <div class="cat-title">Digestivo</div>
+      <div class="item">
+        <div class="item-info"><div class="item-name">K.O. Colheita Tardia</div><div class="item-desc">375ml</div></div>
+        <div class="item-price">40,00 €</div>
+      </div>
+    </div>
+
+    <div class="note">Preços especiais para Take-Away — Consulte um colaborador</div>
+  </div>
+</div>
+
+<!-- ══════════ CERVEJAS ══════════ -->
+<div class="page" id="cervejas">
+  <div class="wrapper">
+    <div class="section-title">
+      <h2>Cervejas & Refrigerantes</h2>
+      <p>Beer · Bière</p>
+      <div class="title-rule"><span></span><i>✦</i><span></span></div>
+    </div>
+
+    <div class="cat">
+      <div class="cat-title">Cervejas</div>
+      <div class="item">
+        <div class="item-info"><div class="item-name">Imperial <em>Pressão</em></div><div class="item-desc">20cl</div></div>
+        <div class="item-price">2,00 €</div>
+      </div>
+      <div class="item">
+        <div class="item-info"><div class="item-name">Caneca <em>Pint</em></div><div class="item-desc">40cl</div></div>
+        <div class="item-price">4,00 €</div>
+      </div>
+      <div class="item">
+        <div class="item-info"><div class="item-name">Garrafa Sagres</div><div class="item-desc">20cl</div></div>
+        <div class="item-price">2,00 €</div>
+      </div>
+      <div class="item">
+        <div class="item-info"><div class="item-name">Garrafa Sagres / Super Bock</div><div class="item-desc">33cl</div></div>
+        <div class="item-price">2,50 €</div>
+      </div>
+      <div class="item">
+        <div class="item-info"><div class="item-name">Sagres Preta <em>Black</em></div><div class="item-desc">33cl</div></div>
+        <div class="item-price">2,50 €</div>
+      </div>
+      <div class="item">
+        <div class="item-info"><div class="item-name">Sagres sem Álcool</div><div class="item-desc">33cl</div></div>
+        <div class="item-price">2,50 €</div>
+      </div>
+    </div>
+
+    <div class="cat">
+      <div class="cat-title">Sangria</div>
+      <div class="item">
+        <div class="item-info"><div class="item-name">Jarro Branca / Tinta</div><div class="item-desc">1 Litro</div></div>
+        <div class="item-price">16,50 €</div>
+      </div>
+      <div class="item">
+        <div class="item-info"><div class="item-name">Copo de Sangria</div><div class="item-desc">33cl</div></div>
+        <div class="item-price">5,50 €</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ BAR & LICORES ══════════ -->
+<div class="page" id="bar">
+  <div class="wrapper">
+    <div class="section-title">
+      <h2>Bar & Licores</h2>
+      <p>Spirits · Spiritueux · 6cl por dose</p>
+      <div class="title-rule"><span></span><i>✦</i><span></span></div>
+    </div>
+
+    <div class="two-col">
+      <!-- COL ESQUERDA -->
+      <div>
+        <div class="cat">
+          <div class="cat-title">Aperitivos</div>
+          <div class="item">
+            <div class="item-info"><div class="item-name">Martini</div></div>
+            <div class="item-price-block"><div class="item-price">2,20 €</div></div>
+          </div>
+          <div class="item">
+            <div class="item-info"><div class="item-name">Aperol <span class="badge badge-new">Bar</span></div><div class="item-desc">Aperitivo italiano, laranja amarga</div></div>
+            <div class="item-price-block"><div class="item-price">3,50 €</div></div>
+          </div>
+          <div class="item">
+            <div class="item-info"><div class="item-name">Moscatel Favaios Setúbal</div></div>
+            <div class="item-price-block"><div class="item-price">3,50 €</div></div>
+          </div>
+          <div class="item">
+            <div class="item-info"><div class="item-name">Ricard</div></div>
+            <div class="item-price-block"><div class="item-price">3,50 €</div></div>
+          </div>
+        </div>
+
+        <div class="cat">
+          <div class="cat-title">Gin</div>
+          <div class="item">
+            <div class="item-info"><div class="item-name">Citadelle Original <span class="badge badge-new">Bar</span></div><div class="item-desc">Gin francês clássico, 44% vol.</div></div>
+            <div class="item-price-block"><div class="item-price">6,00 €</div></div>
+          </div>
+          <div class="item">
+            <div class="item-info"><div class="item-name">Citadelle Rouge</div><div class="item-desc">Envelhecido em barrica, encorpado</div></div>
+            <div class="item-price-block"><div class="item-price">7,00 €</div></div>
+          </div>
+          <div class="item">
+            <div class="item-info"><div class="item-name">Citadelle Jardin d'Été</div><div class="item-desc">Notas florais e frescas</div></div>
+            <div class="item-price-block"><div class="item-price">7,00 €</div></div>
+          </div>
+          <div class="item">
+            <div class="item-info"><div class="item-name">Gin Biológico</div><div class="item-desc">Gin orgânico português artesanal</div></div>
+            <div class="item-price-block"><div class="item-price">5,50 €</div></div>
+          </div>
+        </div>
+
+        <div class="cat">
+          <div class="cat-title">Rum & Cachaça</div>
+          <div class="item">
+            <div class="item-info"><div class="item-name">Bacardi Carta Blanca <span class="badge badge-new">Bar</span></div><div class="item-desc">Rum branco clássico</div></div>
+            <div class="item-price-block"><div class="item-price">4,50 €</div></div>
+          </div>
+          <div class="item">
+            <div class="item-info"><div class="item-name">Plantation Rum</div><div class="item-desc">Rum premium envelhecido, Barbados</div></div>
+            <div class="item-price-block"><div class="item-price">7,00 €</div></div>
+          </div>
+          <div class="item">
+            <div class="item-info"><div class="item-name">Cachaça 51</div><div class="item-desc">Base de caipirinha</div></div>
+            <div class="item-price-block"><div class="item-price">4,00 €</div></div>
+          </div>
+        </div>
+
+        <div class="cat">
+          <div class="cat-title">Vodka</div>
+          <div class="item">
+            <div class="item-info"><div class="item-name">Smirnoff <span class="badge badge-new">Bar</span></div><div class="item-desc">Tripla destilação</div></div>
+            <div class="item-price-block"><div class="item-price">4,50 €</div></div>
+          </div>
+          <div class="item">
+            <div class="item-info"><div class="item-name">Three Sixty Vodka</div><div class="item-desc">Vodka alemã, filtrada a diamante</div></div>
+            <div class="item-price-block"><div class="item-price">4,50 €</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- COL DIREITA -->
+      <div>
+        <div class="cat">
+          <div class="cat-title">Whisky</div>
+          <div class="item">
+            <div class="item-info"><div class="item-name">Jameson</div><div class="item-desc">Irish Whiskey</div></div>
+            <div class="item-price-block"><div class="item-price">3,80 €</div></div>
+          </div>
+          <div class="item">
+            <div class="item-info"><div class="item-name">Famous Grouse</div><div class="item-desc">Blended Scotch</div></div>
+            <div class="item-price-block"><div class="item-price">3,80 €</div></div>
+          </div>
+          <div class="item">
+            <div class="item-info"><div class="item-name">JB Novo</div><div class="item-desc">Blended Scotch</div></div>
+            <div class="item-price-block"><div class="item-price">3,80 €</div></div>
+          </div>
+          <div class="item">
+            <div class="item-info"><div class="item-name">JB 15 Anos</div><div class="item-desc">Blended Scotch, envelhecido</div></div>
+            <div class="item-price-block"><div class="item-price">5,50 €</div></div>
+          </div>
+          <div class="item">
+            <div class="item-info"><div class="item-name">Cardhu 12 Anos <span class="badge badge-new">Bar</span></div><div class="item-desc">Single Malt Speyside, mel e fruta</div></div>
+            <div class="item-price-block"><div class="item-price">7,50 €</div></div>
+          </div>
+          <div class="item">
+            <div class="item-info"><div class="item-name">JB Reserve 15 Anos</div><div class="item-desc">Blended Scotch premium</div></div>
+            <div class="item-price-block"><div class="item-price">5,50 €</div></div>
+          </div>
+        </div>
+
+        <div class="cat">
+          <div class="cat-title">Licores</div>
+          <div class="item">
+            <div class="item-info"><div class="item-name">Kahlúa Coffee Liqueur <span class="badge badge-new">Bar</span></div><div class="item-desc">Licor de café mexicano</div></div>
+            <div class="item-price-block"><div class="item-price">4,50 €</div></div>
+          </div>
+          <div class="item">
+            <div class="item-info"><div class="item-name">Vinho do Porto Branco / Tinto</div></div>
+            <div class="item-price-block"><div class="item-price">2,50 €</div></div>
+          </div>
+          <div class="item">
+            <div class="item-info"><div class="item-name">Porto 10 Anos Tinto</div></div>
+            <div class="item-price-block"><div class="item-price">4,00 €</div></div>
+          </div>
+          <div class="item">
+            <div class="item-info"><div class="item-name">Amarguinha</div><div class="item-desc">Licor de amêndoa amarga</div></div>
+            <div class="item-price-block"><div class="item-price">2,50 €</div></div>
+          </div>
+          <div class="item">
+            <div class="item-info"><div class="item-name">Licor Beirão</div></div>
+            <div class="item-price-block"><div class="item-price">2,50 €</div></div>
+          </div>
+          <div class="item">
+            <div class="item-info"><div class="item-name">Disaronno Amaretto</div></div>
+            <div class="item-price-block"><div class="item-price">3,50 €</div></div>
+          </div>
+          <div class="item">
+            <div class="item-info"><div class="item-name">Genuína — Licor do Caldeirão</div><div class="item-desc">Licor regional algarvio</div></div>
+            <div class="item-price-block"><div class="item-price">3,00 €</div></div>
+          </div>
+          <div class="item">
+            <div class="item-info"><div class="item-name">Xarão — Licor de Ervas</div></div>
+            <div class="item-price-block"><div class="item-price">2,50 €</div></div>
+          </div>
+          <div class="item">
+            <div class="item-info"><div class="item-name">Brandy Mel</div></div>
+            <div class="item-price-block"><div class="item-price">3,00 €</div></div>
+          </div>
+          <div class="item">
+            <div class="item-info"><div class="item-name">Brandy Croft</div></div>
+            <div class="item-price-block"><div class="item-price">3,00 €</div></div>
+          </div>
+          <div class="item">
+            <div class="item-info"><div class="item-name">Macieira Royal Spirit</div></div>
+            <div class="item-price-block"><div class="item-price">2,50 €</div></div>
+          </div>
+        </div>
+
+        <div class="cat">
+          <div class="cat-title">Aguardentes</div>
+          <div class="item">
+            <div class="item-info"><div class="item-name">CRF Reserva</div></div>
+            <div class="item-price-block"><div class="item-price">5,50 €</div></div>
+          </div>
+          <div class="item">
+            <div class="item-info"><div class="item-name">Conde de Contanhede</div></div>
+            <div class="item-price-block"><div class="item-price">5,50 €</div></div>
+          </div>
+          <div class="item">
+            <div class="item-info"><div class="item-name">Medronho — Ambre <span class="badge badge-new">Bar</span></div><div class="item-desc">Aguardente artesanal do Algarve</div></div>
+            <div class="item-price-block"><div class="item-price">4,50 €</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="note">Todas as bebidas espirituosas servidas em dose de 6cl · Bebidas alcoólicas não são servidas a menores de 18 anos.</div>
+  </div>
+</div>
+
+<!-- ══════════ CAFETARIA ══════════ -->
+<div class="page" id="cafe">
+  <div class="wrapper">
+    <div class="section-title">
+      <h2>Cafetaria</h2>
+      <p>Coffee Shop · Caféteria</p>
+      <div class="title-rule"><span></span><i>✦</i><span></span></div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="cat">
+          <div class="cat-title">Cafés & Chás</div>
+          <div class="item"><div class="item-info"><div class="item-name">Café</div></div><div class="item-price">1,00 €</div></div>
+          <div class="item"><div class="item-info"><div class="item-name">Café Pingado</div></div><div class="item-price">1,10 €</div></div>
+          <div class="item"><div class="item-info"><div class="item-name">Descafeinado</div></div><div class="item-price">1,10 €</div></div>
+          <div class="item"><div class="item-info"><div class="item-name">Café com Leite</div></div><div class="item-price">2,75 €</div></div>
+          <div class="item"><div class="item-info"><div class="item-name">Chá</div></div><div class="item-price">3,50 €</div></div>
+          <div class="item"><div class="item-info"><div class="item-name">Cappuccino</div></div><div class="item-price">3,50 €</div></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="cat">
+          <div class="cat-title">Águas</div>
+          <div class="item"><div class="item-info"><div class="item-name">Água Vitalis</div><div class="item-desc">37,5cl</div></div><div class="item-price">2,50 €</div></div>
+          <div class="item"><div class="item-info"><div class="item-name">Água Vitalis</div><div class="item-desc">75cl</div></div><div class="item-price">3,50 €</div></div>
+          <div class="item"><div class="item-info"><div class="item-name">Água c/ Gás Pedras</div><div class="item-desc">25cl</div></div><div class="item-price">2,50 €</div></div>
+          <div class="item"><div class="item-info"><div class="item-name">Água c/ Gás Pedras</div><div class="item-desc">75cl</div></div><div class="item-price">3,50 €</div></div>
+          <div class="item"><div class="item-info"><div class="item-name">Água c/ Gás Castelo</div><div class="item-desc">25cl</div></div><div class="item-price">2,50 €</div></div>
+          <div class="item"><div class="item-info"><div class="item-name">Água Tónica</div><div class="item-desc">25cl</div></div><div class="item-price">2,50 €</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cat" style="margin-top:8px;">
+      <div class="cat-title">Refrigerantes & Sumos</div>
+      <div class="item"><div class="item-info"><div class="item-name">Sumo de Laranja Natural</div></div><div class="item-price">4,00 €</div></div>
+      <div class="item"><div class="item-info"><div class="item-name">Limonada Natural</div></div><div class="item-price">4,00 €</div></div>
+      <div class="item"><div class="item-info"><div class="item-name">Somersby Apple Cider</div><div class="item-desc">33cl</div></div><div class="item-price">2,50 €</div></div>
+      <div class="item">
+        <div class="item-info">
+          <div class="item-name">Coca Cola / Coca Cola Zero / Sprite / Fanta Laranja / Fanta Ananás</div>
+          <div class="item-desc">35cl</div>
+        </div>
+        <div class="item-price">2,50 €</div>
+      </div>
+      <div class="item">
+        <div class="item-info">
+          <div class="item-name">Nestea — Limão / Pêssego / Manga e Ananás</div>
+          <div class="item-desc">30cl</div>
+        </div>
+        <div class="item-price">2,50 €</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <span>Rosa dos Leitões</span> · Preços com IVA incluído · Bebidas alcoólicas proibidas a menores de 18 anos
+</div>
+
+<script>
+  function show(id, el) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    el.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+</body>
+</html>
