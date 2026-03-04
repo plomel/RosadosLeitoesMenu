@@ -6,333 +6,111 @@
 <title>Guia de Bar — Rosa dos Leitões</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #0f0e0b;
-    --surface: #1a1914;
-    --card: #222118;
-    --gold: #c4a042;
-    --gold-dim: #8a6c2c;
-    --text: #e8e0cc;
-    --muted: #8a8270;
-    --border: #2e2b22;
-    --green: #4a7c4e;
-    --amber: #b07a20;
-    --red: #8b3a3a;
-    --blue: #2a4a6e;
-  }
+:root {
+  --bg:#0f0e0b; --surface:#1a1914; --card:#222118;
+  --gold:#c4a042; --gold-dim:#8a6c2c; --gold-pale:#f0dfa0;
+  --text:#e8e0cc; --muted:#8a8270; --border:#2e2b22;
+  --green:#4a7c4e; --amber:#b07a20; --red:#8b3a3a;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Lato',sans-serif;font-size:14px;line-height:1.6;min-height:100vh;}
 
-  * { margin:0; padding:0; box-sizing:border-box; }
+/* ─── HERO ─── */
+.hero{background:linear-gradient(160deg,#1a1710,#0f0e0b);text-align:center;padding:52px 24px 44px;border-bottom:1px solid var(--border);}
+.hero h1{font-family:'Playfair Display',serif;font-size:38px;color:var(--gold);letter-spacing:2px;}
+.hero p{color:var(--muted);font-size:11px;letter-spacing:3px;text-transform:uppercase;margin-top:8px;}
+.hero-note{display:inline-block;margin-top:16px;background:rgba(196,160,66,.12);border:1px solid rgba(196,160,66,.25);color:var(--gold);font-size:12px;padding:8px 20px;border-radius:3px;}
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Lato', sans-serif;
-    font-size: 14px;
-    line-height: 1.6;
-    min-height: 100vh;
-  }
+/* ─── NAV TABS ─── */
+.nav-tabs{background:var(--surface);display:flex;overflow-x:auto;scrollbar-width:none;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:90;}
+.nav-tabs::-webkit-scrollbar{display:none;}
+.nav-tab{flex-shrink:0;padding:13px 18px;color:var(--muted);cursor:pointer;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap;}
+.nav-tab:hover{color:var(--gold);}
+.nav-tab.active{color:var(--gold);border-bottom-color:var(--gold);}
 
-  /* HERO */
-  .hero {
-    background: linear-gradient(160deg, #1a1710 0%, #0f0e0b 60%);
-    text-align: center;
-    padding: 56px 24px 48px;
-    border-bottom: 1px solid var(--border);
-    position: relative;
-  }
-  .hero::after {
-    content: '';
-    position: absolute;
-    bottom: 0; left: 50%; transform: translateX(-50%);
-    width: 200px; height: 1px;
-    background: linear-gradient(to right, transparent, var(--gold), transparent);
-  }
-  .hero h1 {
-    font-family: 'Playfair Display', serif;
-    font-size: 40px;
-    font-weight: 700;
-    color: var(--gold);
-    letter-spacing: 2px;
-  }
-  .hero p {
-    color: var(--muted);
-    font-size: 11px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    margin-top: 8px;
-  }
-  .hero-note {
-    display: inline-block;
-    margin-top: 20px;
-    background: rgba(196,160,66,.12);
-    border: 1px solid rgba(196,160,66,.25);
-    color: var(--gold);
-    font-size: 12px;
-    padding: 8px 20px;
-    border-radius: 3px;
-    letter-spacing: .5px;
-  }
+/* ─── MENU SIMPLES TOGGLE ─── */
+.menu-toggle{display:flex;justify-content:center;gap:8px;padding:18px 20px 0;}
+.toggle-btn{padding:8px 22px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:all .2s;border:1px solid var(--border);color:var(--muted);background:transparent;}
+.toggle-btn.active{background:var(--gold);color:#0f0e0b;border-color:var(--gold);}
 
-  /* NAV */
-  .nav {
-    background: var(--surface);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    display: flex;
-    overflow-x: auto;
-    scrollbar-width: none;
-    border-bottom: 1px solid var(--border);
-  }
-  .nav::-webkit-scrollbar { display: none; }
-  .nav-btn {
-    flex-shrink: 0;
-    padding: 14px 18px;
-    color: var(--muted);
-    cursor: pointer;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    border-bottom: 2px solid transparent;
-    transition: all .2s;
-    white-space: nowrap;
-  }
-  .nav-btn:hover { color: var(--gold); }
-  .nav-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
+/* ─── PAGE ─── */
+.page{display:none;}
+.page.active{display:block;animation:fadeIn .3s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
 
-  /* PAGE */
-  .page { display: none; }
-  .page.active { display: block; animation: fadeIn .3s ease; }
-  @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+.wrapper{max-width:940px;margin:0 auto;padding:36px 20px 80px;}
+.sec-title{text-align:center;margin-bottom:36px;}
+.sec-title h2{font-family:'Playfair Display',serif;font-size:28px;color:var(--gold);font-weight:400;}
+.sec-title p{color:var(--muted);font-size:11px;letter-spacing:2px;text-transform:uppercase;margin-top:4px;}
+.rule{width:60px;height:1px;background:var(--gold-dim);margin:12px auto 0;}
 
-  /* WRAPPER */
-  .wrapper {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 40px 20px 70px;
-  }
+/* ─── CARDS GRID ─── */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px;}
 
-  /* SECTION TITLE */
-  .sec-title {
-    text-align: center;
-    margin-bottom: 40px;
-  }
-  .sec-title h2 {
-    font-family: 'Playfair Display', serif;
-    font-size: 28px;
-    color: var(--gold);
-    font-weight: 400;
-  }
-  .sec-title p { color: var(--muted); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; margin-top: 4px; }
-  .rule { width: 60px; height: 1px; background: var(--gold-dim); margin: 12px auto 0; }
+/* ─── CARD (clicável) ─── */
+.card{background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden;cursor:pointer;transition:transform .2s,box-shadow .2s;}
+.card:hover{transform:translateY(-4px);box-shadow:0 10px 36px rgba(0,0,0,.55);}
+.card-header{padding:18px 20px 14px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between;gap:10px;}
+.card-icon{font-size:28px;line-height:1;flex-shrink:0;}
+.card-title-block{flex:1;}
+.card-name{font-family:'Playfair Display',serif;font-size:17px;color:var(--text);font-weight:700;}
+.card-type{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;margin-top:2px;}
+.card-hint{font-size:10px;color:var(--gold-dim);margin-top:8px;letter-spacing:.5px;}
+.diff-badge{font-size:9px;font-weight:700;padding:3px 8px;border-radius:20px;letter-spacing:.5px;text-transform:uppercase;flex-shrink:0;}
+.diff-easy{background:rgba(74,124,78,.2);color:#6dba73;border:1px solid rgba(74,124,78,.4);}
+.diff-med{background:rgba(176,122,32,.2);color:#e0a040;border:1px solid rgba(176,122,32,.4);}
+.diff-hard{background:rgba(139,58,58,.2);color:#e07070;border:1px solid rgba(139,58,58,.4);}
+.card-body{padding:14px 20px 16px;}
 
-  /* CARDS GRID */
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 20px;
-  }
+/* ─── CARD SIMPLES ─── */
+.card-simple-preview{padding:14px 20px;font-size:13px;color:var(--muted);}
 
-  /* CARD */
-  .card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    overflow: hidden;
-    transition: transform .2s, box-shadow .2s;
-    cursor: pointer;
-  }
-  .card:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(0,0,0,.5); }
+/* ─── INGREDIENTS ─── */
+.ing-title{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:8px;}
+.ing-list{list-style:none;margin-bottom:14px;}
+.ing-list li{font-size:12.5px;color:var(--text);padding:3px 0;display:flex;align-items:baseline;gap:7px;}
+.ing-list li::before{content:'·';color:var(--gold);font-size:16px;line-height:1;flex-shrink:0;}
+.ing-amount{color:var(--gold);font-weight:700;font-size:11.5px;min-width:36px;}
+.steps-title{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#6dba73;margin-bottom:10px;}
+.steps{list-style:none;}
+.steps li{display:flex;gap:12px;margin-bottom:9px;align-items:flex-start;}
+.step-num{background:var(--gold-dim);color:#fff;font-size:10px;font-weight:700;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.step-text{font-size:12.5px;color:var(--text);line-height:1.5;}
+.tip{margin-top:14px;background:rgba(196,160,66,.07);border-left:2px solid var(--gold-dim);padding:9px 12px;border-radius:0 3px 3px 0;font-size:11.5px;color:var(--muted);font-style:italic;}
+.tip strong{color:var(--gold);font-style:normal;}
+.glass-tag{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:3px;padding:4px 10px;font-size:11px;color:var(--muted);margin-top:12px;}
+.simple-serve{background:rgba(42,74,110,.15);border:1px solid rgba(42,74,110,.3);border-radius:5px;padding:14px 16px;font-size:13px;color:var(--text);line-height:1.65;}
+.simple-serve strong{color:#7ab0e0;}
 
-  .card-header {
-    padding: 18px 20px 14px;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 10px;
-  }
-  .card-icon {
-    font-size: 28px;
-    line-height: 1;
-    flex-shrink: 0;
-  }
-  .card-title-block { flex: 1; }
-  .card-name {
-    font-family: 'Playfair Display', serif;
-    font-size: 17px;
-    color: var(--text);
-    font-weight: 700;
-  }
-  .card-type {
-    font-size: 10px;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    margin-top: 2px;
-  }
-  .diff-badge {
-    font-size: 9px;
-    font-weight: 700;
-    padding: 3px 8px;
-    border-radius: 20px;
-    letter-spacing: .5px;
-    text-transform: uppercase;
-    flex-shrink: 0;
-  }
-  .diff-easy  { background: rgba(74,124,78,.2);  color: #6dba73; border: 1px solid rgba(74,124,78,.4); }
-  .diff-med   { background: rgba(176,122,32,.2); color: #e0a040; border: 1px solid rgba(176,122,32,.4); }
-  .diff-hard  { background: rgba(139,58,58,.2);  color: #e07070; border: 1px solid rgba(139,58,58,.4); }
+/* ─── VERSÃO SIMPLES CARD ─── */
+.simple-card{background:var(--card);border:1px solid rgba(42,74,110,.35);border-radius:8px;overflow:hidden;cursor:pointer;transition:transform .2s,box-shadow .2s;}
+.simple-card:hover{transform:translateY(-4px);box-shadow:0 10px 36px rgba(0,0,0,.55);}
+.simple-card .card-header{border-bottom-color:rgba(42,74,110,.3);}
+.simple-badge{font-size:9px;font-weight:700;padding:3px 8px;border-radius:20px;letter-spacing:.5px;text-transform:uppercase;flex-shrink:0;background:rgba(42,74,110,.3);color:#7ab0e0;border:1px solid rgba(42,74,110,.5);}
 
-  .card-body { padding: 16px 20px 18px; }
+/* ─── DIVIDER ─── */
+.cat-divider{text-align:center;color:var(--gold);font-family:'Playfair Display',serif;font-size:20px;margin:40px 0 28px;display:flex;align-items:center;gap:14px;}
+.cat-divider::before,.cat-divider::after{content:'';flex:1;height:1px;background:linear-gradient(to right,transparent,var(--border));}
+.cat-divider::after{background:linear-gradient(to left,transparent,var(--border));}
 
-  /* INGREDIENTS */
-  .ing-title {
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 8px;
-  }
-  .ing-list {
-    list-style: none;
-    margin-bottom: 14px;
-  }
-  .ing-list li {
-    font-size: 12.5px;
-    color: var(--text);
-    padding: 3px 0;
-    display: flex;
-    align-items: baseline;
-    gap: 7px;
-  }
-  .ing-list li::before {
-    content: '·';
-    color: var(--gold);
-    font-size: 16px;
-    line-height: 1;
-    flex-shrink: 0;
-  }
-  .ing-amount {
-    color: var(--gold);
-    font-weight: 700;
-    font-size: 11.5px;
-    min-width: 34px;
-  }
+/* ─── POPUP OVERLAY ─── */
+.overlay{position:fixed;inset:0;z-index:500;display:flex;align-items:flex-end;justify-content:center;pointer-events:none;opacity:0;transition:opacity .3s ease;}
+.overlay.open{opacity:1;pointer-events:all;}
+.overlay-bg{position:absolute;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(4px);}
+.popup{position:relative;z-index:1;background:var(--surface);border:1px solid var(--border);border-radius:14px 14px 0 0;width:100%;max-width:620px;max-height:88vh;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--gold-dim) transparent;padding:0 0 32px;transform:translateY(100%);transition:transform .4s cubic-bezier(.32,0,.15,1);}
+.overlay.open .popup{transform:translateY(0);}
+.popup-handle{width:40px;height:4px;background:var(--border);border-radius:2px;margin:14px auto 0;}
+.popup-header{display:flex;align-items:flex-start;gap:14px;padding:20px 24px 16px;border-bottom:1px solid var(--border);}
+.popup-icon{font-size:36px;}
+.popup-title{font-family:'Playfair Display',serif;font-size:22px;color:var(--gold);}
+.popup-type{font-size:10px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-top:2px;}
+.popup-body{padding:20px 24px 0;}
+.popup-close{position:absolute;top:16px;right:18px;background:rgba(255,255,255,.07);border:none;color:var(--muted);width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:background .2s;}
+.popup-close:hover{background:rgba(255,255,255,.14);color:var(--text);}
 
-  /* STEPS */
-  .steps-title {
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: #6dba73;
-    margin-bottom: 10px;
-  }
-  .steps { list-style: none; }
-  .steps li {
-    display: flex;
-    gap: 12px;
-    margin-bottom: 9px;
-    align-items: flex-start;
-  }
-  .step-num {
-    background: var(--gold-dim);
-    color: #fff;
-    font-size: 10px;
-    font-weight: 700;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    margin-top: 1px;
-  }
-  .step-text { font-size: 12.5px; color: var(--text); line-height: 1.5; }
-
-  /* TIP */
-  .tip {
-    margin-top: 14px;
-    background: rgba(196,160,66,.07);
-    border-left: 2px solid var(--gold-dim);
-    padding: 9px 12px;
-    border-radius: 0 3px 3px 0;
-    font-size: 11.5px;
-    color: var(--muted);
-    font-style: italic;
-  }
-  .tip strong { color: var(--gold); font-style: normal; }
-
-  /* GLASS TAG */
-  .glass-tag {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    background: rgba(255,255,255,.05);
-    border: 1px solid var(--border);
-    border-radius: 3px;
-    padding: 4px 10px;
-    font-size: 11px;
-    color: var(--muted);
-    margin-top: 12px;
-  }
-
-  /* SIMPLE SERVE (para bebidas simples) */
-  .simple-serve {
-    background: rgba(42,74,110,.15);
-    border: 1px solid rgba(42,74,110,.3);
-    border-radius: 5px;
-    padding: 14px 16px;
-    font-size: 13px;
-    color: var(--text);
-    line-height: 1.65;
-  }
-  .simple-serve strong { color: #7ab0e0; }
-
-  /* DIVIDER */
-  .cat-divider {
-    text-align: center;
-    color: var(--gold);
-    font-family: 'Playfair Display', serif;
-    font-size: 20px;
-    margin: 40px 0 28px;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-  }
-  .cat-divider::before, .cat-divider::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: linear-gradient(to right, transparent, var(--border));
-  }
-  .cat-divider::after { background: linear-gradient(to left, transparent, var(--border)); }
-
-  /* SEARCH */
-  .search-bar {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 32px;
-  }
-  .search-bar input {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    color: var(--text);
-    padding: 11px 18px;
-    border-radius: 4px;
-    font-family: 'Lato', sans-serif;
-    font-size: 13px;
-    width: 100%;
-    max-width: 400px;
-    outline: none;
-    transition: border-color .2s;
-  }
-  .search-bar input:focus { border-color: var(--gold-dim); }
-  .search-bar input::placeholder { color: var(--muted); }
+/* Glossário */
+.gloss-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px;margin-top:8px;}
 </style>
 </head>
 <body>
@@ -340,1039 +118,603 @@
 <div class="hero">
   <h1>🍹 Guia de Bar</h1>
   <p>Rosa dos Leitões · Manual do Barman</p>
-  <div class="hero-note">📖 Guia para iniciantes — passo a passo, sem complicações</div>
+  <div class="hero-note">📖 Clica em qualquer bebida para ver a receita completa</div>
 </div>
 
-<nav class="nav">
-  <div class="nav-btn active" onclick="show('gin',this)">🌿 Gin</div>
-  <div class="nav-btn" onclick="show('rum',this)">🥃 Rum & Cachaça</div>
-  <div class="nav-btn" onclick="show('whisky',this)">🥃 Whisky</div>
-  <div class="nav-btn" onclick="show('vodka',this)">🫧 Vodka</div>
-  <div class="nav-btn" onclick="show('aperitivos',this)">🍊 Aperitivos</div>
-  <div class="nav-btn" onclick="show('licores',this)">🌹 Licores</div>
-  <div class="nav-btn" onclick="show('vinho',this)">🍷 Vinho & Porto</div>
-  <div class="nav-btn" onclick="show('cocktails',this)">🍸 Cocktails</div>
+<nav class="nav-tabs">
+  <div class="nav-tab active" onclick="show('gin',this)">🌿 Gin</div>
+  <div class="nav-tab" onclick="show('rum',this)">🥃 Rum & Cachaça</div>
+  <div class="nav-tab" onclick="show('whisky',this)">🥃 Whisky</div>
+  <div class="nav-tab" onclick="show('vodka',this)">🫧 Vodka</div>
+  <div class="nav-tab" onclick="show('aperitivos',this)">🍊 Aperitivos</div>
+  <div class="nav-tab" onclick="show('licores',this)">🌹 Licores</div>
+  <div class="nav-tab" onclick="show('vinho',this)">🍷 Vinho & Porto</div>
+  <div class="nav-tab" onclick="show('cocktails',this)">🍸 Cocktails</div>
 </nav>
 
-<!-- ══════════════ GIN ══════════════ -->
+<div class="menu-toggle">
+  <div class="toggle-btn active" id="btn-completo" onclick="setMenu('completo')">Receitas Completas</div>
+  <div class="toggle-btn" id="btn-simples" onclick="setMenu('simples')">Menu Simples</div>
+</div>
+
+<!-- ════════════ GIN ════════════ -->
 <div class="page active" id="gin">
 <div class="wrapper">
-  <div class="sec-title">
-    <h2>🌿 Gin</h2>
-    <p>Como servir — simples e correto</p>
-    <div class="rule"></div>
+  <div class="sec-title"><h2>🌿 Gin</h2><p>Doses · Cocktails · Serves</p><div class="rule"></div></div>
+
+  <div class="grid" id="gin-completo">
+    <div class="card" onclick="openPopup('citadelle-original')">
+      <div class="card-header"><div class="card-icon">🫙</div><div class="card-title-block"><div class="card-name">Citadelle Original</div><div class="card-type">Gin Puro · Dose</div><div class="card-hint">Clica para ver receita</div></div><div class="diff-badge diff-easy">Fácil</div></div>
+    </div>
+    <div class="card" onclick="openPopup('gin-tonico')">
+      <div class="card-header"><div class="card-icon">🍋</div><div class="card-title-block"><div class="card-name">Gin Tónico</div><div class="card-type">Citadelle + Fever-Tree</div><div class="card-hint">Clica para ver receita</div></div><div class="diff-badge diff-easy">Fácil</div></div>
+    </div>
+    <div class="card" onclick="openPopup('citadelle-rouge')">
+      <div class="card-header"><div class="card-icon">🍊</div><div class="card-title-block"><div class="card-name">Citadelle Rouge</div><div class="card-type">Gin especial · Serve premium</div><div class="card-hint">Clica para ver receita</div></div><div class="diff-badge diff-easy">Fácil</div></div>
+    </div>
+    <div class="card" onclick="openPopup('gin-biologico')">
+      <div class="card-header"><div class="card-icon">🌱</div><div class="card-title-block"><div class="card-name">Gin Biológico</div><div class="card-type">Gin português artesanal</div><div class="card-hint">Clica para ver receita</div></div><div class="diff-badge diff-easy">Fácil</div></div>
+    </div>
   </div>
-  <div class="grid">
 
-    <!-- CITADELLE ORIGINAL -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-icon">🫙</div>
-        <div class="card-title-block">
-          <div class="card-name">Citadelle Original</div>
-          <div class="card-type">Gin Puro · Dose</div>
-        </div>
-        <div class="diff-badge diff-easy">Fácil</div>
-      </div>
-      <div class="card-body">
-        <div class="ing-title">O que precisas</div>
-        <ul class="ing-list">
-          <li><span class="ing-amount">6cl</span> Citadelle Original</li>
-          <li><span class="ing-amount">Gelo</span> em cubos</li>
-        </ul>
-        <div class="steps-title">Como fazer</div>
-        <ol class="steps">
-          <li><span class="step-num">1</span><span class="step-text">Pega num copo baixo (rocks glass).</span></li>
-          <li><span class="step-num">2</span><span class="step-text">Enche o copo com gelo até ao topo.</span></li>
-          <li><span class="step-num">3</span><span class="step-text">Verte 6cl de Citadelle por cima do gelo.</span></li>
-          <li><span class="step-num">4</span><span class="step-text">Serve ao cliente. Simples assim.</span></li>
-        </ol>
-        <div class="tip"><strong>Dica:</strong> Se o cliente quiser gin tónico, adiciona uma garrafa de tónica Fever-Tree e uma fatia de limão.</div>
-        <div class="glass-tag">🥃 Copo rocks ou copo de gin balloon</div>
-      </div>
+  <div class="grid" id="gin-simples" style="display:none;">
+    <div class="simple-card" onclick="openPopup('s-gin-tonico')">
+      <div class="card-header"><div class="card-icon">🍋</div><div class="card-title-block"><div class="card-name">Gin Tónico Simples</div><div class="card-type">Gin Biológico + Tónica</div></div><div class="simple-badge">Simples</div></div>
     </div>
-
-    <!-- GIN TONICO CITADELLE -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-icon">🍋</div>
-        <div class="card-title-block">
-          <div class="card-name">Gin Tónico</div>
-          <div class="card-type">Citadelle + Fever-Tree</div>
-        </div>
-        <div class="diff-badge diff-easy">Fácil</div>
-      </div>
-      <div class="card-body">
-        <div class="ing-title">O que precisas</div>
-        <ul class="ing-list">
-          <li><span class="ing-amount">6cl</span> Citadelle (qualquer variante)</li>
-          <li><span class="ing-amount">1 garr.</span> Tónica Fever-Tree</li>
-          <li><span class="ing-amount">Gelo</span> abundante</li>
-          <li><span class="ing-amount">1 fatia</span> limão ou laranja</li>
-        </ul>
-        <div class="steps-title">Como fazer</div>
-        <ol class="steps">
-          <li><span class="step-num">1</span><span class="step-text">Enche o copo balloon (ou copo grande) completamente com gelo.</span></li>
-          <li><span class="step-num">2</span><span class="step-text">Verte os 6cl de gin devagar pelo gelo.</span></li>
-          <li><span class="step-num">3</span><span class="step-text">Adiciona a tónica Fever-Tree toda de uma vez — verte pela parede do copo para não perder as bolhas.</span></li>
-          <li><span class="step-num">4</span><span class="step-num" style="background:transparent;color:transparent;"> </span></li>
-          <li><span class="step-num">4</span><span class="step-text">Mexe UMA vez, levemente, de baixo para cima.</span></li>
-          <li><span class="step-num">5</span><span class="step-text">Coloca a fatia de limão na borda do copo.</span></li>
-        </ol>
-        <div class="tip"><strong>Regra de ouro:</strong> Não meças a tónica — enche o copo até 1cm da borda. O gelo deve ser muito abundante.</div>
-        <div class="glass-tag">🥂 Copo balloon grande</div>
-      </div>
+    <div class="simple-card" onclick="openPopup('s-gin-limao')">
+      <div class="card-header"><div class="card-icon">🍃</div><div class="card-title-block"><div class="card-name">Gin com Sumo</div><div class="card-type">Gin + Limonada</div></div><div class="simple-badge">Simples</div></div>
     </div>
-
-    <!-- CITADELLE ROUGE -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-icon">🍊</div>
-        <div class="card-title-block">
-          <div class="card-name">Citadelle Rouge</div>
-          <div class="card-type">Gin especial · Serve premium</div>
-        </div>
-        <div class="diff-badge diff-easy">Fácil</div>
-      </div>
-      <div class="card-body">
-        <div class="ing-title">O que precisas</div>
-        <ul class="ing-list">
-          <li><span class="ing-amount">6cl</span> Citadelle Rouge</li>
-          <li><span class="ing-amount">1 garr.</span> Tónica Fever-Tree Mediterranean</li>
-          <li><span class="ing-amount">Gelo</span> abundante</li>
-          <li><span class="ing-amount">1 fatia</span> laranja</li>
-        </ul>
-        <div class="steps-title">Como fazer</div>
-        <ol class="steps">
-          <li><span class="step-num">1</span><span class="step-text">Enche bem o copo balloon com gelo.</span></li>
-          <li><span class="step-num">2</span><span class="step-text">Verte o gin por cima.</span></li>
-          <li><span class="step-num">3</span><span class="step-text">Adiciona a tónica mediterrânea (tem sabor mais suave, combina melhor com o Rouge).</span></li>
-          <li><span class="step-num">4</span><span class="step-text">Decora com fatia de laranja — o Rouge tem notas de fruta, e a laranja realça.</span></li>
-        </ol>
-        <div class="tip"><strong>Porquê laranja?</strong> O Citadelle Rouge é envelhecido em barrica e tem sabor mais encorpado com toques frutados. A laranja complementa bem.</div>
-        <div class="glass-tag">🥂 Copo balloon grande</div>
-      </div>
-    </div>
-
-    <!-- GIN BIOLOGICO -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-icon">🌱</div>
-        <div class="card-title-block">
-          <div class="card-name">Gin Biológico</div>
-          <div class="card-type">Gin português artesanal</div>
-        </div>
-        <div class="diff-badge diff-easy">Fácil</div>
-      </div>
-      <div class="card-body">
-        <div class="ing-title">O que precisas</div>
-        <ul class="ing-list">
-          <li><span class="ing-amount">6cl</span> Gin Biológico</li>
-          <li><span class="ing-amount">1 garr.</span> Tónica Fever-Tree</li>
-          <li><span class="ing-amount">Gelo</span> abundante</li>
-          <li><span class="ing-amount">1 ramo</span> alecrim (se disponível)</li>
-        </ul>
-        <div class="steps-title">Como fazer</div>
-        <ol class="steps">
-          <li><span class="step-num">1</span><span class="step-text">Enche o copo balloon com bastante gelo.</span></li>
-          <li><span class="step-num">2</span><span class="step-text">Verte os 6cl de Gin Biológico.</span></li>
-          <li><span class="step-num">3</span><span class="step-text">Adiciona a tónica pela parede do copo.</span></li>
-          <li><span class="step-num">4</span><span class="step-text">Se tiveres alecrim, coloca um ramo pequeno dentro do copo — fica bonito e perfuma.</span></li>
-        </ol>
-        <div class="tip"><strong>Dica de apresentação:</strong> Um gin nacional artesanal merece ser apresentado bem. Menciona ao cliente que é português e biológico — as pessoas adoram.</div>
-        <div class="glass-tag">🥂 Copo balloon</div>
-      </div>
-    </div>
-
   </div>
-</div>
-</div>
+</div></div>
 
-<!-- ══════════════ RUM & CACHAÇA ══════════════ -->
+<!-- ════════════ RUM ════════════ -->
 <div class="page" id="rum">
 <div class="wrapper">
-  <div class="sec-title">
-    <h2>🥃 Rum & Cachaça</h2>
-    <p>Servir puro ou em cocktail</p>
-    <div class="rule"></div>
+  <div class="sec-title"><h2>🥃 Rum & Cachaça</h2><p>Servir puro ou em cocktail</p><div class="rule"></div></div>
+
+  <div class="grid" id="rum-completo">
+    <div class="card" onclick="openPopup('bacardi-puro')">
+      <div class="card-header"><div class="card-icon">🥃</div><div class="card-title-block"><div class="card-name">Bacardi Puro</div><div class="card-type">Rum branco · Dose simples</div><div class="card-hint">Clica para ver receita</div></div><div class="diff-badge diff-easy">Fácil</div></div>
+    </div>
+    <div class="card" onclick="openPopup('cuba-libre')">
+      <div class="card-header"><div class="card-icon">🥤</div><div class="card-title-block"><div class="card-name">Cuba Libre</div><div class="card-type">Rum + Cola + Lima</div><div class="card-hint">Clica para ver receita</div></div><div class="diff-badge diff-easy">Fácil</div></div>
+    </div>
+    <div class="card" onclick="openPopup('plantation')">
+      <div class="card-header"><div class="card-icon">🌴</div><div class="card-title-block"><div class="card-name">Plantation Rum</div><div class="card-type">Rum premium · Serve lento</div><div class="card-hint">Clica para ver receita</div></div><div class="diff-badge diff-easy">Fácil</div></div>
+    </div>
+    <div class="card" onclick="openPopup('caipirinha')">
+      <div class="card-header"><div class="card-icon">🍋</div><div class="card-title-block"><div class="card-name">Caipirinha</div><div class="card-type">Cachaça 51 · Cocktail clássico</div><div class="card-hint">Clica para ver receita</div></div><div class="diff-badge diff-med">Médio</div></div>
+    </div>
   </div>
-  <div class="grid">
 
-    <!-- BACARDI PURO -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-icon">🥃</div>
-        <div class="card-title-block">
-          <div class="card-name">Bacardi Puro</div>
-          <div class="card-type">Rum branco · Dose simples</div>
-        </div>
-        <div class="diff-badge diff-easy">Fácil</div>
-      </div>
-      <div class="card-body">
-        <div class="ing-title">O que precisas</div>
-        <ul class="ing-list">
-          <li><span class="ing-amount">6cl</span> Bacardi Carta Blanca</li>
-          <li><span class="ing-amount">Gelo</span> opcional</li>
-        </ul>
-        <div class="steps-title">Como fazer</div>
-        <ol class="steps">
-          <li><span class="step-num">1</span><span class="step-text">Pergunta ao cliente: com gelo ou sem?</span></li>
-          <li><span class="step-num">2</span><span class="step-text">Mede 6cl no medidor (jigger) e verte no copo.</span></li>
-          <li><span class="step-num">3</span><span class="step-text">Se com gelo, coloca 2-3 cubos no copo primeiro.</span></li>
-        </ol>
-        <div class="tip"><strong>Nota:</strong> O Bacardi branco é muito usado como base de cocktails (Mojito, Cuba Libre, Daiquiri). Se o cliente pede rum com cola, usa este.</div>
-        <div class="glass-tag">🥃 Copo rocks</div>
-      </div>
+  <div class="grid" id="rum-simples" style="display:none;">
+    <div class="simple-card" onclick="openPopup('s-rum-cola')">
+      <div class="card-header"><div class="card-icon">🥤</div><div class="card-title-block"><div class="card-name">Rum Cola</div><div class="card-type">Bacardi + Coca Cola</div></div><div class="simple-badge">Simples</div></div>
     </div>
-
-    <!-- CUBA LIBRE -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-icon">🥤</div>
-        <div class="card-title-block">
-          <div class="card-name">Cuba Libre</div>
-          <div class="card-type">Rum + Cola + Lima</div>
-        </div>
-        <div class="diff-badge diff-easy">Fácil</div>
-      </div>
-      <div class="card-body">
-        <div class="ing-title">O que precisas</div>
-        <ul class="ing-list">
-          <li><span class="ing-amount">6cl</span> Bacardi Carta Blanca</li>
-          <li><span class="ing-amount">1 lata</span> Coca Cola</li>
-          <li><span class="ing-amount">½</span> lima (ou limão)</li>
-          <li><span class="ing-amount">Gelo</span> abundante</li>
-        </ul>
-        <div class="steps-title">Como fazer</div>
-        <ol class="steps">
-          <li><span class="step-num">1</span><span class="step-text">Enche o copo alto (highball) com gelo.</span></li>
-          <li><span class="step-num">2</span><span class="step-text">Espreme metade da lima por cima do gelo.</span></li>
-          <li><span class="step-num">3</span><span class="step-text">Verte os 6cl de Bacardi.</span></li>
-          <li><span class="step-num">4</span><span class="step-text">Enche com Coca Cola pela parede do copo.</span></li>
-          <li><span class="step-num">5</span><span class="step-text">Mexe levemente. Coloca uma fatia de lima na borda.</span></li>
-        </ol>
-        <div class="tip"><strong>Diferença do Rum Cola:</strong> O Cuba Libre leva lima espremida. Rum com Cola é rum + cola, sem lima.</div>
-        <div class="glass-tag">🥛 Copo highball / copo alto</div>
-      </div>
+    <div class="simple-card" onclick="openPopup('s-rum-sprite')">
+      <div class="card-header"><div class="card-icon">🫧</div><div class="card-title-block"><div class="card-name">Rum Sprite</div><div class="card-type">Bacardi + Sprite + Lima</div></div><div class="simple-badge">Simples</div></div>
     </div>
-
-    <!-- PLANTATION -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-icon">🌴</div>
-        <div class="card-title-block">
-          <div class="card-name">Plantation Rum</div>
-          <div class="card-type">Rum premium · Serve lento</div>
-        </div>
-        <div class="diff-badge diff-easy">Fácil</div>
-      </div>
-      <div class="card-body">
-        <div class="ing-title">O que precisas</div>
-        <ul class="ing-list">
-          <li><span class="ing-amount">6cl</span> Plantation Rum</li>
-          <li><span class="ing-amount">Gelo</span> 1-2 cubos grandes (opcional)</li>
-        </ul>
-        <div class="steps-title">Como fazer</div>
-        <ol class="steps">
-          <li><span class="step-num">1</span><span class="step-text">Serve num copo tipo snifter ou copo rocks limpo.</span></li>
-          <li><span class="step-num">2</span><span class="step-text">Mede 6cl e verte.</span></li>
-          <li><span class="step-num">3</span><span class="step-text">Serve preferencialmente sem gelo ou com 1 cubo grande, para não diluir.</span></li>
-        </ol>
-        <div class="tip"><strong>É rum premium.</strong> Serve como se fosse um bom whisky — sem pressa, copo correto, pouco ou nenhum gelo. O cliente vai notar a diferença.</div>
-        <div class="glass-tag">🥃 Snifter ou copo rocks</div>
-      </div>
-    </div>
-
-    <!-- CAIPIRINHA -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-icon">🍋</div>
-        <div class="card-title-block">
-          <div class="card-name">Caipirinha</div>
-          <div class="card-type">Cachaça 51 · Cocktail clássico</div>
-        </div>
-        <div class="diff-badge diff-med">Médio</div>
-      </div>
-      <div class="card-body">
-        <div class="ing-title">O que precisas</div>
-        <ul class="ing-list">
-          <li><span class="ing-amount">6cl</span> Cachaça 51</li>
-          <li><span class="ing-amount">1</span> lima inteira</li>
-          <li><span class="ing-amount">2 col.</span> açúcar branco</li>
-          <li><span class="ing-amount">Gelo</span> picado (ou cubos)</li>
-        </ul>
-        <div class="steps-title">Como fazer</div>
-        <ol class="steps">
-          <li><span class="step-num">1</span><span class="step-text">Corta a lima em 8 pedaços. Coloca no copo rocks.</span></li>
-          <li><span class="step-num">2</span><span class="step-text">Adiciona 2 colheres de chá de açúcar por cima da lima.</span></li>
-          <li><span class="step-num">3</span><span class="step-text">Com o pilão (ou colher resistente), esmaga bem a lima — sem rasgar demasiado a casca, só para soltar o sumo.</span></li>
-          <li><span class="step-num">4</span><span class="step-text">Enche o copo com gelo picado (ou 4-5 cubos).</span></li>
-          <li><span class="step-num">5</span><span class="step-text">Verte os 6cl de cachaça por cima.</span></li>
-          <li><span class="step-num">6</span><span class="step-text">Mexe bem com colher longa até o açúcar dissolver.</span></li>
-        </ol>
-        <div class="tip"><strong>Segredo:</strong> Esmaga a lima com cuidado — se partir muito a casca fica amargo. Menos é mais.</div>
-        <div class="glass-tag">🥃 Copo rocks</div>
-      </div>
-    </div>
-
   </div>
-</div>
-</div>
+</div></div>
 
-<!-- ══════════════ WHISKY ══════════════ -->
+<!-- ════════════ WHISKY ════════════ -->
 <div class="page" id="whisky">
 <div class="wrapper">
-  <div class="sec-title">
-    <h2>🥃 Whisky</h2>
-    <p>Como servir corretamente</p>
-    <div class="rule"></div>
+  <div class="sec-title"><h2>🥃 Whisky</h2><p>Como servir corretamente</p><div class="rule"></div></div>
+
+  <div class="grid" id="whisky-completo">
+    <div class="card" onclick="openPopup('whisky-puro')">
+      <div class="card-header"><div class="card-icon">🥃</div><div class="card-title-block"><div class="card-name">Whisky Puro / On the Rocks</div><div class="card-type">Todos os whiskys</div><div class="card-hint">Clica para ver receita</div></div><div class="diff-badge diff-easy">Fácil</div></div>
+    </div>
+    <div class="card" onclick="openPopup('whisky-cola')">
+      <div class="card-header"><div class="card-icon">🥤</div><div class="card-title-block"><div class="card-name">Whisky Cola</div><div class="card-type">Jack & Coke style</div><div class="card-hint">Clica para ver receita</div></div><div class="diff-badge diff-easy">Fácil</div></div>
+    </div>
+    <div class="card" onclick="openPopup('cardhu')">
+      <div class="card-header"><div class="card-icon">🏔️</div><div class="card-title-block"><div class="card-name">Cardhu 12 Anos</div><div class="card-type">Single Malt · Serve premium</div><div class="card-hint">Clica para ver receita</div></div><div class="diff-badge diff-easy">Fácil</div></div>
+    </div>
   </div>
-  <div class="grid">
 
-    <!-- WHISKY PURO -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-icon">🥃</div>
-        <div class="card-title-block">
-          <div class="card-name">Whisky Puro / On the Rocks</div>
-          <div class="card-type">Todos os whiskys</div>
-        </div>
-        <div class="diff-badge diff-easy">Fácil</div>
-      </div>
-      <div class="card-body">
-        <div class="ing-title">O que precisas</div>
-        <ul class="ing-list">
-          <li><span class="ing-amount">6cl</span> Whisky escolhido</li>
-          <li><span class="ing-amount">Gelo</span> a pedido do cliente</li>
-        </ul>
-        <div class="steps-title">Como fazer</div>
-        <ol class="steps">
-          <li><span class="step-num">1</span><span class="step-text">Pergunta sempre: <em>"Com gelo, com água ou puro?"</em></span></li>
-          <li><span class="step-num">2</span><span class="step-text">Se com gelo: coloca 2-3 cubos no copo primeiro, depois o whisky.</span></li>
-          <li><span class="step-num">3</span><span class="step-text">Se puro: mede 6cl e serve direto no copo limpo.</span></li>
-          <li><span class="step-num">4</span><span class="step-text">Nunca enches o copo — 6cl é a dose certa.</span></li>
-        </ol>
-        <div class="tip"><strong>Cardhu é Single Malt</strong> — serve preferencialmente com pouco ou nenhum gelo. JB e Jameson são mais versáteis, funcionam bem on the rocks.</div>
-        <div class="glass-tag">🥃 Copo rocks ou tumbler</div>
-      </div>
+  <div class="grid" id="whisky-simples" style="display:none;">
+    <div class="simple-card" onclick="openPopup('s-whisky-cola')">
+      <div class="card-header"><div class="card-icon">🥤</div><div class="card-title-block"><div class="card-name">Whisky Cola</div><div class="card-type">JB / Jameson + Coca Cola</div></div><div class="simple-badge">Simples</div></div>
     </div>
-
-    <!-- WHISKY COLA -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-icon">🥤</div>
-        <div class="card-title-block">
-          <div class="card-name">Whisky Cola</div>
-          <div class="card-type">Jack & Coke style</div>
-        </div>
-        <div class="diff-badge diff-easy">Fácil</div>
-      </div>
-      <div class="card-body">
-        <div class="ing-title">O que precisas</div>
-        <ul class="ing-list">
-          <li><span class="ing-amount">6cl</span> Whisky (JB, Jameson, etc.)</li>
-          <li><span class="ing-amount">1 lata</span> Coca Cola</li>
-          <li><span class="ing-amount">Gelo</span> abundante</li>
-          <li><span class="ing-amount">1 fatia</span> limão (opcional)</li>
-        </ul>
-        <div class="steps-title">Como fazer</div>
-        <ol class="steps">
-          <li><span class="step-num">1</span><span class="step-text">Enche o copo alto com gelo.</span></li>
-          <li><span class="step-num">2</span><span class="step-text">Verte os 6cl de whisky por cima do gelo.</span></li>
-          <li><span class="step-num">3</span><span class="step-text">Completa com Coca Cola pela parede do copo.</span></li>
-          <li><span class="step-num">4</span><span class="step-text">Mexe uma vez, gentilmente. Serve com palinha.</span></li>
-        </ol>
-        <div class="tip"><strong>Proporção:</strong> 1 parte de whisky para 3 partes de cola é o padrão. Nunca deixes a cola cair de cima — perde as bolhas.</div>
-        <div class="glass-tag">🥛 Copo highball</div>
-      </div>
+    <div class="simple-card" onclick="openPopup('s-whisky-gelo')">
+      <div class="card-header"><div class="card-icon">🧊</div><div class="card-title-block"><div class="card-name">Whisky On the Rocks</div><div class="card-type">Qualquer whisky + Gelo</div></div><div class="simple-badge">Simples</div></div>
     </div>
-
-    <!-- CARDHU ESPECIAL -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-icon">🏔️</div>
-        <div class="card-title-block">
-          <div class="card-name">Cardhu 12 Anos</div>
-          <div class="card-type">Single Malt · Serve premium</div>
-        </div>
-        <div class="diff-badge diff-easy">Fácil</div>
-      </div>
-      <div class="card-body">
-        <div class="ing-title">O que precisas</div>
-        <ul class="ing-list">
-          <li><span class="ing-amount">6cl</span> Cardhu 12 Anos</li>
-          <li><span class="ing-amount">Opcional</span> 1 pedra de gelo grande</li>
-        </ul>
-        <div class="steps-title">Como fazer</div>
-        <ol class="steps">
-          <li><span class="step-num">1</span><span class="step-text">Usa sempre um copo rocks limpo e seco.</span></li>
-          <li><span class="step-num">2</span><span class="step-text">Mede exatamente 6cl.</span></li>
-          <li><span class="step-num">3</span><span class="step-text">Serve puro ou com 1 cubo grande — nunca vários cubos pequenos que diluem rápido.</span></li>
-          <li><span class="step-num">4</span><span class="step-text">Não adiciones cola, sumo nem mistura — é um whisky premium para ser saboreado puro.</span></li>
-        </ol>
-        <div class="tip"><strong>É o whisky mais caro do bar.</strong> Trata-o com respeito — copo certo, dose medida, serve calmo. O cliente que o pede sabe apreciá-lo.</div>
-        <div class="glass-tag">🥃 Copo rocks / crystal tumbler</div>
-      </div>
-    </div>
-
   </div>
-</div>
-</div>
+</div></div>
 
-<!-- ══════════════ VODKA ══════════════ -->
+<!-- ════════════ VODKA ════════════ -->
 <div class="page" id="vodka">
 <div class="wrapper">
-  <div class="sec-title">
-    <h2>🫧 Vodka</h2>
-    <p>A bebida mais versátil do bar</p>
-    <div class="rule"></div>
+  <div class="sec-title"><h2>🫧 Vodka</h2><p>A bebida mais versátil do bar</p><div class="rule"></div></div>
+
+  <div class="grid" id="vodka-completo">
+    <div class="card" onclick="openPopup('vodka-pura')">
+      <div class="card-header"><div class="card-icon">❄️</div><div class="card-title-block"><div class="card-name">Vodka Pura</div><div class="card-type">Smirnoff / Three Sixty</div><div class="card-hint">Clica para ver receita</div></div><div class="diff-badge diff-easy">Fácil</div></div>
+    </div>
+    <div class="card" onclick="openPopup('vodka-tonica')">
+      <div class="card-header"><div class="card-icon">🫧</div><div class="card-title-block"><div class="card-name">Vodka Tónica</div><div class="card-type">Vodka + Fever-Tree</div><div class="card-hint">Clica para ver receita</div></div><div class="diff-badge diff-easy">Fácil</div></div>
+    </div>
+    <div class="card" onclick="openPopup('vodka-cola')">
+      <div class="card-header"><div class="card-icon">🥤</div><div class="card-title-block"><div class="card-name">Vodka Cola</div><div class="card-type">Clássico de bar</div><div class="card-hint">Clica para ver receita</div></div><div class="diff-badge diff-easy">Fácil</div></div>
+    </div>
   </div>
-  <div class="grid">
 
-    <!-- VODKA PURA -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-icon">❄️</div>
-        <div class="card-title-block">
-          <div class="card-name">Vodka Pura</div>
-          <div class="card-type">Smirnoff / Three Sixty</div>
-        </div>
-        <div class="diff-badge diff-easy">Fácil</div>
-      </div>
-      <div class="card-body">
-        <div class="ing-title">O que precisas</div>
-        <ul class="ing-list">
-          <li><span class="ing-amount">6cl</span> Vodka</li>
-          <li><span class="ing-amount">Gelo</span> a pedido</li>
-        </ul>
-        <div class="steps-title">Como fazer</div>
-        <ol class="steps">
-          <li><span class="step-num">1</span><span class="step-text">Mede 6cl no jigger.</span></li>
-          <li><span class="step-num">2</span><span class="step-text">Serve num copo rocks com ou sem gelo conforme pedido.</span></li>
-          <li><span class="step-num">3</span><span class="step-text">Vodka pura deve ser servida bem fria — se a garrafa estiver no frigorífico, melhor ainda.</span></li>
-        </ol>
-        <div class="tip"><strong>Vodka fria = melhor vodka.</strong> Mantém a garrafa no frigorífico ou num balde com gelo atrás do bar.</div>
-        <div class="glass-tag">🥃 Shot glass ou copo rocks</div>
-      </div>
+  <div class="grid" id="vodka-simples" style="display:none;">
+    <div class="simple-card" onclick="openPopup('s-vodka-laranja')">
+      <div class="card-header"><div class="card-icon">🍊</div><div class="card-title-block"><div class="card-name">Vodka Laranja</div><div class="card-type">Vodka + Sumo Natural</div></div><div class="simple-badge">Simples</div></div>
     </div>
-
-    <!-- VODKA TONICA -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-icon">🫧</div>
-        <div class="card-title-block">
-          <div class="card-name">Vodka Tónica</div>
-          <div class="card-type">Vodka + Fever-Tree</div>
-        </div>
-        <div class="diff-badge diff-easy">Fácil</div>
-      </div>
-      <div class="card-body">
-        <div class="ing-title">O que precisas</div>
-        <ul class="ing-list">
-          <li><span class="ing-amount">6cl</span> Vodka (Smirnoff ou Three Sixty)</li>
-          <li><span class="ing-amount">1 garr.</span> Tónica Fever-Tree</li>
-          <li><span class="ing-amount">Gelo</span> abundante</li>
-          <li><span class="ing-amount">1 fatia</span> limão</li>
-        </ul>
-        <div class="steps-title">Como fazer</div>
-        <ol class="steps">
-          <li><span class="step-num">1</span><span class="step-text">Enche o copo alto com gelo.</span></li>
-          <li><span class="step-num">2</span><span class="step-text">Verte a vodka por cima do gelo.</span></li>
-          <li><span class="step-num">3</span><span class="step-text">Adiciona a tónica pela parede do copo.</span></li>
-          <li><span class="step-num">4</span><span class="step-text">Mexe suavemente uma vez. Decora com limão.</span></li>
-        </ol>
-        <div class="tip"><strong>Mais leve que gin tónico.</strong> Boa opção para quem não gosta do sabor intenso do gin.</div>
-        <div class="glass-tag">🥛 Copo highball</div>
-      </div>
+    <div class="simple-card" onclick="openPopup('s-vodka-limonada')">
+      <div class="card-header"><div class="card-icon">🍋</div><div class="card-title-block"><div class="card-name">Vodka Limonada</div><div class="card-type">Vodka + Limonada</div></div><div class="simple-badge">Simples</div></div>
     </div>
-
-    <!-- VODKA COLA -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-icon">🥤</div>
-        <div class="card-title-block">
-          <div class="card-name">Vodka Cola</div>
-          <div class="card-type">Clássico de bar</div>
-        </div>
-        <div class="diff-badge diff-easy">Fácil</div>
-      </div>
-      <div class="card-body">
-        <div class="ing-title">O que precisas</div>
-        <ul class="ing-list">
-          <li><span class="ing-amount">6cl</span> Vodka</li>
-          <li><span class="ing-amount">1 lata</span> Coca Cola</li>
-          <li><span class="ing-amount">Gelo</span> abundante</li>
-        </ul>
-        <div class="steps-title">Como fazer</div>
-        <ol class="steps">
-          <li><span class="step-num">1</span><span class="step-text">Enche o copo alto com gelo.</span></li>
-          <li><span class="step-num">2</span><span class="step-text">Verte a vodka.</span></li>
-          <li><span class="step-num">3</span><span class="step-text">Completa com Coca Cola pela parede. Mexe uma vez.</span></li>
-        </ol>
-        <div class="tip"><strong>Simples e muito pedido.</strong> Rápido de fazer, não tem erro.</div>
-        <div class="glass-tag">🥛 Copo highball</div>
-      </div>
-    </div>
-
   </div>
-</div>
-</div>
+</div></div>
 
-<!-- ══════════════ APERITIVOS ══════════════ -->
+<!-- ════════════ APERITIVOS ════════════ -->
 <div class="page" id="aperitivos">
 <div class="wrapper">
-  <div class="sec-title">
-    <h2>🍊 Aperitivos</h2>
-    <p>Para antes da refeição</p>
-    <div class="rule"></div>
+  <div class="sec-title"><h2>🍊 Aperitivos</h2><p>Para antes da refeição</p><div class="rule"></div></div>
+
+  <div class="grid" id="aperitivos-completo">
+    <div class="card" onclick="openPopup('aperol-spritz')">
+      <div class="card-header"><div class="card-icon">🍊</div><div class="card-title-block"><div class="card-name">Aperol Spritz</div><div class="card-type">O cocktail do verão</div><div class="card-hint">Clica para ver receita</div></div><div class="diff-badge diff-easy">Fácil</div></div>
+    </div>
+    <div class="card" onclick="openPopup('martini')">
+      <div class="card-header"><div class="card-icon">🍸</div><div class="card-title-block"><div class="card-name">Martini</div><div class="card-type">Bianco / Rosso / Extra Dry</div><div class="card-hint">Clica para ver receita</div></div><div class="diff-badge diff-easy">Fácil</div></div>
+    </div>
+    <div class="card" onclick="openPopup('ricard')">
+      <div class="card-header"><div class="card-icon">⭐</div><div class="card-title-block"><div class="card-name">Ricard</div><div class="card-type">Pastis francês · Aperitivo clássico</div><div class="card-hint">Clica para ver receita</div></div><div class="diff-badge diff-easy">Fácil</div></div>
+    </div>
+    <div class="card" onclick="openPopup('moscatel-tonico')">
+      <div class="card-header"><div class="card-icon">🍇</div><div class="card-title-block"><div class="card-name">Moscatel Tónico</div><div class="card-type">Porto Tónico style</div><div class="card-hint">Clica para ver receita</div></div><div class="diff-badge diff-easy">Fácil</div></div>
+    </div>
   </div>
-  <div class="grid">
 
-    <!-- APEROL SPRITZ -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-icon">🍊</div>
-        <div class="card-title-block">
-          <div class="card-name">Aperol Spritz</div>
-          <div class="card-type">O cocktail do verão</div>
-        </div>
-        <div class="diff-badge diff-easy">Fácil</div>
-      </div>
-      <div class="card-body">
-        <div class="ing-title">O que precisas</div>
-        <ul class="ing-list">
-          <li><span class="ing-amount">6cl</span> Aperol</li>
-          <li><span class="ing-amount">9cl</span> Espumante seco (Messias Bruto)</li>
-          <li><span class="ing-amount">3cl</span> Água com gás (Pedras ou Castelo)</li>
-          <li><span class="ing-amount">Gelo</span> em cubos</li>
-          <li><span class="ing-amount">1 fatia</span> laranja</li>
-        </ul>
-        <div class="steps-title">Como fazer — Regra 3-2-1</div>
-        <ol class="steps">
-          <li><span class="step-num">1</span><span class="step-text">Enche o copo de vinho grande com gelo.</span></li>
-          <li><span class="step-num">2</span><span class="step-text">Verte 9cl de espumante primeiro (sempre o espumante antes do Aperol).</span></li>
-          <li><span class="step-num">3</span><span class="step-text">Adiciona 6cl de Aperol — vai ficar com cor laranja bonita.</span></li>
-          <li><span class="step-num">4</span><span class="step-text">Adiciona um splash de água com gás (3cl).</span></li>
-          <li><span class="step-num">5</span><span class="step-text">Mexe UMA vez, devagar. Coloca a fatia de laranja.</span></li>
-        </ol>
-        <div class="tip"><strong>Regra fácil de memorizar: 3-2-1</strong> → 3 partes espumante, 2 Aperol, 1 água com gás. O Aperol Spritz é o aperitivo mais pedido no verão no Algarve.</div>
-        <div class="glass-tag">🍷 Copo de vinho grande</div>
-      </div>
+  <div class="grid" id="aperitivos-simples" style="display:none;">
+    <div class="simple-card" onclick="openPopup('s-aperol-simples')">
+      <div class="card-header"><div class="card-icon">🍊</div><div class="card-title-block"><div class="card-name">Aperol com Gelo</div><div class="card-type">Aperol + Sprite</div></div><div class="simple-badge">Simples</div></div>
     </div>
-
-    <!-- MARTINI -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-icon">🍸</div>
-        <div class="card-title-block">
-          <div class="card-name">Martini</div>
-          <div class="card-type">Bianco / Rosso / Extra Dry</div>
-        </div>
-        <div class="diff-badge diff-easy">Fácil</div>
-      </div>
-      <div class="card-body">
-        <div class="ing-title">O que precisas</div>
-        <ul class="ing-list">
-          <li><span class="ing-amount">6cl</span> Martini (Bianco, Rosso, ou Extra Dry)</li>
-          <li><span class="ing-amount">Gelo</span> em cubos</li>
-          <li><span class="ing-amount">1 fatia</span> laranja ou limão</li>
-        </ul>
-        <div class="steps-title">Como fazer</div>
-        <ol class="steps">
-          <li><span class="step-num">1</span><span class="step-text">Serve num copo de vinho ou copo rocks com gelo.</span></li>
-          <li><span class="step-num">2</span><span class="step-text">Mede 6cl e verte por cima do gelo.</span></li>
-          <li><span class="step-num">3</span><span class="step-text">Decora com uma fatia de laranja (Bianco/Rosso) ou de limão (Extra Dry).</span></li>
-        </ol>
-        <div class="tip"><strong>Martini Bianco</strong> = branco doce · <strong>Martini Rosso</strong> = vermelho, ligeiramente amargo · <strong>Extra Dry</strong> = branco seco. Pergunta sempre qual o cliente prefere.</div>
-        <div class="glass-tag">🍷 Copo de vinho ou rocks</div>
-      </div>
+    <div class="simple-card" onclick="openPopup('s-martini-simples')">
+      <div class="card-header"><div class="card-icon">🍸</div><div class="card-title-block"><div class="card-name">Martini com Gelo</div><div class="card-type">Martini + Gelo + Limão</div></div><div class="simple-badge">Simples</div></div>
     </div>
-
-    <!-- RICARD -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-icon">⭐</div>
-        <div class="card-title-block">
-          <div class="card-name">Ricard</div>
-          <div class="card-type">Pastis francês · Aperitivo clássico</div>
-        </div>
-        <div class="diff-badge diff-easy">Fácil</div>
-      </div>
-      <div class="card-body">
-        <div class="ing-title">O que precisas</div>
-        <ul class="ing-list">
-          <li><span class="ing-amount">6cl</span> Ricard</li>
-          <li><span class="ing-amount">~12cl</span> Água fria (ou a pedido)</li>
-          <li><span class="ing-amount">Gelo</span> opcional</li>
-        </ul>
-        <div class="steps-title">Como fazer</div>
-        <ol class="steps">
-          <li><span class="step-num">1</span><span class="step-text">Coloca o copo alto no balcão. Verte os 6cl de Ricard.</span></li>
-          <li><span class="step-num">2</span><span class="step-text">Adiciona água fria na proporção de 1:2 (1 Ricard para 2 de água). O líquido vai ficar turvo/amarelado — é normal e correto.</span></li>
-          <li><span class="step-num">3</span><span class="step-text">Gelo à parte, ou dentro, conforme preferência do cliente.</span></li>
-        </ol>
-        <div class="tip"><strong>O Ricard fica turvo com água</strong> — muitos iniciantes assustam-se, mas é exatamente assim que deve ficar. Nunca o serves puro.</div>
-        <div class="glass-tag">🥛 Copo highball</div>
-      </div>
-    </div>
-
-    <!-- MOSCATEL TÓNICO -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-icon">🍇</div>
-        <div class="card-title-block">
-          <div class="card-name">Moscatel Tónico</div>
-          <div class="card-type">Porto Tónico style</div>
-        </div>
-        <div class="diff-badge diff-easy">Fácil</div>
-      </div>
-      <div class="card-body">
-        <div class="ing-title">O que precisas</div>
-        <ul class="ing-list">
-          <li><span class="ing-amount">6cl</span> Moscatel Favaios</li>
-          <li><span class="ing-amount">½ garr.</span> Tónica Fever-Tree</li>
-          <li><span class="ing-amount">Gelo</span> em cubos</li>
-          <li><span class="ing-amount">Raspa</span> de limão (opcional)</li>
-        </ul>
-        <div class="steps-title">Como fazer</div>
-        <ol class="steps">
-          <li><span class="step-num">1</span><span class="step-text">Enche o copo de vinho com gelo.</span></li>
-          <li><span class="step-num">2</span><span class="step-text">Verte o Moscatel por cima.</span></li>
-          <li><span class="step-num">3</span><span class="step-text">Completa com meia garrafa de tónica, devagar pela parede.</span></li>
-          <li><span class="step-num">4</span><span class="step-text">Decora com uma rodela de limão ou raspa de casca.</span></li>
-        </ol>
-        <div class="tip"><strong>Drink português e elegante</strong> — perfeito para oferecer como sugestão antes das refeições no verão.</div>
-        <div class="glass-tag">🍷 Copo de vinho</div>
-      </div>
-    </div>
-
   </div>
-</div>
-</div>
+</div></div>
 
-<!-- ══════════════ LICORES ══════════════ -->
+<!-- ════════════ LICORES ════════════ -->
 <div class="page" id="licores">
 <div class="wrapper">
-  <div class="sec-title">
-    <h2>🌹 Licores & Digestivos</h2>
-    <p>Para depois da refeição</p>
-    <div class="rule"></div>
+  <div class="sec-title"><h2>🌹 Licores & Digestivos</h2><p>Para depois da refeição</p><div class="rule"></div></div>
+
+  <div class="grid" id="licores-completo">
+    <div class="card" style="grid-column:1/-1" onclick="openPopup('regra-licores')">
+      <div class="card-header"><div class="card-icon">📋</div><div class="card-title-block"><div class="card-name">Regra Geral — Todos os Licores</div><div class="card-type">Amarguinha · Licor Beirão · Disaronno · Genuína · Xarão · Brandy</div><div class="card-hint">Clica para ver</div></div><div class="diff-badge diff-easy">Fácil</div></div>
+    </div>
+    <div class="card" onclick="openPopup('kahlua')">
+      <div class="card-header"><div class="card-icon">☕</div><div class="card-title-block"><div class="card-name">Kahlúa</div><div class="card-type">Licor de café · Com gelo</div><div class="card-hint">Clica para ver receita</div></div><div class="diff-badge diff-easy">Fácil</div></div>
+    </div>
+    <div class="card" onclick="openPopup('porto')">
+      <div class="card-header"><div class="card-icon">🍷</div><div class="card-title-block"><div class="card-name">Vinho do Porto</div><div class="card-type">Tawny · Branco · 10 Anos</div><div class="card-hint">Clica para ver receita</div></div><div class="diff-badge diff-easy">Fácil</div></div>
+    </div>
+    <div class="card" onclick="openPopup('medronho')">
+      <div class="card-header"><div class="card-icon">🌿</div><div class="card-title-block"><div class="card-name">Medronho Ambre</div><div class="card-type">Aguardente do Algarve</div><div class="card-hint">Clica para ver receita</div></div><div class="diff-badge diff-easy">Fácil</div></div>
+    </div>
   </div>
-  <div class="grid">
 
-    <!-- REGRA GERAL LICORES -->
-    <div class="card" style="grid-column: 1 / -1;">
-      <div class="card-header">
-        <div class="card-icon">📋</div>
-        <div class="card-title-block">
-          <div class="card-name">Regra Geral — Todos os Licores</div>
-          <div class="card-type">Amarguinha · Licor Beirão · Disaronno · Genuína · Xarão · Brandy</div>
-        </div>
-        <div class="diff-badge diff-easy">Fácil</div>
-      </div>
-      <div class="card-body">
-        <div class="simple-serve">
-          Todos os licores seguem a mesma regra simples:<br><br>
-          <strong>1.</strong> Mede 6cl no jigger.<br>
-          <strong>2.</strong> Pergunta: <em>"Com gelo ou sem gelo?"</em><br>
-          <strong>3.</strong> Serve num copo baixo (rocks) — com ou sem gelo, conforme pedido.<br>
-          <strong>4.</strong> Nunca serves mais de 6cl sem o cliente pedir dose dupla.<br><br>
-          <strong>Temperatura:</strong> Licores de ervas (Licor Beirão, Xarão) ficam bem ligeiramente frios. Licores de fruta (Amarguinha, Disaronno) ficam bem à temperatura ambiente ou com 1 cubo.
-        </div>
-      </div>
+  <div class="grid" id="licores-simples" style="display:none;">
+    <div class="simple-card" onclick="openPopup('s-beirao-gelo')">
+      <div class="card-header"><div class="card-icon">🌿</div><div class="card-title-block"><div class="card-name">Licor Beirão</div><div class="card-type">Com gelo</div></div><div class="simple-badge">Simples</div></div>
     </div>
-
-    <!-- KAHLUA -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-icon">☕</div>
-        <div class="card-title-block">
-          <div class="card-name">Kahlúa</div>
-          <div class="card-type">Licor de café · Com gelo</div>
-        </div>
-        <div class="diff-badge diff-easy">Fácil</div>
-      </div>
-      <div class="card-body">
-        <div class="ing-title">O que precisas</div>
-        <ul class="ing-list">
-          <li><span class="ing-amount">6cl</span> Kahlúa Coffee Liqueur</li>
-          <li><span class="ing-amount">Gelo</span> ou leite (opcional)</li>
-        </ul>
-        <div class="steps-title">Como servir</div>
-        <ol class="steps">
-          <li><span class="step-num">1</span><span class="step-text"><strong>Puro com gelo:</strong> 6cl num copo rocks com 2-3 cubos. Muito bom assim.</span></li>
-          <li><span class="step-num">2</span><span class="step-text"><strong>Com leite/natas:</strong> 6cl + completar com leite frio. Fica tipo um White Russian simples.</span></li>
-          <li><span class="step-num">3</span><span class="step-text"><strong>Com café:</strong> Clientes às vezes pedem Kahlúa por cima do café expresso — verte os 6cl sobre o café quente.</span></li>
-        </ol>
-        <div class="tip"><strong>O Kahlúa é muito doce</strong> — some café para equilibrar. Perfeito como digestivo depois da sobremesa.</div>
-        <div class="glass-tag">🥃 Copo rocks ou caneca de café</div>
-      </div>
+    <div class="simple-card" onclick="openPopup('s-amarguinha-gelo')">
+      <div class="card-header"><div class="card-icon">🍑</div><div class="card-title-block"><div class="card-name">Amarguinha</div><div class="card-type">Com gelo ou puro</div></div><div class="simple-badge">Simples</div></div>
     </div>
-
-    <!-- PORTO 10 ANOS -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-icon">🍷</div>
-        <div class="card-title-block">
-          <div class="card-name">Vinho do Porto</div>
-          <div class="card-type">Tawny · Branco · 10 Anos</div>
-        </div>
-        <div class="diff-badge diff-easy">Fácil</div>
-      </div>
-      <div class="card-body">
-        <div class="ing-title">O que precisas</div>
-        <ul class="ing-list">
-          <li><span class="ing-amount">6cl</span> Porto escolhido</li>
-          <li><span class="ing-amount">Gelo</span> opcional (Porto Branco)</li>
-        </ul>
-        <div class="steps-title">Como servir</div>
-        <ol class="steps">
-          <li><span class="step-num">1</span><span class="step-text"><strong>Porto Tinto/Tawny:</strong> Serve num copo de porto pequeno ou copo de vinho, sem gelo, temperatura ambiente.</span></li>
-          <li><span class="step-num">2</span><span class="step-text"><strong>Porto Branco:</strong> Podes servir ligeiramente fresco, com ou sem gelo.</span></li>
-          <li><span class="step-num">3</span><span class="step-text"><strong>Porto 10 Anos:</strong> Serve como o tinto, em copo apropriado. É mais nobre — trata com cuidado.</span></li>
-        </ol>
-        <div class="tip"><strong>Porto Tónico</strong> é muito popular: 6cl Porto Branco + tónica + gelo + fatia de limão. Perfeito como aperitivo ou digestivo.</div>
-        <div class="glass-tag">🍷 Copo de porto ou copo de vinho pequeno</div>
-      </div>
-    </div>
-
-    <!-- MEDRONHO -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-icon">🌿</div>
-        <div class="card-title-block">
-          <div class="card-name">Medronho — Ambre</div>
-          <div class="card-type">Aguardente do Algarve</div>
-        </div>
-        <div class="diff-badge diff-easy">Fácil</div>
-      </div>
-      <div class="card-body">
-        <div class="ing-title">O que precisas</div>
-        <ul class="ing-list">
-          <li><span class="ing-amount">6cl</span> Aguardente de Medronho Ambre</li>
-        </ul>
-        <div class="steps-title">Como servir</div>
-        <ol class="steps">
-          <li><span class="step-num">1</span><span class="step-text">Serve SEMPRE puro, sem gelo e à temperatura ambiente.</span></li>
-          <li><span class="step-num">2</span><span class="step-text">Usa um copo de shot ou copo pequeno de aguardente.</span></li>
-          <li><span class="step-num">3</span><span class="step-text">Mede bem os 6cl — é forte (40%+ vol.) e caro.</span></li>
-        </ol>
-        <div class="tip"><strong>Aguardente regional.</strong> O medronho é típico do Algarve — podes sempre mencionar isso ao cliente como curiosidade. Serve-se após a refeição, nunca antes.</div>
-        <div class="glass-tag">🥃 Copo de aguardente ou shot</div>
-      </div>
-    </div>
-
   </div>
-</div>
-</div>
+</div></div>
 
-<!-- ══════════════ VINHO & PORTO ══════════════ -->
+<!-- ════════════ VINHO ════════════ -->
 <div class="page" id="vinho">
 <div class="wrapper">
-  <div class="sec-title">
-    <h2>🍷 Vinho & Espumante</h2>
-    <p>Como servir corretamente</p>
-    <div class="rule"></div>
+  <div class="sec-title"><h2>🍷 Vinho & Porto</h2><p>Como servir corretamente</p><div class="rule"></div></div>
+
+  <div class="grid" id="vinho-completo">
+    <div class="card" onclick="openPopup('vinho-tinto-branco')">
+      <div class="card-header"><div class="card-icon">🍷</div><div class="card-title-block"><div class="card-name">Vinho Tinto / Branco</div><div class="card-type">Copo ou garrafa</div><div class="card-hint">Clica para ver receita</div></div><div class="diff-badge diff-easy">Fácil</div></div>
+    </div>
+    <div class="card" onclick="openPopup('espumante')">
+      <div class="card-header"><div class="card-icon">🥂</div><div class="card-title-block"><div class="card-name">Espumante / Champanhe</div><div class="card-type">Como abrir e servir</div><div class="card-hint">Clica para ver receita</div></div><div class="diff-badge diff-easy">Fácil</div></div>
+    </div>
+    <div class="card" onclick="openPopup('frisante')">
+      <div class="card-header"><div class="card-icon">🫧</div><div class="card-title-block"><div class="card-name">Vinho Frisante</div><div class="card-type">Rosa dos Leitões Frisante</div><div class="card-hint">Clica para ver receita</div></div><div class="diff-badge diff-easy">Fácil</div></div>
+    </div>
   </div>
-  <div class="grid">
 
-    <div class="card">
-      <div class="card-header">
-        <div class="card-icon">🍷</div>
-        <div class="card-title-block">
-          <div class="card-name">Vinho Tinto / Branco</div>
-          <div class="card-type">Copo ou garrafa</div>
-        </div>
-        <div class="diff-badge diff-easy">Fácil</div>
-      </div>
-      <div class="card-body">
-        <div class="steps-title">Regras de ouro</div>
-        <ol class="steps">
-          <li><span class="step-num">1</span><span class="step-text"><strong>Copo de tinto:</strong> Serve 15cl (mede no jigger ou usa marcação do copo). Temperatura ambiente. Nunca com gelo.</span></li>
-          <li><span class="step-num">2</span><span class="step-text"><strong>Copo de branco:</strong> Serve frio, 15cl. Mantém a garrafa no balde de gelo à mesa.</span></li>
-          <li><span class="step-num">3</span><span class="step-text"><strong>Garrafa na mesa:</strong> Mostra o rótulo ao cliente antes de abrir. Abre, verte um pouco para o cliente provar, espera aprovação, depois serves todos.</span></li>
-          <li><span class="step-num">4</span><span class="step-text"><strong>Branco/Rosé:</strong> Serve sempre no balde com gelo para manter frio.</span></li>
-        </ol>
-        <div class="tip"><strong>Nunca enches o copo de vinho até ao topo</strong> — só até 1/3 ou metade. O vinho precisa de espaço para respirar e para se poder cheirar.</div>
-        <div class="glass-tag">🍷 Copo de vinho (não usa highball)</div>
-      </div>
+  <div class="grid" id="vinho-simples" style="display:none;">
+    <div class="simple-card" onclick="openPopup('s-copo-vinho')">
+      <div class="card-header"><div class="card-icon">🍷</div><div class="card-title-block"><div class="card-name">Copo de Vinho</div><div class="card-type">Tinto ou Branco da Casa</div></div><div class="simple-badge">Simples</div></div>
     </div>
-
-    <div class="card">
-      <div class="card-header">
-        <div class="card-icon">🥂</div>
-        <div class="card-title-block">
-          <div class="card-name">Espumante / Champanhe</div>
-          <div class="card-type">Como abrir e servir</div>
-        </div>
-        <div class="diff-badge diff-med">Médio</div>
-      </div>
-      <div class="card-body">
-        <div class="steps-title">Como abrir sem acidentes</div>
-        <ol class="steps">
-          <li><span class="step-num">1</span><span class="step-text">Mantém a garrafa fria — nunca abres espumante quente.</span></li>
-          <li><span class="step-num">2</span><span class="step-text">Remove o papel de alumínio e a gaiola metálica (mantém o polegar por cima da rolha durante este passo).</span></li>
-          <li><span class="step-num">3</span><span class="step-text">Segura a rolha com uma mão e roda a GARRAFA (não a rolha) lentamente com a outra.</span></li>
-          <li><span class="step-num">4</span><span class="step-text">Deixa a rolha sair devagar — deve fazer "pshh" suave, não "pop" explosivo.</span></li>
-          <li><span class="step-num">5</span><span class="step-text">Inclina a taça a 45° e verte devagar pela parede para não fazer espuma.</span></li>
-        </ol>
-        <div class="tip"><strong>Regra:</strong> Roda a garrafa, não a rolha. Nunca aponta a rolha para pessoas. Champanhe fria abre mais facilmente e com menos espuma.</div>
-        <div class="glass-tag">🥂 Flute de espumante</div>
-      </div>
+    <div class="simple-card" onclick="openPopup('s-porto-gelo')">
+      <div class="card-header"><div class="card-icon">🍇</div><div class="card-title-block"><div class="card-name">Porto com Gelo</div><div class="card-type">Branco ou Tinto</div></div><div class="simple-badge">Simples</div></div>
     </div>
-
-    <div class="card">
-      <div class="card-header">
-        <div class="card-icon">🫧</div>
-        <div class="card-title-block">
-          <div class="card-name">Vinho Frisante</div>
-          <div class="card-type">Rosa dos Leitões Frisante</div>
-        </div>
-        <div class="diff-badge diff-easy">Fácil</div>
-      </div>
-      <div class="card-body">
-        <div class="steps-title">Como servir</div>
-        <ol class="steps">
-          <li><span class="step-num">1</span><span class="step-text">Serve sempre bem frio — mantém no frigorífico ou balde com gelo.</span></li>
-          <li><span class="step-num">2</span><span class="step-text">Abre igual ao espumante — devagar, sem explosão.</span></li>
-          <li><span class="step-num">3</span><span class="step-text">Serve na taça ou copo de vinho branco, inclinado, pela parede.</span></li>
-          <li><span class="step-num">4</span><span class="step-text">Enches até 2/3 do copo — não enches até ao topo.</span></li>
-        </ol>
-        <div class="tip"><strong>Frisante ≠ Espumante.</strong> O frisante tem menos pressão e menos gás. Mais fácil de abrir, mais fácil de servir.</div>
-        <div class="glass-tag">🍷 Copo de vinho ou flute</div>
-      </div>
-    </div>
-
   </div>
-</div>
-</div>
+</div></div>
 
-<!-- ══════════════ COCKTAILS ══════════════ -->
+<!-- ════════════ COCKTAILS ════════════ -->
 <div class="page" id="cocktails">
 <div class="wrapper">
-  <div class="sec-title">
-    <h2>🍸 Cocktails</h2>
-    <p>Os mais pedidos — passo a passo</p>
-    <div class="rule"></div>
-  </div>
-  <div class="grid">
+  <div class="sec-title"><h2>🍸 Cocktails</h2><p>Os mais pedidos — passo a passo</p><div class="rule"></div></div>
 
-    <!-- MOJITO -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-icon">🌿</div>
-        <div class="card-title-block">
-          <div class="card-name">Mojito</div>
-          <div class="card-type">O mais pedido do mundo</div>
-        </div>
-        <div class="diff-badge diff-med">Médio</div>
-      </div>
-      <div class="card-body">
-        <div class="ing-title">O que precisas</div>
-        <ul class="ing-list">
-          <li><span class="ing-amount">6cl</span> Bacardi Carta Blanca</li>
-          <li><span class="ing-amount">½</span> lima (cortada em 4)</li>
-          <li><span class="ing-amount">2 col.</span> açúcar branco</li>
-          <li><span class="ing-amount">8-10</span> folhas de hortelã</li>
-          <li><span class="ing-amount">Gelo</span> picado ou cubos</li>
-          <li><span class="ing-amount">Soda</span> ou água com gás (Pedras)</li>
-        </ul>
-        <div class="steps-title">Como fazer</div>
-        <ol class="steps">
-          <li><span class="step-num">1</span><span class="step-text">Coloca as folhas de hortelã no fundo do copo alto. <em>Não partas as folhas — só pressiona levemente com o pilão para libertar o aroma.</em></span></li>
-          <li><span class="step-num">2</span><span class="step-text">Adiciona o açúcar e os pedaços de lima. Esmaga suavemente.</span></li>
-          <li><span class="step-num">3</span><span class="step-text">Enche o copo com gelo até ao topo.</span></li>
-          <li><span class="step-num">4</span><span class="step-text">Verte os 6cl de Bacardi.</span></li>
-          <li><span class="step-num">5</span><span class="step-text">Completa com soda/água com gás até 1cm da borda. Mexe suavemente de baixo para cima.</span></li>
-          <li><span class="step-num">6</span><span class="step-text">Decora com um ramo de hortelã fresca em cima. Serve com palhinhas.</span></li>
-        </ol>
-        <div class="tip"><strong>Erro mais comum:</strong> rasgar demasiado a hortelã — fica verde e amargo. Esmaga com cuidado. A hortelã deve perfumar, não corar o drink.</div>
-        <div class="glass-tag">🥛 Copo highball alto</div>
-      </div>
+  <div class="grid" id="cocktails-completo">
+    <div class="card" onclick="openPopup('mojito')">
+      <div class="card-header"><div class="card-icon">🌿</div><div class="card-title-block"><div class="card-name">Mojito</div><div class="card-type">O mais pedido do mundo</div><div class="card-hint">Clica para ver receita</div></div><div class="diff-badge diff-med">Médio</div></div>
     </div>
-
-    <!-- ESPRESSO MARTINI -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-icon">☕</div>
-        <div class="card-title-block">
-          <div class="card-name">Espresso Martini</div>
-          <div class="card-type">Vodka + Kahlúa + Café</div>
-        </div>
-        <div class="diff-badge diff-med">Médio</div>
-      </div>
-      <div class="card-body">
-        <div class="ing-title">O que precisas</div>
-        <ul class="ing-list">
-          <li><span class="ing-amount">4cl</span> Vodka (Smirnoff)</li>
-          <li><span class="ing-amount">3cl</span> Kahlúa</li>
-          <li><span class="ing-amount">3cl</span> Café expresso frio</li>
-          <li><span class="ing-amount">Gelo</span> para o shaker</li>
-        </ul>
-        <div class="steps-title">Como fazer</div>
-        <ol class="steps">
-          <li><span class="step-num">1</span><span class="step-text">Faz um café expresso. Deixa arrefecer 2-3 min (ou mete gelo no café para arrefecer rápido).</span></li>
-          <li><span class="step-num">2</span><span class="step-text">Enche o shaker com gelo até meio.</span></li>
-          <li><span class="step-num">3</span><span class="step-text">Adiciona a vodka, o Kahlúa e o café frio ao shaker.</span></li>
-          <li><span class="step-num">4</span><span class="step-text">Fecha bem o shaker e agita com força durante 15 segundos — é mesmo agitar forte.</span></li>
-          <li><span class="step-num">5</span><span class="step-text">Coa para uma taça de martini fria (sem gelo na taça).</span></li>
-          <li><span class="step-num">6</span><span class="step-text">Vai ter uma espuma bonita em cima — decora com 3 grãos de café.</span></li>
-        </ol>
-        <div class="tip"><strong>A espuma é o segredo.</strong> Só aparece se agitares bem e com força. Se não tiveres taça de martini, serves num copo de vinho — fica igualmente bem.</div>
-        <div class="glass-tag">🍸 Taça de Martini ou copo de vinho</div>
-      </div>
+    <div class="card" onclick="openPopup('espresso-martini')">
+      <div class="card-header"><div class="card-icon">☕</div><div class="card-title-block"><div class="card-name">Espresso Martini</div><div class="card-type">Vodka + Kahlúa + Café</div><div class="card-hint">Clica para ver receita</div></div><div class="diff-badge diff-med">Médio</div></div>
     </div>
-
-    <!-- SANGRIA -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-icon">🍓</div>
-        <div class="card-title-block">
-          <div class="card-name">Sangria</div>
-          <div class="card-type">Jarro para a mesa</div>
-        </div>
-        <div class="diff-badge diff-easy">Fácil</div>
-      </div>
-      <div class="card-body">
-        <div class="ing-title">O que precisas (1 jarro = 1L)</div>
-        <ul class="ing-list">
-          <li><span class="ing-amount">75cl</span> Vinho tinto (ou branco para Sangria Branca)</li>
-          <li><span class="ing-amount">10cl</span> Brandy ou Macieira</li>
-          <li><span class="ing-amount">1 lata</span> Sprite ou Fanta Laranja</li>
-          <li><span class="ing-amount">Fruta</span> laranja + maçã cortadas</li>
-          <li><span class="ing-amount">Gelo</span> abundante</li>
-          <li><span class="ing-amount">1 col.</span> açúcar (opcional)</li>
-        </ul>
-        <div class="steps-title">Como fazer</div>
-        <ol class="steps">
-          <li><span class="step-num">1</span><span class="step-text">Corta a fruta em rodelas finas e coloca no jarro.</span></li>
-          <li><span class="step-num">2</span><span class="step-text">Enche com o vinho.</span></li>
-          <li><span class="step-num">3</span><span class="step-text">Adiciona o Macieira/Brandy.</span></li>
-          <li><span class="step-num">4</span><span class="step-text">Adiciona o Sprite ou Fanta por cima.</span></li>
-          <li><span class="step-num">5</span><span class="step-text">Mexe bem. Junta muito gelo. Leva à mesa com copos e serve.</span></li>
-        </ol>
-        <div class="tip"><strong>Melhor feita com antecedência.</strong> Se sobrar, guarda no frigorífico sem gelo — o gelo só coloca na hora de servir para não diluir.</div>
-        <div class="glass-tag">🫙 Jarro de 1L + copos</div>
-      </div>
+    <div class="card" onclick="openPopup('sangria')">
+      <div class="card-header"><div class="card-icon">🍓</div><div class="card-title-block"><div class="card-name">Sangria</div><div class="card-type">Jarro para a mesa</div><div class="card-hint">Clica para ver receita</div></div><div class="diff-badge diff-easy">Fácil</div></div>
     </div>
-
-    <!-- CAIPIVODKA -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-icon">🍋</div>
-        <div class="card-title-block">
-          <div class="card-name">Caipivodka</div>
-          <div class="card-type">Caipirinha com Vodka</div>
-        </div>
-        <div class="diff-badge diff-med">Médio</div>
-      </div>
-      <div class="card-body">
-        <div class="ing-title">O que precisas</div>
-        <ul class="ing-list">
-          <li><span class="ing-amount">6cl</span> Vodka Smirnoff</li>
-          <li><span class="ing-amount">1</span> lima inteira</li>
-          <li><span class="ing-amount">2 col.</span> açúcar</li>
-          <li><span class="ing-amount">Gelo</span> picado</li>
-        </ul>
-        <div class="steps-title">Como fazer</div>
-        <ol class="steps">
-          <li><span class="step-num">1</span><span class="step-text">Corta a lima em 8 pedaços. Coloca no copo rocks.</span></li>
-          <li><span class="step-num">2</span><span class="step-text">Adiciona o açúcar. Esmaga bem com pilão.</span></li>
-          <li><span class="step-num">3</span><span class="step-text">Enche com gelo. Verte a vodka.</span></li>
-          <li><span class="step-num">4</span><span class="step-text">Mexe bem. Serve com palinha curta.</span></li>
-        </ol>
-        <div class="tip"><strong>É exatamente igual à Caipirinha</strong> mas em vez de cachaça usa vodka. Mais suave no sabor, muito pedida.</div>
-        <div class="glass-tag">🥃 Copo rocks</div>
-      </div>
+    <div class="card" onclick="openPopup('caipivodka')">
+      <div class="card-header"><div class="card-icon">🍋</div><div class="card-title-block"><div class="card-name">Caipivodka</div><div class="card-type">Caipirinha com Vodka</div><div class="card-hint">Clica para ver receita</div></div><div class="diff-badge diff-med">Médio</div></div>
     </div>
-
-    <!-- GIN FIZZ -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-icon">🍸</div>
-        <div class="card-title-block">
-          <div class="card-name">Gin Fizz</div>
-          <div class="card-type">Gin + Lima + Soda</div>
-        </div>
-        <div class="diff-badge diff-med">Médio</div>
-      </div>
-      <div class="card-body">
-        <div class="ing-title">O que precisas</div>
-        <ul class="ing-list">
-          <li><span class="ing-amount">6cl</span> Citadelle Original</li>
-          <li><span class="ing-amount">3cl</span> Sumo de lima (½ lima)</li>
-          <li><span class="ing-amount">1 col.</span> açúcar ou xarope de açúcar</li>
-          <li><span class="ing-amount">Soda</span> / água com gás</li>
-          <li><span class="ing-amount">Gelo</span></li>
-        </ul>
-        <div class="steps-title">Como fazer</div>
-        <ol class="steps">
-          <li><span class="step-num">1</span><span class="step-text">No shaker com gelo: gin + sumo de lima + açúcar. Agita bem (10 seg).</span></li>
-          <li><span class="step-num">2</span><span class="step-text">Coa para um copo alto com gelo fresco.</span></li>
-          <li><span class="step-num">3</span><span class="step-text">Completa com soda fria. Mexe uma vez.</span></li>
-          <li><span class="step-num">4</span><span class="step-text">Decora com fatia de lima.</span></li>
-        </ol>
-        <div class="tip"><strong>Fresco e levinho.</strong> Ótimo para quem quer algo diferente do gin tónico clássico. Menos amargo, mais cítrico.</div>
-        <div class="glass-tag">🥛 Copo highball</div>
-      </div>
+    <div class="card" onclick="openPopup('gin-fizz')">
+      <div class="card-header"><div class="card-icon">🍸</div><div class="card-title-block"><div class="card-name">Gin Fizz</div><div class="card-type">Gin + Lima + Soda</div><div class="card-hint">Clica para ver receita</div></div><div class="diff-badge diff-med">Médio</div></div>
     </div>
-
-    <!-- RUM COLA PLANTATION -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-icon">🌴</div>
-        <div class="card-title-block">
-          <div class="card-name">Rum Ginger</div>
-          <div class="card-type">Plantation + Ginger Beer</div>
-        </div>
-        <div class="diff-badge diff-easy">Fácil</div>
-      </div>
-      <div class="card-body">
-        <div class="ing-title">O que precisas</div>
-        <ul class="ing-list">
-          <li><span class="ing-amount">6cl</span> Plantation Rum</li>
-          <li><span class="ing-amount">½ garr.</span> Fever-Tree Ginger Beer (se disponível) ou Sprite</li>
-          <li><span class="ing-amount">Gelo</span></li>
-          <li><span class="ing-amount">1 fatia</span> lima</li>
-        </ul>
-        <div class="steps-title">Como fazer</div>
-        <ol class="steps">
-          <li><span class="step-num">1</span><span class="step-text">Enche copo alto com gelo.</span></li>
-          <li><span class="step-num">2</span><span class="step-text">Verte o Plantation Rum.</span></li>
-          <li><span class="step-num">3</span><span class="step-text">Completa com Ginger Beer ou Sprite pela parede.</span></li>
-          <li><span class="step-num">4</span><span class="step-text">Espreme a lima, coloca no copo. Mexe levemente.</span></li>
-        </ol>
-        <div class="tip"><strong>Rum premium merece mistura premium.</strong> A Ginger Beer realça as notas do Plantation melhor do que a cola.</div>
-        <div class="glass-tag">🥛 Copo highball</div>
-      </div>
+    <div class="card" onclick="openPopup('rum-ginger')">
+      <div class="card-header"><div class="card-icon">🌴</div><div class="card-title-block"><div class="card-name">Rum Ginger</div><div class="card-type">Plantation + Ginger Beer</div><div class="card-hint">Clica para ver receita</div></div><div class="diff-badge diff-easy">Fácil</div></div>
     </div>
-
   </div>
 
-  <!-- GLOSSARIO -->
+  <div class="grid" id="cocktails-simples" style="display:none;">
+    <div class="simple-card" onclick="openPopup('s-sangria-simples')">
+      <div class="card-header"><div class="card-icon">🍓</div><div class="card-title-block"><div class="card-name">Sangria Express</div><div class="card-type">Vinho + Sprite + Fruta + Gelo</div></div><div class="simple-badge">Simples</div></div>
+    </div>
+    <div class="simple-card" onclick="openPopup('s-limonada-vodka')">
+      <div class="card-header"><div class="card-icon">🍋</div><div class="card-title-block"><div class="card-name">Vodka Limonada</div><div class="card-type">Vodka + Limonada da Casa</div></div><div class="simple-badge">Simples</div></div>
+    </div>
+  </div>
+
   <div class="cat-divider">Glossário rápido</div>
-  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;">
+  <div class="gloss-grid">
     <div class="simple-serve"><strong>🧊 On the Rocks</strong><br>Com gelo no copo</div>
     <div class="simple-serve"><strong>🍸 Shaker</strong><br>Coqueteleira — agita os ingredientes com gelo</div>
     <div class="simple-serve"><strong>📏 Jigger</strong><br>Medidor de doses (6cl / 3cl)</div>
     <div class="simple-serve"><strong>🌿 Muddling</strong><br>Esmagar ingredientes com pilão</div>
     <div class="simple-serve"><strong>🫧 Coar</strong><br>Filtrar o gelo ao verter do shaker</div>
-    <div class="simple-serve"><strong>🍋 Twist</strong><br>Tira de casca de fruta usada como decoração</div>
+    <div class="simple-serve"><strong>🍋 Twist</strong><br>Tira de casca de fruta para decorar</div>
     <div class="simple-serve"><strong>🥛 Highball</strong><br>Copo alto e estreito</div>
     <div class="simple-serve"><strong>🥃 Rocks glass</strong><br>Copo baixo e largo</div>
   </div>
+</div></div>
 
-</div>
+<!-- ════════════ POPUP ════════════ -->
+<div class="overlay" id="overlay" onclick="closeOnBg(event)">
+  <div class="overlay-bg"></div>
+  <div class="popup" id="popup">
+    <div class="popup-handle"></div>
+    <button class="popup-close" onclick="closePopup()">✕</button>
+    <div class="popup-header">
+      <div class="popup-icon" id="p-icon"></div>
+      <div><div class="popup-title" id="p-title"></div><div class="popup-type" id="p-type"></div></div>
+    </div>
+    <div class="popup-body" id="p-body"></div>
+  </div>
 </div>
 
 <script>
-  function show(id, el) {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-    el.classList.add('active');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+// ── NAVEGAÇÃO ──
+let currentMenu = 'completo';
+
+function show(id, el) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  el.classList.add('active');
+  applyMenuMode(id);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function setMenu(mode) {
+  currentMenu = mode;
+  document.getElementById('btn-completo').classList.toggle('active', mode === 'completo');
+  document.getElementById('btn-simples').classList.toggle('active', mode === 'simples');
+  const activeTab = document.querySelector('.nav-tab.active');
+  if (activeTab) {
+    const pageId = activeTab.getAttribute('onclick').match(/'([^']+)'/)[1];
+    applyMenuMode(pageId);
   }
+}
+
+function applyMenuMode(pageId) {
+  const completo = document.getElementById(pageId + '-completo');
+  const simples  = document.getElementById(pageId + '-simples');
+  if (completo) completo.style.display = currentMenu === 'completo' ? 'grid' : 'none';
+  if (simples)  simples.style.display  = currentMenu === 'simples'  ? 'grid' : 'none';
+}
+
+// ── POPUP ──
+const recipes = {
+
+  // ── GIN ──
+  'citadelle-original': { icon:'🫙', title:'Citadelle Original', type:'Gin Puro · Dose · Fácil',
+    html: ing([['6cl','Citadelle Original'],['Gelo','em cubos']]) +
+          steps(['Pega num copo baixo (rocks glass).','Enche o copo com gelo até ao topo.','Verte 6cl de Citadelle por cima do gelo.','Serve ao cliente. Simples assim.']) +
+          tip('Se o cliente quiser gin tónico, adiciona uma tónica Fever-Tree e uma fatia de limão.') + glass('🥃 Copo rocks ou gin balloon') },
+
+  'gin-tonico': { icon:'🍋', title:'Gin Tónico', type:'Citadelle + Fever-Tree · Fácil',
+    html: ing([['6cl','Citadelle (qualquer variante)'],['1 garr.','Tónica Fever-Tree'],['Gelo','abundante'],['1 fatia','limão ou laranja']]) +
+          steps(['Enche o copo balloon com gelo até ao topo.','Verte os 6cl de gin devagar pelo gelo.','Adiciona a tónica pela parede do copo — não perdes as bolhas.','Mexe UMA vez, levemente, de baixo para cima.','Coloca a fatia de limão na borda.']) +
+          tip('<strong>Regra de ouro:</strong> Não meças a tónica — enche o copo até 1cm da borda.') + glass('🥂 Copo balloon grande') },
+
+  'citadelle-rouge': { icon:'🍊', title:'Citadelle Rouge', type:'Gin especial · Serve premium · Fácil',
+    html: ing([['6cl','Citadelle Rouge'],['1 garr.','Tónica Fever-Tree Mediterranean'],['Gelo','abundante'],['1 fatia','laranja']]) +
+          steps(['Enche bem o copo balloon com gelo.','Verte o gin por cima.','Adiciona a tónica mediterrânea — tem sabor mais suave.','Decora com fatia de laranja.']) +
+          tip('<strong>Porquê laranja?</strong> O Rouge é envelhecido em barrica com toques frutados. A laranja realça.') + glass('🥂 Copo balloon grande') },
+
+  'gin-biologico': { icon:'🌱', title:'Gin Biológico', type:'Gin português artesanal · Fácil',
+    html: ing([['6cl','Gin Biológico'],['1 garr.','Tónica Fever-Tree'],['Gelo','abundante'],['1 ramo','alecrim (se disponível)']]) +
+          steps(['Enche o copo balloon com bastante gelo.','Verte os 6cl de Gin Biológico.','Adiciona a tónica pela parede do copo.','Se tiveres alecrim, coloca um ramo dentro do copo.']) +
+          tip('<strong>Dica:</strong> É português e biológico — menciona-o ao cliente, adoram saber.') + glass('🥂 Copo balloon') },
+
+  's-gin-tonico': { icon:'🍃', title:'Gin Tónico Simples', type:'Gin Biológico + Tónica · Simples',
+    html: ing([['6cl','Gin Biológico'],['1 garr.','Tónica (qualquer)'],['Gelo','em cubos']]) +
+          steps(['Enche o copo com gelo.','Verte o gin.','Completa com tónica. Mexe uma vez.']) +
+          tip('Versão rápida para quando não há Fever-Tree disponível.') + glass('🥂 Copo balloon ou highball') },
+
+  's-gin-limao': { icon:'🍃', title:'Gin com Sumo', type:'Gin + Limonada · Simples',
+    html: ing([['6cl','Gin Biológico'],['Metade','copo de limonada da casa'],['Gelo','em cubos'],['1 fatia','limão']]) +
+          steps(['Enche o copo com gelo.','Verte o gin.','Completa com a limonada. Coloca o limão na borda.']) +
+          tip('Ótimo quando o stock de tónica está em baixo — suave e fresco.') + glass('🥛 Copo highball') },
+
+  // ── RUM ──
+  'bacardi-puro': { icon:'🥃', title:'Bacardi Puro', type:'Rum branco · Dose simples · Fácil',
+    html: ing([['6cl','Bacardi Carta Blanca'],['Gelo','opcional']]) +
+          steps(['Pergunta ao cliente: com gelo ou sem?','Mede 6cl no jigger e verte no copo.','Se com gelo, coloca 2-3 cubos primeiro.']) +
+          tip('O Bacardi branco é a base de Mojito, Cuba Libre e Caipirinha. Se pede rum com cola, usa este.') + glass('🥃 Copo rocks') },
+
+  'cuba-libre': { icon:'🥤', title:'Cuba Libre', type:'Rum + Cola + Lima · Fácil',
+    html: ing([['6cl','Bacardi Carta Blanca'],['1 lata','Coca Cola'],['½','lima (ou limão)'],['Gelo','abundante']]) +
+          steps(['Enche o copo alto com gelo.','Espreme metade da lima por cima do gelo.','Verte os 6cl de Bacardi.','Enche com Coca Cola pela parede do copo.','Mexe levemente. Coloca uma fatia de lima na borda.']) +
+          tip('<strong>Diferença do Rum Cola:</strong> O Cuba Libre leva lima espremida. Rum com Cola não leva.') + glass('🥛 Copo highball') },
+
+  'plantation': { icon:'🌴', title:'Plantation Rum', type:'Rum premium · Serve lento · Fácil',
+    html: ing([['6cl','Plantation Rum'],['Gelo','1-2 cubos grandes (opcional)']]) +
+          steps(['Serve num copo rocks limpo e seco.','Mede 6cl e verte.','Serve preferencialmente puro ou com 1 cubo grande.']) +
+          tip('<strong>É rum premium.</strong> Serve como se fosse um bom whisky — copo correto, pouco ou nenhum gelo.') + glass('🥃 Snifter ou copo rocks') },
+
+  'caipirinha': { icon:'🍋', title:'Caipirinha', type:'Cachaça 51 · Cocktail clássico · Médio',
+    html: ing([['6cl','Cachaça 51'],['1','lima inteira'],['2 col.','açúcar branco'],['Gelo','picado ou cubos']]) +
+          steps(['Corta a lima em 8 pedaços. Coloca no copo rocks.','Adiciona 2 colheres de açúcar.','Com o pilão, esmaga bem — sem rasgar a casca, só para soltar o sumo.','Enche o copo com gelo.','Verte os 6cl de cachaça por cima.','Mexe bem com colher longa até o açúcar dissolver.']) +
+          tip('<strong>Segredo:</strong> Esmaga a lima com cuidado — se partir a casca fica amargo. Menos é mais.') + glass('🥃 Copo rocks') },
+
+  's-rum-cola': { icon:'🥤', title:'Rum Cola', type:'Bacardi + Coca Cola · Simples',
+    html: ing([['6cl','Bacardi'],['1 lata','Coca Cola'],['Gelo','abundante']]) +
+          steps(['Gelo no copo.','Rum por cima.','Completa com cola pela parede. Mexe uma vez.']) +
+          tip('O mais básico. Rápido, sem erro.') + glass('🥛 Copo highball') },
+
+  's-rum-sprite': { icon:'🫧', title:'Rum Sprite', type:'Bacardi + Sprite + Lima · Simples',
+    html: ing([['6cl','Bacardi'],['1 lata','Sprite'],['½','limão'],['Gelo','abundante']]) +
+          steps(['Gelo no copo.','Rum por cima.','Espreme o limão.','Completa com Sprite. Mexe uma vez.']) +
+          tip('Alternativa mais leve ao Cuba Libre — suave e fresco.') + glass('🥛 Copo highball') },
+
+  // ── WHISKY ──
+  'whisky-puro': { icon:'🥃', title:'Whisky Puro / On the Rocks', type:'Todos os whiskys · Fácil',
+    html: ing([['6cl','Whisky escolhido'],['Gelo','a pedido do cliente']]) +
+          steps(['"Com gelo, com água ou puro?" — pergunta sempre.','Se com gelo: 2-3 cubos no copo, depois o whisky.','Se puro: mede 6cl e serve direto.','Nunca enches o copo — 6cl é a dose.']) +
+          tip('<strong>Cardhu é Single Malt</strong> — serve preferencialmente puro. JB e Jameson funcionam bem on the rocks.') + glass('🥃 Copo rocks ou tumbler') },
+
+  'whisky-cola': { icon:'🥤', title:'Whisky Cola', type:'Jack & Coke style · Fácil',
+    html: ing([['6cl','Whisky (JB, Jameson, etc.)'],['1 lata','Coca Cola'],['Gelo','abundante'],['1 fatia','limão (opcional)']]) +
+          steps(['Enche o copo alto com gelo.','Verte os 6cl de whisky por cima.','Completa com Coca Cola pela parede.','Mexe uma vez, gentilmente. Serve com palinha.']) +
+          tip('<strong>Proporção:</strong> 1 parte whisky para 3 cola. Nunca deixes a cola cair de cima — perde as bolhas.') + glass('🥛 Copo highball') },
+
+  'cardhu': { icon:'🏔️', title:'Cardhu 12 Anos', type:'Single Malt · Serve premium · Fácil',
+    html: ing([['6cl','Cardhu 12 Anos'],['Opcional','1 pedra de gelo grande']]) +
+          steps(['Usa sempre um copo rocks limpo e seco.','Mede exatamente 6cl.','Serve puro ou com 1 cubo grande — nunca vários cubos pequenos.','Não adiciones cola, sumo nem mistura.']) +
+          tip('<strong>É o whisky mais caro do bar.</strong> Copo certo, dose medida, serve calmo. O cliente que o pede sabe apreciá-lo.') + glass('🥃 Copo rocks / crystal tumbler') },
+
+  's-whisky-cola': { icon:'🥤', title:'Whisky Cola', type:'JB / Jameson + Coca Cola · Simples',
+    html: ing([['6cl','JB ou Jameson'],['1 lata','Coca Cola'],['Gelo','em cubos']]) +
+          steps(['Gelo no copo.','Whisky por cima.','Completa com cola. Mexe uma vez.']) +
+          tip('Clássico do bar. Rápido e sem falhas.') + glass('🥛 Copo highball') },
+
+  's-whisky-gelo': { icon:'🧊', title:'Whisky On the Rocks', type:'Qualquer whisky + Gelo · Simples',
+    html: ing([['6cl','Whisky (à escolha)'],['3 cubos','Gelo']]) +
+          steps(['3 cubos de gelo no copo.','Verte 6cl de whisky por cima.','Serve imediatamente.']) +
+          tip('Pergunta sempre que whisky o cliente prefere antes de servir.') + glass('🥃 Copo rocks') },
+
+  // ── VODKA ──
+  'vodka-pura': { icon:'❄️', title:'Vodka Pura', type:'Smirnoff / Three Sixty · Fácil',
+    html: ing([['6cl','Vodka'],['Gelo','a pedido']]) +
+          steps(['Mede 6cl no jigger.','Serve num copo rocks com ou sem gelo conforme pedido.','Serve bem fria — se a garrafa estiver no frigorífico, melhor.']) +
+          tip('<strong>Vodka fria = melhor vodka.</strong> Mantém a garrafa no frigorífico ou num balde com gelo.') + glass('🥃 Shot glass ou copo rocks') },
+
+  'vodka-tonica': { icon:'🫧', title:'Vodka Tónica', type:'Vodka + Fever-Tree · Fácil',
+    html: ing([['6cl','Vodka (Smirnoff ou Three Sixty)'],['1 garr.','Tónica Fever-Tree'],['Gelo','abundante'],['1 fatia','limão']]) +
+          steps(['Enche o copo alto com gelo.','Verte a vodka por cima.','Adiciona a tónica pela parede do copo.','Mexe suavemente uma vez. Decora com limão.']) +
+          tip('<strong>Mais leve que gin tónico.</strong> Boa opção para quem não gosta do sabor intenso do gin.') + glass('🥛 Copo highball') },
+
+  'vodka-cola': { icon:'🥤', title:'Vodka Cola', type:'Clássico de bar · Fácil',
+    html: ing([['6cl','Vodka'],['1 lata','Coca Cola'],['Gelo','abundante']]) +
+          steps(['Enche o copo alto com gelo.','Verte a vodka.','Completa com Coca Cola pela parede. Mexe uma vez.']) +
+          tip('<strong>Simples e muito pedido.</strong> Rápido de fazer, não tem erro.') + glass('🥛 Copo highball') },
+
+  's-vodka-laranja': { icon:'🍊', title:'Vodka Laranja', type:'Vodka + Sumo Natural · Simples',
+    html: ing([['6cl','Vodka'],['1 copo','Sumo de laranja natural'],['Gelo','em cubos']]) +
+          steps(['Gelo no copo.','Vodka por cima.','Completa com sumo de laranja. Mexe uma vez.']) +
+          tip('Chiadapiece clássica. Se tiver sumo natural ainda melhor.') + glass('🥛 Copo highball') },
+
+  's-vodka-limonada': { icon:'🍋', title:'Vodka Limonada', type:'Vodka + Limonada · Simples',
+    html: ing([['6cl','Vodka'],['1 copo','Limonada da casa'],['Gelo','em cubos'],['1 fatia','limão']]) +
+          steps(['Gelo no copo.','Vodka por cima.','Completa com a limonada. Limão na borda.']) +
+          tip('Refrescante e fácil. Perfeito para o verão no Algarve.') + glass('🥛 Copo highball') },
+
+  // ── APERITIVOS ──
+  'aperol-spritz': { icon:'🍊', title:'Aperol Spritz', type:'O cocktail do verão · Fácil',
+    html: ing([['6cl','Aperol'],['9cl','Espumante seco'],['3cl','Água com gás'],['Gelo','em cubos'],['1 fatia','laranja']]) +
+          steps(['Enche o copo de vinho grande com gelo.','Verte 9cl de espumante primeiro — sempre o espumante antes do Aperol.','Adiciona 6cl de Aperol.','Adiciona um splash de água com gás (3cl).','Mexe UMA vez, devagar. Coloca a fatia de laranja.']) +
+          tip('<strong>Regra 3-2-1:</strong> 3 partes espumante, 2 Aperol, 1 água com gás. O mais pedido no verão no Algarve.') + glass('🍷 Copo de vinho grande') },
+
+  'martini': { icon:'🍸', title:'Martini', type:'Bianco / Rosso / Extra Dry · Fácil',
+    html: ing([['6cl','Martini (Bianco, Rosso, ou Extra Dry)'],['Gelo','em cubos'],['1 fatia','laranja ou limão']]) +
+          steps(['Serve num copo de vinho ou rocks com gelo.','Mede 6cl e verte por cima do gelo.','Decora com laranja (Bianco/Rosso) ou limão (Extra Dry).']) +
+          tip('<strong>Bianco</strong> = branco doce · <strong>Rosso</strong> = vermelho ligeiramente amargo · <strong>Extra Dry</strong> = branco seco. Pergunta sempre.') + glass('🍷 Copo de vinho ou rocks') },
+
+  'ricard': { icon:'⭐', title:'Ricard', type:'Pastis francês · Aperitivo clássico · Fácil',
+    html: ing([['6cl','Ricard'],['~12cl','Água fria'],['Gelo','opcional']]) +
+          steps(['Verte os 6cl de Ricard no copo alto.','Adiciona água fria na proporção 1:2 — vai ficar turvo/amarelado, é normal.','Gelo à parte ou dentro, conforme preferência.']) +
+          tip('<strong>O Ricard fica turvo com água</strong> — é exatamente assim que deve ficar. Nunca o serves puro.') + glass('🥛 Copo highball') },
+
+  'moscatel-tonico': { icon:'🍇', title:'Moscatel Tónico', type:'Porto Tónico style · Fácil',
+    html: ing([['6cl','Moscatel Favaios'],['½ garr.','Tónica Fever-Tree'],['Gelo','em cubos'],['Raspa','de limão (opcional)']]) +
+          steps(['Enche o copo de vinho com gelo.','Verte o Moscatel.','Completa com meia garrafa de tónica, devagar pela parede.','Decora com rodela de limão ou raspa de casca.']) +
+          tip('<strong>Drink português e elegante</strong> — perfeito como sugestão antes da refeição no verão.') + glass('🍷 Copo de vinho') },
+
+  's-aperol-simples': { icon:'🍊', title:'Aperol com Gelo', type:'Aperol + Sprite · Simples',
+    html: ing([['6cl','Aperol'],['½ lata','Sprite'],['Gelo','em cubos'],['1 fatia','laranja']]) +
+          steps(['Gelo no copo.','Aperol por cima.','Completa com Sprite. Laranja na borda.']) +
+          tip('Versão rápida sem espumante. Funciona bem.') + glass('🍷 Copo de vinho') },
+
+  's-martini-simples': { icon:'🍸', title:'Martini com Gelo', type:'Martini + Gelo + Limão · Simples',
+    html: ing([['6cl','Martini (à escolha)'],['Gelo','em cubos'],['1 fatia','limão']]) +
+          steps(['Gelo no copo.','Verte 6cl de Martini.','Coloca o limão na borda.']) +
+          tip('Pergunta se quer Bianco, Rosso ou Extra Dry.') + glass('🍷 Copo de vinho ou rocks') },
+
+  // ── LICORES ──
+  'regra-licores': { icon:'📋', title:'Regra Geral — Licores', type:'Amarguinha · Licor Beirão · Disaronno · Genuína · Xarão · Brandy',
+    html: `<div class="simple-serve">Todos os licores seguem a mesma regra:<br><br>
+      <strong>1.</strong> Mede 6cl no jigger.<br>
+      <strong>2.</strong> Pergunta: <em>"Com gelo ou sem gelo?"</em><br>
+      <strong>3.</strong> Serve num copo baixo (rocks) com ou sem gelo.<br>
+      <strong>4.</strong> Nunca serves mais de 6cl sem o cliente pedir dose dupla.<br><br>
+      <strong>Temperatura:</strong> Licores de ervas (Licor Beirão, Xarão) ficam bem ligeiramente frios. Licores de fruta (Amarguinha, Disaronno) ficam bem à temperatura ambiente ou com 1 cubo.
+    </div>` },
+
+  'kahlua': { icon:'☕', title:'Kahlúa', type:'Licor de café · Com gelo · Fácil',
+    html: ing([['6cl','Kahlúa Coffee Liqueur'],['Gelo','ou leite (opcional)']]) +
+          steps(['Serve num copo rocks com gelo.','Se o cliente quiser, podes adicionar um pouco de leite ou natas — fica tipo cocktail.','Também é a base do Espresso Martini.']) +
+          tip('Kahlúa com leite é muito pedido. Experimenta sugerir ao cliente.') + glass('🥃 Copo rocks') },
+
+  'porto': { icon:'🍷', title:'Vinho do Porto', type:'Tawny · Branco · 10 Anos · Fácil',
+    html: ing([['6cl','Porto (Branco, Tinto, ou 10 Anos)'],['Gelo','opcional'],['Tónica','para Porto Tónico (opcional)']]) +
+          steps(['Porto puro: mede 6cl, serve à temperatura ambiente.','Porto com gelo: 2 cubos no copo, verte o porto.','Porto Tónico: porto + tónica Fever-Tree + gelo + rodela de limão.']) +
+          tip('<strong>Porto 10 Anos</strong> é o mais premium — serve preferencialmente puro ou com 1 cubo.') + glass('🍷 Copo de porto ou rocks') },
+
+  'medronho': { icon:'🌿', title:'Medronho Ambre', type:'Aguardente do Algarve · Fácil',
+    html: ing([['6cl','Medronho Ambre'],['Gelo','opcional']]) +
+          steps(['Serve num copo rocks, à temperatura ambiente ou ligeiramente frio.','Nunca serve com mistura — é para beber puro.','Podes oferecer gelo à parte se o cliente preferir.']) +
+          tip('<strong>É aguardente regional do Algarve.</strong> Menciona que é local — os turistas adoram experimentar produtos da região.') + glass('🥃 Copo rocks') },
+
+  's-beirao-gelo': { icon:'🌿', title:'Licor Beirão', type:'Com gelo · Simples',
+    html: ing([['6cl','Licor Beirão'],['2-3 cubos','Gelo']]) +
+          steps(['Gelo no copo.','Verte 6cl de Licor Beirão.','Serve.']) +
+          tip('Um dos licores mais pedidos. Simples e sem erro.') + glass('🥃 Copo rocks') },
+
+  's-amarguinha-gelo': { icon:'🍑', title:'Amarguinha', type:'Com gelo ou puro · Simples',
+    html: ing([['6cl','Amarguinha'],['Gelo','opcional']]) +
+          steps(['Pergunta se quer com gelo ou puro.','Serve num copo rocks.']) +
+          tip('Licor de amêndoa amarga — muito popular no Algarve.') + glass('🥃 Copo rocks') },
+
+  // ── VINHO ──
+  'vinho-tinto-branco': { icon:'🍷', title:'Vinho Tinto / Branco', type:'Copo ou garrafa · Fácil',
+    html: ing([['15cl','Vinho (por copo)'],['75cl','Garrafa completa']]) +
+          steps(['Copo: usa sempre o copo correto — tinto em copo de vinho tinto, branco em copo de vinho branco.','Serve 15cl por copo — não enches até ao topo.','Garrafa: mostra o rótulo ao cliente antes de abrir.','Serve uma pequena prova ao cliente antes de encher os copos da mesa.']) +
+          tip('Vinho branco e espumante servem-se sempre frescos. Tinto à temperatura ambiente.') + glass('🍷 Copo de vinho adequado') },
+
+  'espumante': { icon:'🥂', title:'Espumante / Champanhe', type:'Como abrir e servir · Fácil',
+    html: ing([['1 garrafa','Espumante ou Champanhe frio']]) +
+          steps(['Mantém a garrafa fria até ao momento de servir.','Retira a gaiola de arame com cuidado, mantendo o polegar na rolha.','Segura a rolha com firmeza, roda a garrafa devagar — a rolha sai suavemente.','O som certo é um "puff" suave, não uma explosão.','Inclinao copo a 45° e verte devagar para não espumar em excesso.']) +
+          tip('<strong>Nunca apontes a garrafa para pessoas.</strong> Segura sempre com toalha de serviço.') + glass('🥂 Flûte ou copo de champanhe') },
+
+  'frisante': { icon:'🫧', title:'Vinho Frisante', type:'Rosa dos Leitões Frisante · Fácil',
+    html: ing([['75cl','Rosa dos Leitões Frisante (Branco / Rosé / Tinto)']]) +
+          steps(['Serve bem fresco.','Abre com cuidado — é um vinho com gás, pode sair com pressão.','Serve em copo de vinho, cerca de 15cl por copo.']) +
+          tip('O frisante da casa — sugere-o como alternativa a quem pede vinho com bolhas.') + glass('🍷 Copo de vinho') },
+
+  's-copo-vinho': { icon:'🍷', title:'Copo de Vinho', type:'Tinto ou Branco da Casa · Simples',
+    html: ing([['15cl','Vinho da casa (tinto ou branco)']]) +
+          steps(['Pergunta: tinto ou branco?','Serve 15cl no copo correto.']) +
+          tip('O mais pedido à refeição. Direto e sem complicação.') + glass('🍷 Copo de vinho') },
+
+  's-porto-gelo': { icon:'🍇', title:'Porto com Gelo', type:'Branco ou Tinto · Simples',
+    html: ing([['6cl','Vinho do Porto (branco ou tinto)'],['2 cubos','Gelo'],['1 fatia','limão (opcional)']]) +
+          steps(['Gelo no copo.','Verte 6cl de Porto.','Limão na borda se o cliente quiser.']) +
+          tip('Porto branco com gelo é especialmente popular como aperitivo no verão.') + glass('🥃 Copo rocks') },
+
+  // ── COCKTAILS ──
+  'mojito': { icon:'🌿', title:'Mojito', type:'O mais pedido do mundo · Médio',
+    html: ing([['6cl','Bacardi Carta Blanca'],['½','lima (cortada em 4)'],['2 col.','açúcar branco'],['8-10','folhas de hortelã'],['Gelo','picado ou cubos'],['Soda','ou água com gás']]) +
+          steps(['Coloca as folhas de hortelã no fundo do copo. Pressiona levemente com o pilão — não partas as folhas.','Adiciona o açúcar e os pedaços de lima. Esmaga suavemente.','Enche com gelo até ao topo.','Verte os 6cl de Bacardi.','Completa com soda até 1cm da borda. Mexe de baixo para cima.','Decora com um ramo de hortelã. Serve com palhinhas.']) +
+          tip('<strong>Erro mais comum:</strong> rasgar demasiado a hortelã — fica verde e amargo. A hortelã deve perfumar, não corar o drink.') + glass('🥛 Copo highball alto') },
+
+  'espresso-martini': { icon:'☕', title:'Espresso Martini', type:'Vodka + Kahlúa + Café · Médio',
+    html: ing([['4cl','Vodka (Smirnoff)'],['3cl','Kahlúa'],['3cl','Café expresso frio'],['Gelo','para o shaker']]) +
+          steps(['Faz um café expresso. Deixa arrefecer 2-3 min.','Enche o shaker com gelo até meio.','Adiciona a vodka, Kahlúa e café frio ao shaker.','Fecha e agita com força durante 15 segundos.','Coa para uma taça de martini fria (sem gelo na taça).','Vai ter espuma em cima — decora com 3 grãos de café.']) +
+          tip('<strong>A espuma é o segredo.</strong> Só aparece se agitares com força. Sem taça de martini, serves num copo de vinho.') + glass('🍸 Taça de Martini ou copo de vinho') },
+
+  'sangria': { icon:'🍓', title:'Sangria', type:'Jarro para a mesa · Fácil',
+    html: ing([['75cl','Vinho tinto (ou branco para Sangria Branca)'],['10cl','Brandy ou Macieira'],['1 lata','Sprite ou Fanta Laranja'],['Fruta','laranja + maçã cortadas'],['Gelo','abundante'],['1 col.','açúcar (opcional)']]) +
+          steps(['Corta a fruta em rodelas finas e coloca no jarro.','Enche com o vinho.','Adiciona o Macieira/Brandy.','Adiciona o Sprite ou Fanta por cima.','Mexe bem. Junta muito gelo. Leva à mesa.']) +
+          tip('<strong>Melhor feita com antecedência.</strong> Guarda no frigorífico sem gelo — só coloca o gelo na hora de servir.') + glass('🫙 Jarro de 1L + copos') },
+
+  'caipivodka': { icon:'🍋', title:'Caipivodka', type:'Caipirinha com Vodka · Médio',
+    html: ing([['6cl','Vodka Smirnoff'],['1','lima inteira'],['2 col.','açúcar'],['Gelo','picado']]) +
+          steps(['Corta a lima em 8 pedaços. Coloca no copo rocks.','Adiciona o açúcar. Esmaga bem com pilão.','Enche com gelo. Verte a vodka.','Mexe bem. Serve com palinha curta.']) +
+          tip('<strong>Igual à Caipirinha</strong> mas com vodka em vez de cachaça. Mais suave, muito pedida.') + glass('🥃 Copo rocks') },
+
+  'gin-fizz': { icon:'🍸', title:'Gin Fizz', type:'Gin + Lima + Soda · Médio',
+    html: ing([['6cl','Citadelle Original'],['3cl','Sumo de lima (½ lima)'],['1 col.','açúcar ou xarope'],['Soda','/ água com gás'],['Gelo','']]) +
+          steps(['No shaker com gelo: gin + sumo de lima + açúcar. Agita bem (10 seg).','Coa para um copo alto com gelo fresco.','Completa com soda fria. Mexe uma vez.','Decora com fatia de lima.']) +
+          tip('<strong>Fresco e levinho.</strong> Menos amargo que o gin tónico clássico, mais cítrico.') + glass('🥛 Copo highball') },
+
+  'rum-ginger': { icon:'🌴', title:'Rum Ginger', type:'Plantation + Ginger Beer · Fácil',
+    html: ing([['6cl','Plantation Rum'],['½ garr.','Fever-Tree Ginger Beer (ou Sprite)'],['Gelo',''],['1 fatia','lima']]) +
+          steps(['Enche copo alto com gelo.','Verte o Plantation Rum.','Completa com Ginger Beer ou Sprite pela parede.','Espreme a lima, coloca no copo. Mexe levemente.']) +
+          tip('<strong>Rum premium merece mistura premium.</strong> A Ginger Beer realça as notas do Plantation melhor que a cola.') + glass('🥛 Copo highball') },
+
+  's-sangria-simples': { icon:'🍓', title:'Sangria Express', type:'Vinho + Sprite + Fruta + Gelo · Simples',
+    html: ing([['½ garrafa','Vinho tinto da casa'],['½ lata','Sprite'],['Fruta','laranja ou maçã em rodelas'],['Gelo','abundante']]) +
+          steps(['Fruta no jarro.','Vinho + Sprite.','Muito gelo. Mexe. Serve.']) +
+          tip('Para quando não há brandy — fica simples mas funciona bem para uma mesa.') + glass('🫙 Jarro pequeno') },
+
+  's-limonada-vodka': { icon:'🍋', title:'Vodka Limonada', type:'Vodka + Limonada da Casa · Simples',
+    html: ing([['6cl','Vodka'],['1 copo','Limonada da casa'],['Gelo','em cubos'],['1 fatia','limão']]) +
+          steps(['Gelo no copo.','Vodka por cima.','Completa com limonada. Limão na borda.']) +
+          tip('Refrescante e fácil. Usa a limonada da casa que já tens.') + glass('🥛 Copo highball') },
+};
+
+// ── HELPERS HTML ──
+function ing(items) {
+  let html = '<div class="ing-title">O que precisas</div><ul class="ing-list">';
+  items.forEach(([amt, name]) => html += `<li><span class="ing-amount">${amt}</span>${name}</li>`);
+  return html + '</ul>';
+}
+function steps(arr) {
+  let html = '<div class="steps-title">Como fazer</div><ol class="steps">';
+  arr.forEach((s, i) => html += `<li><span class="step-num">${i+1}</span><span class="step-text">${s}</span></li>`);
+  return html + '</ol>';
+}
+function tip(t) { return `<div class="tip">${t}</div>`; }
+function glass(g) { return `<div class="glass-tag">${g}</div>`; }
+
+// ── POPUP ──
+function openPopup(id) {
+  const r = recipes[id];
+  if (!r) return;
+  document.getElementById('p-icon').textContent = r.icon;
+  document.getElementById('p-title').textContent = r.title;
+  document.getElementById('p-type').textContent = r.type;
+  document.getElementById('p-body').innerHTML = r.html;
+  document.getElementById('overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closePopup() {
+  document.getElementById('overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function closeOnBg(e) {
+  if (e.target === document.getElementById('overlay') || e.target.classList.contains('overlay-bg')) closePopup();
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closePopup(); });
 </script>
 </body>
 </html>
