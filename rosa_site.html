@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Rosa dos Leitões — Quarteira</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   ROOT & RESET
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+:root {
+  --bg:        #0d0c09;
+  --surface:   #161410;
+  --card:      #1e1b14;
+  --gold:      #c9a84c;
+  --gold-dim:  #7a5e28;
+  --gold-pale: #f0dfa0;
+  --cream:     #f5f0e6;
+  --text:      #ede6d6;
+  --muted:     #8a7f6a;
+  --border:    #2a2620;
+  --white:     #ffffff;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Jost',sans-serif;
+  font-size:14px;
+  line-height:1.65;
+  overflow-x:hidden;
+}
+a{text-decoration:none;color:inherit;}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   SPLASH / BOAS-VINDAS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+#splash {
+  position:fixed;inset:0;z-index:1000;
+  background:var(--bg);
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:32px 24px;
+  transition:opacity .7s ease, visibility .7s;
+}
+#splash.hidden{opacity:0;visibility:hidden;pointer-events:none;}
+
+.splash-rose {
+  font-size:56px;
+  animation: floatUp 1.2s ease both;
+  margin-bottom:8px;
+}
+.splash-title {
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(36px,10vw,58px);
+  font-weight:700;
+  color:var(--gold);
+  letter-spacing:3px;
+  text-align:center;
+  animation:floatUp .9s .15s ease both;
+  line-height:1.1;
+}
+.splash-subtitle {
+  font-size:11px;
+  letter-spacing:4px;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin-top:10px;
+  animation:floatUp .9s .25s ease both;
+}
+.splash-divider {
+  width:100px;height:1px;
+  background:linear-gradient(to right,transparent,var(--gold),transparent);
+  margin:28px 0;
+  animation:floatUp .9s .35s ease both;
+}
+.splash-tagline {
+  font-family:'Cormorant Garamond',serif;
+  font-size:18px;
+  font-style:italic;
+  color:var(--muted);
+  text-align:center;
+  margin-bottom:40px;
+  animation:floatUp .9s .4s ease both;
+}
+
+/* botões splash */
+.splash-btns {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+  width:100%;max-width:380px;
+  animation:floatUp .9s .5s ease both;
+}
+.splash-btn {
+  display:flex;flex-direction:column;align-items:center;
+  padding:20px 12px;
+  border-radius:8px;
+  border:1px solid var(--border);
+  background:var(--card);
+  cursor:pointer;
+  transition:all .25s;
+  gap:8px;
+}
+.splash-btn:hover{
+  border-color:var(--gold-dim);
+  background:#231f15;
+  transform:translateY(-3px);
+  box-shadow:0 10px 30px rgba(0,0,0,.5);
+}
+.splash-btn i{font-size:26px;color:var(--gold);}
+.splash-btn span{
+  font-size:12px;font-weight:600;
+  letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--text);
+}
+.splash-btn small{font-size:10px;color:var(--muted);font-weight:300;}
+
+.splash-btn-full {
+  grid-column:1/-1;
+  flex-direction:row;
+  justify-content:center;
+  padding:16px;
+  background:rgba(201,168,76,.08);
+  border-color:var(--gold-dim);
+}
+.splash-btn-full i{font-size:18px;}
+.splash-btn-full span{font-size:11px;}
+
+@keyframes floatUp{
+  from{opacity:0;transform:translateY(20px);}
+  to{opacity:1;transform:translateY(0);}
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   MAIN APP
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+#app{display:none;}
+#app.visible{display:block;}
+
+/* TOP BAR */
+.topbar {
+  background:var(--surface);
+  border-bottom:1px solid var(--border);
+  position:sticky;top:0;z-index:200;
+  display:flex;align-items:center;
+  padding:0 16px;
+  height:52px;
+}
+.topbar-logo {
+  font-family:'Cormorant Garamond',serif;
+  font-size:18px;font-weight:700;
+  color:var(--gold);
+  letter-spacing:1px;
+  flex:1;
+}
+.topbar-home {
+  display:flex;align-items:center;gap:6px;
+  font-size:11px;font-weight:600;
+  letter-spacing:1px;text-transform:uppercase;
+  color:var(--muted);cursor:pointer;
+  padding:6px 10px;border-radius:4px;
+  transition:color .2s;
+}
+.topbar-home:hover{color:var(--gold);}
+
+/* BOTTOM NAV (mobile-first) */
+.bottom-nav {
+  position:fixed;bottom:0;left:0;right:0;z-index:200;
+  background:var(--surface);
+  border-top:1px solid var(--border);
+  display:flex;
+}
+.bnav-btn {
+  flex:1;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:10px 4px 12px;
+  cursor:pointer;
+  font-size:9px;font-weight:600;
+  letter-spacing:1px;text-transform:uppercase;
+  color:var(--muted);
+  gap:4px;transition:color .2s;
+  border-top:2px solid transparent;
+}
+.bnav-btn i{font-size:18px;}
+.bnav-btn.active{color:var(--gold);border-top-color:var(--gold);}
+.bnav-btn:hover{color:var(--gold);}
+
+/* PAGES */
+.page{display:none;padding-bottom:80px;}
+.page.active{display:block;animation:fadeIn .3s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+/* WRAPPER */
+.wrap{max-width:820px;margin:0 auto;padding:32px 18px 20px;}
+
+/* ━━ SECTION HEADER ━━ */
+.sec-head{text-align:center;margin-bottom:36px;}
+.sec-head h2{
+  font-family:'Cormorant Garamond',serif;
+  font-size:30px;font-weight:400;
+  color:var(--gold);letter-spacing:1.5px;
+}
+.sec-head p{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-top:5px;}
+.sec-rule{
+  display:flex;align-items:center;gap:10px;
+  max-width:140px;margin:12px auto 0;
+}
+.sec-rule span{flex:1;height:1px;background:var(--gold-dim);}
+.sec-rule i{color:var(--gold-dim);font-size:9px;}
+
+/* ━━ CATEGORY ━━ */
+.cat{margin-bottom:36px;}
+.cat-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:18px;font-weight:600;
+  color:var(--gold);
+  padding-bottom:9px;
+  border-bottom:1px solid var(--border);
+  margin-bottom:4px;
+  display:flex;align-items:center;gap:10px;
+}
+.cat-title::after{content:'';flex:1;height:1px;background:linear-gradient(to right,var(--border),transparent);}
+
+/* ━━ ITEM ━━ */
+.item{
+  display:flex;justify-content:space-between;
+  align-items:baseline;
+  padding:10px 6px;
+  border-bottom:1px dotted #252218;
+  gap:14px;
+  transition:background .15s;
+}
+.item:last-child{border-bottom:none;}
+.item:hover{background:rgba(201,168,76,.04);border-radius:4px;}
+.item-info{flex:1;}
+.item-name{font-weight:500;font-size:13.5px;color:var(--text);}
+.item-name em{font-style:italic;font-weight:300;font-size:12px;color:var(--muted);margin-left:6px;}
+.item-desc{font-size:11.5px;color:var(--muted);font-style:italic;margin-top:2px;}
+.item-price{
+  font-family:'Cormorant Garamond',serif;
+  font-size:16px;font-weight:600;
+  color:var(--gold);white-space:nowrap;
+}
+.badge{
+  display:inline-block;font-size:9px;font-weight:700;
+  letter-spacing:1px;text-transform:uppercase;
+  padding:2px 7px;border-radius:2px;margin-left:6px;
+  vertical-align:middle;
+}
+.badge-star{background:var(--gold-dim);color:#fff;}
+
+/* ━━ TWO COL ━━ */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:0 32px;}
+@media(max-width:580px){.two-col{grid-template-columns:1fr;}}
+
+/* ━━ NOTE ━━ */
+.note{
+  background:rgba(201,168,76,.07);
+  border-left:2px solid var(--gold-dim);
+  padding:11px 16px;border-radius:0 3px 3px 0;
+  font-size:11.5px;color:var(--muted);
+  font-style:italic;margin-top:24px;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   CONTACTOS PAGE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.lojas{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:32px;}
+@media(max-width:560px){.lojas{grid-template-columns:1fr;}}
+
+.loja-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:8px;overflow:hidden;
+}
+.loja-hdr{
+  background:#131109;
+  padding:16px 18px 12px;
+  border-bottom:2px solid var(--gold-dim);
+}
+.loja-badge{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);}
+.loja-nome{font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--gold);font-weight:600;}
+.loja-body{padding:14px 18px;}
+.c-row{
+  display:flex;align-items:flex-start;gap:12px;
+  padding:9px 0;border-bottom:1px solid var(--border);
+  color:var(--text);transition:color .2s;
+}
+.c-row:last-child{border-bottom:none;}
+.c-row:hover{color:var(--gold);}
+.c-ico{
+  width:30px;height:30px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;font-size:12px;
+}
+.ico-addr{background:rgba(201,168,76,.15);color:var(--gold);}
+.ico-tel{background:rgba(74,180,74,.15);color:#4db64d;}
+.ico-tlm{background:rgba(74,144,226,.15);color:#4a90e2;}
+.ico-mail{background:rgba(220,80,80,.15);color:#e05050;}
+.ico-web{background:rgba(160,80,220,.15);color:#a050dc;}
+.c-lbl{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:1px;}
+.c-val{font-size:13px;word-break:break-word;}
+
+/* redes */
+.redes-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:20px;color:var(--gold);font-weight:600;
+  margin-bottom:16px;
+  display:flex;align-items:center;gap:10px;
+}
+.redes-title::after{content:'';flex:1;height:1px;background:linear-gradient(to right,var(--border),transparent);}
+.redes-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-bottom:32px;}
+.rede-btn{
+  display:flex;align-items:center;gap:12px;
+  padding:14px 16px;border-radius:8px;
+  font-weight:600;font-size:13px;
+  transition:transform .2s,box-shadow .2s;
+  border:1px solid transparent;
+}
+.rede-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.4);}
+.rede-btn i{font-size:20px;width:24px;text-align:center;}
+.rede-btn span{line-height:1.3;}
+.rede-btn small{display:block;font-weight:300;font-size:10px;opacity:.75;}
+.r-fb{background:#1877F2;color:#fff;}
+.r-ta{background:#34E0A1;color:#000;}
+.r-wa{background:#25D366;color:#fff;}
+.r-web{background:var(--card);color:var(--gold);border-color:var(--gold-dim);}
+.r-enc{background:var(--gold-dim);color:#fff;}
+
+/* mapa */
+.mapas-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:32px;}
+@media(max-width:560px){.mapas-grid{grid-template-columns:1fr;}}
+.mapa-card{background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+.mapa-lbl{
+  background:#131109;color:var(--gold);
+  font-size:10px;font-weight:700;letter-spacing:2px;
+  text-transform:uppercase;padding:9px 14px;text-align:center;
+}
+.mapa-card iframe{width:100%;height:200px;border:none;display:block;}
+.mapa-link{
+  display:block;text-align:center;padding:10px;
+  background:rgba(201,168,76,.08);
+  color:var(--gold);font-size:11px;font-weight:700;
+  letter-spacing:1px;text-transform:uppercase;
+  transition:background .2s;
+}
+.mapa-link:hover{background:var(--gold-dim);color:#fff;}
+
+/* encomendas CTA */
+.enc-cta{
+  background:linear-gradient(135deg,var(--card) 0%,#1a1508 100%);
+  border:1px solid var(--gold-dim);
+  border-radius:10px;padding:28px;text-align:center;
+  margin-bottom:24px;
+}
+.enc-cta h3{font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--gold);margin-bottom:8px;}
+.enc-cta p{color:var(--muted);font-size:13px;margin-bottom:20px;}
+.enc-btn{
+  display:inline-flex;align-items:center;gap:10px;
+  background:var(--gold);color:#0d0c09;
+  padding:13px 28px;border-radius:4px;
+  font-weight:700;font-size:14px;letter-spacing:.5px;
+  transition:background .2s;
+}
+.enc-btn:hover{background:var(--gold-pale);color:#0d0c09;}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   FOOTER
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.footer{
+  background:var(--surface);
+  border-top:1px solid var(--border);
+  text-align:center;
+  padding:18px;
+  color:var(--muted);font-size:10px;
+  letter-spacing:1.5px;text-transform:uppercase;
+}
+.footer span{color:var(--gold);}
+</style>
+</head>
+<body>
+
+<!-- ━━━━━━━━━━━━━━ SPLASH ━━━━━━━━━━━━━━ -->
+<div id="splash">
+  <div class="splash-rose">🌹</div>
+  <div class="splash-title">Rosa dos Leitões</div>
+  <div class="splash-subtitle">Gourmet · Quarteira · Algarve</div>
+  <div class="splash-divider"></div>
+  <div class="splash-tagline">O sabor que faz a viagem valer a pena</div>
+
+  <div class="splash-btns">
+    <div class="splash-btn" onclick="openApp('menu')">
+      <i class="fas fa-utensils"></i>
+      <span>Menu</span>
+      <small>Ver pratos</small>
+    </div>
+    <div class="splash-btn" onclick="openApp('vinhos')">
+      <i class="fas fa-wine-glass"></i>
+      <span>Vinhos</span>
+      <small>Carta de vinhos</small>
+    </div>
+    <div class="splash-btn" onclick="openApp('bar')">
+      <i class="fas fa-martini-glass"></i>
+      <span>Bar</span>
+      <small>Bebidas & licores</small>
+    </div>
+    <div class="splash-btn" onclick="openApp('contactos')">
+      <i class="fas fa-location-dot"></i>
+      <span>Contactos</span>
+      <small>Morada & redes</small>
+    </div>
+    <div class="splash-btn splash-btn-full" onclick="openApp('takeaway')">
+      <i class="fas fa-basket-shopping"></i>
+      <span>Encomendas Take Away</span>
+    </div>
+  </div>
+</div>
+
+<!-- ━━━━━━━━━━━━━━ APP ━━━━━━━━━━━━━━ -->
+<div id="app">
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="topbar-logo">🌹 Rosa dos Leitões</div>
+    <div class="topbar-home" onclick="goHome()">
+      <i class="fas fa-house"></i> Início
+    </div>
+  </div>
+
+  <!-- ══ MENU PAGE ══ -->
+  <div class="page active" id="p-menu">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>Menu</h2>
+        <p>Couvert · Pratos · Acompanhamentos · Sobremesas</p>
+        <div class="sec-rule"><span></span><i>✦</i><span></span></div>
+      </div>
+
+      <div class="cat">
+        <div class="cat-title">Couvert</div>
+        <div class="item"><div class="item-info"><div class="item-name">Azeitonas <em>Olives</em></div></div><div class="item-price">—</div></div>
+        <div class="item"><div class="item-info"><div class="item-name">Manteiga <em>Butter</em></div></div><div class="item-price">1,50 €</div></div>
+        <div class="item"><div class="item-info"><div class="item-name">Cesto Pão Pequeno</div></div><div class="item-price">0,80 €</div></div>
+        <div class="item"><div class="item-info"><div class="item-name">Cesto Pão Grande</div></div><div class="item-price">1,50 €</div></div>
+        <div class="item"><div class="item-info"><div class="item-name">Sopa do Dia</div></div><div class="item-price">2,50 €</div></div>
+        <div class="item"><div class="item-info"><div class="item-name">Folhados de Leitão</div><div class="item-desc">Leitão envolvido em massa folhada</div></div><div class="item-price">3,50 €</div></div>
+        <div class="item"><div class="item-info"><div class="item-name">Bolas de Leitão c/ Batata Doce</div></div><div class="item-price">2,45 €</div></div>
+        <div class="item"><div class="item-info"><div class="item-name">Pézinhos de Coentrada</div><div class="item-desc">Trotter with coriander</div></div><div class="item-price">9,90 €</div></div>
+        <div class="note">Nenhum item do couvert pode ser cobrado se não for solicitado.</div>
+      </div>
+
+      <div class="cat">
+        <div class="cat-title">Pratos</div>
+        <div class="item">
+          <div class="item-info"><div class="item-name">Dose de Leitão <span class="badge badge-star">★ Especialidade</span></div><div class="item-desc">300gr aprox. · Leitão assado, batata frita e laranja</div></div>
+          <div class="item-price">19,70 €</div>
+        </div>
+        <div class="item">
+          <div class="item-info"><div class="item-name">Salada de Leitão</div><div class="item-desc">Maçã, laranja, alface, tomate, sementes e leitão</div></div>
+          <div class="item-price">14,70 €</div>
+        </div>
+        <div class="item">
+          <div class="item-info"><div class="item-name">Sandes de Leitão em Pão Tradicional</div><div class="item-desc">Pão cozido no forno a lenha</div></div>
+          <div class="item-price">7,50 €</div>
+        </div>
+        <div class="item">
+          <div class="item-info"><div class="item-name">Salada de Frango ou Atum</div><div class="item-desc">Azeite, maçã, laranja, alface, tomate, sementes</div></div>
+          <div class="item-price">12,95 €</div>
+        </div>
+      </div>
+
+      <div class="cat">
+        <div class="cat-title">Acompanhamentos</div>
+        <div class="item"><div class="item-info"><div class="item-name">Arroz Aromatizado de Leitão</div></div><div class="item-price">6,50 €</div></div>
+        <div class="item"><div class="item-info"><div class="item-name">Arroz de Miúdos</div></div><div class="item-price">7,50 €</div></div>
+        <div class="item"><div class="item-info"><div class="item-name">Salada Mista — Tomate e Cebola</div></div><div class="item-price">3,90 €</div></div>
+        <div class="item"><div class="item-info"><div class="item-name">Salada Mista — Alface e Cebola</div></div><div class="item-price">3,90 €</div></div>
+        <div class="item"><div class="item-info"><div class="item-name">Batata Frita</div></div><div class="item-price">3,50 €</div></div>
+        <div class="item"><div class="item-info"><div class="item-name">Batata Doce Frita</div></div><div class="item-price">3,50 €</div></div>
+      </div>
+
+      <div class="cat">
+        <div class="cat-title">Sobremesas</div>
+        <div class="item"><div class="item-info"><div class="item-name">Fruta da Época</div></div><div class="item-price">—</div></div>
+        <div class="item"><div class="item-info"><div class="item-name">Mousse de Chocolate</div></div><div class="item-price">5,50 €</div></div>
+        <div class="item"><div class="item-info"><div class="item-name">Doce Tradicional</div></div><div class="item-price">5,50 €</div></div>
+        <div class="item"><div class="item-info"><div class="item-name">Brownie c/ Bola de Gelado</div><div class="item-desc">Baunilha ou Pistacho</div></div><div class="item-price">5,50 €</div></div>
+        <div class="item"><div class="item-info"><div class="item-name">Bola de Gelado — 2 Bolas</div><div class="item-desc">Baunilha e/ou Pistacho</div></div><div class="item-price">5,50 €</div></div>
+        <div class="item"><div class="item-info"><div class="item-name">Cheesecake de Frutos Vermelhos</div></div><div class="item-price">5,50 €</div></div>
+        <div class="item"><div class="item-info"><div class="item-name">Petit Gâteau com Bola de Gelado</div></div><div class="item-price">5,50 €</div></div>
+      </div>
+    </div>
+    <div class="footer"><span>Rosa dos Leitões</span> · Preços com IVA incluído</div>
+  </div>
+
+  <!-- ══ VINHOS PAGE ══ -->
+  <div class="page" id="p-vinhos">
+    <div class="wrap">
+      <div class="sec-head"><h2>Vinhos</h2><p>Wines · Vins</p><div class="sec-rule"><span></span><i>✦</i><span></span></div></div>
+
+      <div class="cat">
+        <div class="cat-title">Vinhos Frisantes</div>
+        <div class="item"><div class="item-info"><div class="item-name">Rosa dos Leitões Frisante Branco / Rosé / Tinto</div><div class="item-desc">75cl</div></div><div class="item-price">16,90 €</div></div>
+      </div>
+      <div class="cat">
+        <div class="cat-title">Espumantes & Champanhe</div>
+        <div class="item"><div class="item-info"><div class="item-name">Rosa dos Leitões Tinto</div><div class="item-desc">75cl</div></div><div class="item-price">16,90 €</div></div>
+        <div class="item"><div class="item-info"><div class="item-name">Murganheira Tinto Bruto Távora Varosa</div><div class="item-desc">75cl</div></div><div class="item-price">27,50 €</div></div>
+        <div class="item"><div class="item-info"><div class="item-name">Terras do Demo Rosé Bruto</div><div class="item-desc">75cl</div></div><div class="item-price">22,50 €</div></div>
+        <div class="item"><div class="item-info"><div class="item-name">Laurent Perrier Champanhe Branco <span class="badge badge-star">Prestige</span></div><div class="item-desc">75cl</div></div><div class="item-price">110,00 €</div></div>
+      </div>
+      <div class="cat">
+        <div class="cat-title">Vinho Tinto</div>
+        <div class="item"><div class="item-info"><div class="item-name">Copo Tinto</div><div class="item-desc">15cl</div></div><div class="item-price">4,50 €</div></div>
+        <div class="item"><div class="item-info"><div class="item-name">Copo Tinto — Escolha da Casa</div><div class="item-desc">15cl</div></div><div class="item-price">5,50 €</div></div>
+        <div class="item"><div class="item-info"><div class="item-name">Ouro do Meio Douro</div><div class="item-desc">75cl</div></div><div class="item-price">25,00 €</div></div>
+        <div class="item"><div class="item-info"><div class="item-name">Herdade do Grous 2020</div><div class="item-desc">75cl</div></div><div class="item-price">26,50 €</div></div>
+        <div class="item"><div class="item-info"><div class="item-name">Belmiro Cruz Douro Tinto</div><div class="item-desc">75cl</div></div><div class="item-price">20,50 €</div></div>
+        <div class="item"><div class="item-info"><div class="item-name">Belmiro Bairrada Tinto 2011</div><div class="item-desc">75cl</div></div><div class="item-price">39,50 €</div></div>
+        <div class="item"><div class="item-info"><div class="item-name">Folha do Meio Tinto Gr. Reserva</div><div class="item-desc">75cl</div></div><div class="item-price">59,00 €</div></div>
+      </div>
+      <div class="cat">
+        <div class="cat-title">Vinho Branco</div>
+        <div class="item"><div class="item-info"><div class="item-name">Copo Branco Frisante</div><div class="item-desc">15cl</div></div><div class="item-price">4,50 €</div></div>
+        <div class="item"><div class="item-info"><div class="item-name">Copo Branco — Escolha da Casa</div><div class="item-desc">15cl</div></div><div class="item-price">5,50 €</div></div>
+        <div class="item"><div class="item-info"><div class="item-name">Belmiro Cruz Douro Seco Branco</div><div class="item-desc">75cl</div></div><div class="item-price">24,90 €</div></div>
+        <div class="item"><div class="item-info"><div class="item-name">Ouro do Meio Branco</div><div class="item-desc">75cl</div></div><div class="item-price">25,00 €</div></div>
+      </div>
+      <div class="cat">
+        <div class="cat-title">Digestivo</div>
+        <div class="item"><div class="item-info"><div class="item-name">K.O. Colheita Tardia</div><div class="item-desc">375ml</div></div><div class="item-price">40,00 €</div></div>
+      </div>
+      <div class="note">Preços especiais para Take Away — Consulte um colaborador</div>
+    </div>
+    <div class="footer"><span>Rosa dos Leitões</span> · Preços com IVA incluído</div>
+  </div>
+
+  <!-- ══ BAR PAGE ══ -->
+  <div class="page" id="p-bar">
+    <div class="wrap">
+      <div class="sec-head"><h2>Bar & Bebidas</h2><p>Cervejas · Licores · Spirits · 6cl por dose</p><div class="sec-rule"><span></span><i>✦</i><span></span></div></div>
+
+      <div class="cat">
+        <div class="cat-title">Cervejas</div>
+        <div class="item"><div class="item-info"><div class="item-name">Imperial <em>Pressão 20cl</em></div></div><div class="item-price">2,00 €</div></div>
+        <div class="item"><div class="item-info"><div class="item-name">Caneca <em>Pressão 40cl</em></div></div><div class="item-price">4,00 €</div></div>
+        <div class="item"><div class="item-info"><div class="item-name">Sagres / Super Bock Garrafa</div><div class="item-desc">33cl</div></div><div class="item-price">2,50 €</div></div>
+        <div class="item"><div class="item-info"><div class="item-name">Sagres Preta</div><div class="item-desc">33cl</div></div><div class="item-price">2,50 €</div></div>
+        <div class="item"><div class="item-info"><div class="item-name">Sagres sem Álcool</div><div class="item-desc">33cl</div></div><div class="item-price">2,50 €</div></div>
+      </div>
+
+      <div class="cat">
+        <div class="cat-title">Sangria</div>
+        <div class="item"><div class="item-info"><div class="item-name">Jarro Branca / Tinta</div><div class="item-desc">1 Litro</div></div><div class="item-price">16,50 €</div></div>
+        <div class="item"><div class="item-info"><div class="item-name">Copo de Sangria</div><div class="item-desc">33cl</div></div><div class="item-price">5,50 €</div></div>
+      </div>
+
+      <div class="two-col">
+        <div>
+          <div class="cat">
+            <div class="cat-title">Gin</div>
+            <div class="item"><div class="item-info"><div class="item-name">Citadelle Original</div></div><div class="item-price">6,00 €</div></div>
+            <div class="item"><div class="item-info"><div class="item-name">Citadelle Rouge</div></div><div class="item-price">7,00 €</div></div>
+            <div class="item"><div class="item-info"><div class="item-name">Citadelle Jardin d'Été</div></div><div class="item-price">7,00 €</div></div>
+            <div class="item"><div class="item-info"><div class="item-name">Gin Biológico</div></div><div class="item-price">5,50 €</div></div>
+          </div>
+          <div class="cat">
+            <div class="cat-title">Rum & Cachaça</div>
+            <div class="item"><div class="item-info"><div class="item-name">Bacardi Carta Blanca</div></div><div class="item-price">4,50 €</div></div>
+            <div class="item"><div class="item-info"><div class="item-name">Plantation Rum</div></div><div class="item-price">7,00 €</div></div>
+            <div class="item"><div class="item-info"><div class="item-name">Cachaça 51</div></div><div class="item-price">4,00 €</div></div>
+          </div>
+          <div class="cat">
+            <div class="cat-title">Vodka</div>
+            <div class="item"><div class="item-info"><div class="item-name">Smirnoff</div></div><div class="item-price">4,50 €</div></div>
+            <div class="item"><div class="item-info"><div class="item-name">Three Sixty</div></div><div class="item-price">4,50 €</div></div>
+          </div>
+          <div class="cat">
+            <div class="cat-title">Aperitivos</div>
+            <div class="item"><div class="item-info"><div class="item-name">Aperol</div></div><div class="item-price">3,50 €</div></div>
+            <div class="item"><div class="item-info"><div class="item-name">Martini</div></div><div class="item-price">2,20 €</div></div>
+            <div class="item"><div class="item-info"><div class="item-name">Moscatel Favaios</div></div><div class="item-price">3,50 €</div></div>
+            <div class="item"><div class="item-info"><div class="item-name">Ricard</div></div><div class="item-price">3,50 €</div></div>
+          </div>
+        </div>
+        <div>
+          <div class="cat">
+            <div class="cat-title">Whisky</div>
+            <div class="item"><div class="item-info"><div class="item-name">Jameson</div></div><div class="item-price">3,80 €</div></div>
+            <div class="item"><div class="item-info"><div class="item-name">Famous Grouse</div></div><div class="item-price">3,80 €</div></div>
+            <div class="item"><div class="item-info"><div class="item-name">JB Novo</div></div><div class="item-price">3,80 €</div></div>
+            <div class="item"><div class="item-info"><div class="item-name">JB 15 Anos</div></div><div class="item-price">5,50 €</div></div>
+            <div class="item"><div class="item-info"><div class="item-name">Cardhu 12 Anos</div></div><div class="item-price">7,50 €</div></div>
+          </div>
+          <div class="cat">
+            <div class="cat-title">Licores</div>
+            <div class="item"><div class="item-info"><div class="item-name">Kahlúa Coffee</div></div><div class="item-price">4,50 €</div></div>
+            <div class="item"><div class="item-info"><div class="item-name">Porto Branco / Tinto</div></div><div class="item-price">2,50 €</div></div>
+            <div class="item"><div class="item-info"><div class="item-name">Porto 10 Anos</div></div><div class="item-price">4,00 €</div></div>
+            <div class="item"><div class="item-info"><div class="item-name">Amarguinha</div></div><div class="item-price">2,50 €</div></div>
+            <div class="item"><div class="item-info"><div class="item-name">Licor Beirão</div></div><div class="item-price">2,50 €</div></div>
+            <div class="item"><div class="item-info"><div class="item-name">Disaronno Amaretto</div></div><div class="item-price">3,50 €</div></div>
+            <div class="item"><div class="item-info"><div class="item-name">Genuína · Xarão · Macieira</div></div><div class="item-price">2,50 €</div></div>
+          </div>
+          <div class="cat">
+            <div class="cat-title">Aguardentes</div>
+            <div class="item"><div class="item-info"><div class="item-name">CRF Reserva</div></div><div class="item-price">5,50 €</div></div>
+            <div class="item"><div class="item-info"><div class="item-name">Conde de Contanhede</div></div><div class="item-price">5,50 €</div></div>
+            <div class="item"><div class="item-info"><div class="item-name">Medronho Ambre</div></div><div class="item-price">4,50 €</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cat" style="margin-top:8px;">
+        <div class="cat-title">Cafetaria & Refrigerantes</div>
+        <div class="item"><div class="item-info"><div class="item-name">Café / Descafeinado</div></div><div class="item-price">1,00 €</div></div>
+        <div class="item"><div class="item-info"><div class="item-name">Café com Leite / Cappuccino</div></div><div class="item-price">2,75 – 3,50 €</div></div>
+        <div class="item"><div class="item-info"><div class="item-name">Sumo Laranja Natural / Limonada</div></div><div class="item-price">4,00 €</div></div>
+        <div class="item"><div class="item-info"><div class="item-name">Água Vitalis 37,5cl / 75cl</div></div><div class="item-price">2,50 / 3,50 €</div></div>
+        <div class="item"><div class="item-info"><div class="item-name">Coca Cola / Sprite / Fanta</div><div class="item-desc">35cl</div></div><div class="item-price">2,50 €</div></div>
+        <div class="item"><div class="item-info"><div class="item-name">Somersby Apple Cider</div><div class="item-desc">33cl</div></div><div class="item-price">2,50 €</div></div>
+      </div>
+
+      <div class="note">Bebidas alcoólicas não servidas a menores de 18 anos · Doses de 6cl</div>
+    </div>
+    <div class="footer"><span>Rosa dos Leitões</span> · Preços com IVA incluído</div>
+  </div>
+
+  <!-- ══ TAKE AWAY PAGE ══ -->
+  <div class="page" id="p-takeaway">
+    <div class="wrap">
+      <div class="sec-head"><h2>Take Away</h2><p>Encomendas & preços especiais</p><div class="sec-rule"><span></span><i>✦</i><span></span></div></div>
+      <div class="enc-cta">
+        <h3>🛒 Encomendar Online</h3>
+        <p>Leva o sabor da Rosa dos Leitões para casa.<br>Preços especiais para Take Away — consulte também um colaborador.</p>
+        <a class="enc-btn" href="https://rosadosleitoesquarteira.pt" target="_blank">
+          <i class="fas fa-basket-shopping"></i> Encomendar agora
+        </a>
+      </div>
+      <div class="cat">
+        <div class="cat-title">Contacto direto</div>
+        <a class="c-row" href="https://wa.me/351965635655" target="_blank" style="display:flex;align-items:center;gap:12px;padding:14px 6px;border-bottom:1px solid var(--border);color:var(--text);">
+          <div class="c-ico" style="background:rgba(37,211,102,.15);color:#25D366;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;"><i class="fab fa-whatsapp"></i></div>
+          <div><div style="font-weight:600;">WhatsApp · 965 635 655</div><div style="font-size:11px;color:var(--muted);">Fala diretamente connosco</div></div>
+        </a>
+        <a class="c-row" href="tel:+351289328078" style="display:flex;align-items:center;gap:12px;padding:14px 6px;color:var(--text);">
+          <div class="c-ico" style="background:rgba(74,180,74,.15);color:#4db64d;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;"><i class="fas fa-phone"></i></div>
+          <div><div style="font-weight:600;">Telefone · 289 328 078</div><div style="font-size:11px;color:var(--muted);">Quarteira</div></div>
+        </a>
+      </div>
+    </div>
+    <div class="footer"><span>Rosa dos Leitões</span> · Quarteira · Algarve</div>
+  </div>
+
+  <!-- ══ CONTACTOS PAGE ══ -->
+  <div class="page" id="p-contactos">
+    <div class="wrap">
+      <div class="sec-head"><h2>Contactos</h2><p>Lojas · Redes Sociais · Mapas</p><div class="sec-rule"><span></span><i>✦</i><span></span></div></div>
+
+      <div class="lojas">
+        <div class="loja-card">
+          <div class="loja-hdr"><div class="loja-badge">📍 Loja</div><div class="loja-nome">Negrais · Sintra</div></div>
+          <div class="loja-body">
+            <a class="c-row" href="https://maps.google.com/?q=R.+Pedra+Abelha+7+Negrais+Sintra" target="_blank">
+              <div class="c-ico ico-addr"><i class="fas fa-location-dot"></i></div>
+              <div><div class="c-lbl">Morada</div><div class="c-val">R. Pedra Abelha 7, Negrais<br>Almargem do Bispo, 2715-334 Sintra</div></div>
+            </a>
+            <a class="c-row" href="tel:+351219270833">
+              <div class="c-ico ico-tel"><i class="fas fa-phone"></i></div>
+              <div><div class="c-lbl">Telefone</div><div class="c-val">219 270 833</div></div>
+            </a>
+            <a class="c-row" href="tel:+351965635655">
+              <div class="c-ico ico-tlm"><i class="fas fa-mobile-screen"></i></div>
+              <div><div class="c-lbl">Telemóvel</div><div class="c-val">965 635 655</div></div>
+            </a>
+            <a class="c-row" href="/cdn-cgi/l/email-protection#ff919a988d9e968cbf8d908c9e9b908c939a968b909a8cd18f8b">
+              <div class="c-ico ico-mail"><i class="fas fa-envelope"></i></div>
+              <div><div class="c-lbl">Email</div><div class="c-val"><span class="__cf_email__" data-cfemail="5739323025363e2417253824363338243b323e23383224792723">[email&#160;protected]</span></div></div>
+            </a>
+          </div>
+        </div>
+        <div class="loja-card">
+          <div class="loja-hdr"><div class="loja-badge">📍 Loja</div><div class="loja-nome">Quarteira · Algarve</div></div>
+          <div class="loja-body">
+            <a class="c-row" href="https://maps.google.com/?q=Estrada+Nacional+125+Km+86+Baceladas+Quarteira" target="_blank">
+              <div class="c-ico ico-addr"><i class="fas fa-location-dot"></i></div>
+              <div><div class="c-lbl">Morada</div><div class="c-val">EN 125, Km 86, Baceladas<br>8125-013 Quarteira</div></div>
+            </a>
+            <a class="c-row" href="tel:+351289328078">
+              <div class="c-ico ico-tel"><i class="fas fa-phone"></i></div>
+              <div><div class="c-lbl">Telefone</div><div class="c-val">289 328 078</div></div>
+            </a>
+            <a class="c-row" href="/cdn-cgi/l/email-protection#157479727467637055677a6674717a6679707c617a70663b6561">
+              <div class="c-ico ico-mail"><i class="fas fa-envelope"></i></div>
+              <div><div class="c-lbl">Email</div><div class="c-val"><span class="__cf_email__" data-cfemail="6908050e081b1f0c291b061a080d061a050c001d060c1a47191d">[email&#160;protected]</span></div></div>
+            </a>
+            <a class="c-row" href="https://rosadosleitoesquarteira.pt" target="_blank">
+              <div class="c-ico ico-web"><i class="fas fa-globe"></i></div>
+              <div><div class="c-lbl">Website</div><div class="c-val">rosadosleitoesquarteira.pt</div></div>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="redes-title"><i class="fas fa-share-nodes"></i> Redes Sociais</div>
+      <div class="redes-grid">
+        <a class="rede-btn r-fb" href="http://www.facebook.com/leitoes.rosados" target="_blank">
+          <i class="fab fa-facebook"></i><span>Facebook<small>leitoes.rosados</small></span>
+        </a>
+        <a class="rede-btn r-ta" href="https://www.tripadvisor.com/Restaurant_Review-g580249-d8375232-Reviews-Rosa_dos_Leitoes-Quarteira_Faro_District_Algarve.html" target="_blank">
+          <i class="fab fa-tripadvisor"></i><span>TripAdvisor<small>Ver avaliações</small></span>
+        </a>
+        <a class="rede-btn r-wa" href="https://wa.me/351965635655" target="_blank">
+          <i class="fab fa-whatsapp"></i><span>WhatsApp<small>965 635 655</small></span>
+        </a>
+        <a class="rede-btn r-web" href="https://rosadosleitoesquarteira.pt" target="_blank">
+          <i class="fas fa-globe"></i><span>Website<small>rosadosleitoesquarteira.pt</small></span>
+        </a>
+        <a class="rede-btn r-enc" href="https://rosadosleitoesquarteira.pt" target="_blank">
+          <i class="fas fa-basket-shopping"></i><span>Encomendas<small>Online · Take Away</small></span>
+        </a>
+      </div>
+
+      <div style="margin-bottom:16px;" class="redes-title"><i class="fas fa-map"></i> Como Chegar</div>
+      <div class="mapas-grid">
+        <div class="mapa-card">
+          <div class="mapa-lbl">📍 Negrais · Sintra</div>
+          <iframe src="https://maps.google.com/maps?q=R.+Pedra+Abelha+7,+Negrais,+2715-334+Sintra&output=embed&z=15" allowfullscreen loading="lazy"></iframe>
+          <a class="mapa-link" href="https://maps.google.com/?q=R.+Pedra+Abelha+7+Negrais+Sintra" target="_blank"><i class="fas fa-directions"></i> Abrir Maps</a>
+        </div>
+        <div class="mapa-card">
+          <div class="mapa-lbl">📍 Quarteira · Algarve</div>
+          <iframe src="https://maps.google.com/maps?q=Estrada+Nacional+125+Km+86+Baceladas+Quarteira&output=embed&z=15" allowfullscreen loading="lazy"></iframe>
+          <a class="mapa-link" href="https://maps.google.com/?q=Estrada+Nacional+125+Km+86+Baceladas+Quarteira" target="_blank"><i class="fas fa-directions"></i> Abrir Maps</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer"><span>Rosa dos Leitões</span> · Quarteira & Negrais</div>
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <div class="bottom-nav">
+    <div class="bnav-btn active" id="bn-menu" onclick="showPage('menu')">
+      <i class="fas fa-utensils"></i>Menu
+    </div>
+    <div class="bnav-btn" id="bn-vinhos" onclick="showPage('vinhos')">
+      <i class="fas fa-wine-glass"></i>Vinhos
+    </div>
+    <div class="bnav-btn" id="bn-bar" onclick="showPage('bar')">
+      <i class="fas fa-martini-glass"></i>Bar
+    </div>
+    <div class="bnav-btn" id="bn-takeaway" onclick="showPage('takeaway')">
+      <i class="fas fa-basket-shopping"></i>Take Away
+    </div>
+    <div class="bnav-btn" id="bn-contactos" onclick="showPage('contactos')">
+      <i class="fas fa-location-dot"></i>Contactos
+    </div>
+  </div>
+
+</div><!-- /app -->
+
+<script>
+  // ── Ordem das páginas para swipe ──
+  const PAGE_ORDER = ['menu','vinhos','bar','takeaway','contactos'];
+  let currentPage = 'menu';
+
+  // Abre o app a partir do splash
+  function openApp(section) {
+    document.getElementById('splash').classList.add('hidden');
+    document.getElementById('app').classList.add('visible');
+    // Empurra estado no histórico para evitar que o back saia do site
+    history.pushState({ page: section }, '', '');
+    showPage(section);
+  }
+
+  // Volta ao splash
+  function goHome() {
+    document.getElementById('splash').classList.remove('hidden');
+    document.getElementById('app').classList.remove('visible');
+  }
+
+  // Interceta o botão "back" do browser/gesto de swipe do sistema
+  window.addEventListener('popstate', function(e) {
+    const app = document.getElementById('app');
+    if (app.classList.contains('visible')) {
+      // Em vez de sair, vai para a página anterior na ordem
+      const idx = PAGE_ORDER.indexOf(currentPage);
+      if (idx > 0) {
+        history.pushState({ page: PAGE_ORDER[idx-1] }, '', '');
+        showPage(PAGE_ORDER[idx-1]);
+      } else {
+        // Já está no início — empurra estado de volta para não sair
+        history.pushState({ page: currentPage }, '', '');
+      }
+    }
+  });
+
+  // Muda de página
+  function showPage(id) {
+    currentPage = id;
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.bnav-btn').forEach(b => b.classList.remove('active'));
+    const page = document.getElementById('p-' + id);
+    const btn  = document.getElementById('bn-' + id);
+    if (page) page.classList.add('active');
+    if (btn)  btn.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ── Swipe táctil entre páginas ──
+  let touchStartX = 0;
+  let touchStartY = 0;
+
+  document.addEventListener('touchstart', function(e) {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+  }, { passive: true });
+
+  document.addEventListener('touchend', function(e) {
+    const app = document.getElementById('app');
+    if (!app.classList.contains('visible')) return;
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    const dy = e.changedTouches[0].clientY - touchStartY;
+    if (Math.abs(dx) < 60 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+    const idx = PAGE_ORDER.indexOf(currentPage);
+    if (dx < 0 && idx < PAGE_ORDER.length - 1) {
+      history.pushState({ page: PAGE_ORDER[idx+1] }, '', '');
+      showPage(PAGE_ORDER[idx+1]);
+    } else if (dx > 0 && idx > 0) {
+      history.pushState({ page: PAGE_ORDER[idx-1] }, '', '');
+      showPage(PAGE_ORDER[idx-1]);
+    }
+  }, { passive: true });
+</script>
+</body>
+</html>
