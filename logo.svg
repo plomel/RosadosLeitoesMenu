@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 220" width="220" height="220">
+  <!-- Sombra suave -->
+  <defs>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000" flood-opacity="0.18"/>
+    </filter>
+  </defs>
+
+  <!-- Círculo branco de fundo -->
+  <circle cx="110" cy="110" r="106" fill="white" filter="url(#shadow)"/>
+  <circle cx="110" cy="110" r="103" fill="white" stroke="#1a1a1a" stroke-width="3.5"/>
+  <!-- Anel interior decorativo -->
+  <circle cx="110" cy="110" r="96" fill="none" stroke="#1a1a1a" stroke-width="1"/>
+
+  <!-- ── ROSA ── centrado em y≈98 ── -->
+  <!-- R -->
+  <text x="18" y="100" font-family="Georgia,'Times New Roman',serif"
+        font-weight="900" font-size="62" fill="#1a1a1a" letter-spacing="1">R</text>
+
+  <!-- O estilizado como círculo com rosa interior -->
+  <circle cx="91" cy="72" r="28" fill="none" stroke="#1a1a1a" stroke-width="5.5"/>
+  <!-- Folhas/pétalas da rosa dentro do O -->
+  <g transform="translate(91,72)">
+    <!-- 5 pétalas -->
+    <ellipse rx="7" ry="12" fill="#1a1a1a" opacity="0.85" transform="rotate(0) translate(0,-7)"/>
+    <ellipse rx="7" ry="12" fill="#1a1a1a" opacity="0.85" transform="rotate(72) translate(0,-7)"/>
+    <ellipse rx="7" ry="12" fill="#1a1a1a" opacity="0.85" transform="rotate(144) translate(0,-7)"/>
+    <ellipse rx="7" ry="12" fill="#1a1a1a" opacity="0.85" transform="rotate(216) translate(0,-7)"/>
+    <ellipse rx="7" ry="12" fill="#1a1a1a" opacity="0.85" transform="rotate(288) translate(0,-7)"/>
+    <!-- Centro da rosa -->
+    <circle r="6" fill="white"/>
+    <circle r="4" fill="#1a1a1a"/>
+    <circle r="2" fill="white"/>
+  </g>
+
+  <!-- S -->
+  <text x="118" y="100" font-family="Georgia,'Times New Roman',serif"
+        font-weight="900" font-size="62" fill="#1a1a1a" letter-spacing="1">S</text>
+  <!-- A -->
+  <text x="155" y="100" font-family="Georgia,'Times New Roman',serif"
+        font-weight="900" font-size="62" fill="#1a1a1a" letter-spacing="1">A</text>
+
+  <!-- linha decorativa entre ROSA e DOS LEITÕES -->
+  <line x1="30" y1="111" x2="190" y2="111" stroke="#1a1a1a" stroke-width="1.2"/>
+
+  <!-- DOS -->
+  <text x="110" y="130" font-family="Georgia,'Times New Roman',serif"
+        font-weight="600" font-size="16" fill="#1a1a1a"
+        text-anchor="middle" letter-spacing="5">DOS</text>
+
+  <!-- LEITÕES -->
+  <text x="110" y="158" font-family="Georgia,'Times New Roman',serif"
+        font-weight="900" font-size="30" fill="#1a1a1a"
+        text-anchor="middle" letter-spacing="3">LEITÕES</text>
+
+  <!-- linha inferior decorativa -->
+  <line x1="30" y1="167" x2="190" y2="167" stroke="#1a1a1a" stroke-width="1.2"/>
+
+  <!-- tagline -->
+  <text x="110" y="184" font-family="Georgia,'Times New Roman',serif"
+        font-style="italic" font-size="10" fill="#555"
+        text-anchor="middle" letter-spacing="1.5">desde 1938</text>
+</svg>

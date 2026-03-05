@@ -80,10 +80,13 @@ a{text-decoration:none;color:inherit;}
 }
 #splash.hidden{opacity:0;visibility:hidden;pointer-events:none;}
 
-.splash-rose {
-  font-size:56px;
+.splash-logo {
+  width:clamp(120px,38vw,170px);
   animation: floatUp 1.2s ease both;
-  margin-bottom:8px;
+  margin-bottom:16px;
+  border-radius:50%;
+  /* halo suave para dar presença no fundo escuro */
+  filter: drop-shadow(0 4px 18px rgba(181,101,29,.35));
 }
 .splash-title {
   font-family:'Cormorant Garamond',serif;
@@ -188,6 +191,12 @@ a{text-decoration:none;color:inherit;}
   color:var(--gold);
   letter-spacing:1px;
   flex:1;
+  display:flex;align-items:center;gap:10px;
+}
+.topbar-logo img {
+  width:36px;height:36px;border-radius:50%;
+  filter:drop-shadow(0 1px 4px rgba(0,0,0,.4));
+  flex-shrink:0;
 }
 .topbar-home {
   display:flex;align-items:center;gap:6px;
@@ -539,7 +548,7 @@ body.lang-en .item-desc.en-desc { display: block; }
 
 <!-- ━━━━━━━━━━━━━━ SPLASH ━━━━━━━━━━━━━━ -->
 <div id="splash">
-  <div class="splash-rose">🌹</div>
+  <img src="logo.svg" alt="Rosa dos Leitões" class="splash-logo">
   <div class="splash-title">Rosa dos Leitões</div>
   <div class="splash-subtitle">Quarteira · Algarve · Desde 1938</div>
   <div class="splash-divider"></div>
@@ -578,7 +587,9 @@ body.lang-en .item-desc.en-desc { display: block; }
 
   <!-- TOP BAR -->
   <div class="topbar">
-    <div class="topbar-logo" onclick="goHome()" style="cursor:pointer;">🌹 Rosa dos Leitões</div>
+    <div class="topbar-logo" onclick="goHome()" style="cursor:pointer;">
+      <img src="logo.svg" alt="Logo"> Rosa dos Leitões
+    </div>
     <div class="lang-toggle">
       <div class="lang-btn active" id="btn-pt" onclick="setLang('pt')">PT</div>
       <div class="lang-btn" id="btn-en" onclick="setLang('en')">EN</div>
