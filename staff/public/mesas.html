@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mesas — Rosa dos Leitões Staff</title>
+  <link rel="stylesheet" href="/assets/style.css">
+  <style>
+    .mesas-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 10px;
+      margin-top: 16px;
+    }
+    .mesa-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 12px;
+      cursor: pointer; transition: border-color .15s;
+    }
+    .mesa-card:hover { border-color: var(--gold); }
+    .mesa-card.ocupada { border-color: rgba(201,150,42,.4); background: rgba(201,150,42,.06); }
+    .mesa-num {
+      font-size: 11px; font-weight: 700; letter-spacing: 1px;
+      text-transform: uppercase; color: var(--muted); margin-bottom: 6px;
+    }
+    .mesa-pax { font-size: 22px; font-weight: 700; color: var(--gold); }
+    .mesa-pax span { font-size: 12px; color: var(--muted); font-weight: 400; }
+    .mesa-doses { font-size: 12px; color: var(--muted); margin-top: 4px; }
+    .mesa-obs { font-size: 11px; color: var(--muted); margin-top: 4px; font-style: italic; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .zona-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 1px;
+      text-transform: uppercase; color: var(--gold);
+      margin: 18px 0 4px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-brand">
+    <img src="/assets/logo.svg" alt="" onerror="this.style.display='none'">
+    Rosa dos Leitões
+  </div>
+  <div class="topbar-spacer"></div>
+  <div class="topbar-user">
+    <span id="topbar-name"></span>
+    <span class="role-badge" id="topbar-role"></span>
+    <button class="btn-logout" id="btn-logout">Sair</button>
+  </div>
+</div>
+
+<div class="layout">
+  <nav class="sidebar"><div id="sidebar-nav"></div></nav>
+  <main class="main">
+
+    <div class="page-header">
+      <div>
+        <div class="page-title">🪑 Controlo de Mesas</div>
+        <div class="page-subtitle">Registo de pax e doses por mesa</div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <div class="date-nav">
+          <button class="btn btn-outline btn-sm" id="btn-prev">◀</button>
+          <input type="date" id="data-sel">
+          <button class="btn btn-outline btn-sm" id="btn-next">▶</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats do dia -->
+    <div class="stats">
+      <div class="stat"><div class="stat-val" id="st-mesas">—</div><div class="stat-label">Mesas ocupadas</div></div>
+      <div class="stat"><div class="stat-val" id="st-pax">—</div><div class="stat-label">Total pax</div></div>
+      <div class="stat"><div class="stat-val" id="st-media">—</div><div class="stat-label">Média pax/mesa</div></div>
+      <div class="stat"><div class="stat-val" id="st-doses">—</div><div class="stat-label">Total doses</div></div>
+    </div>
+
+    <div class="zona-label">Salão Interior — Mesas 1 a 8</div>
+    <div class="mesas-grid" id="grid-interior"></div>
+
+    <div class="zona-label">Salão Exterior — Mesas 9 a 21</div>
+    <div class="mesas-grid" id="grid-exterior"></div>
+
+  </main>
+</div>
+
+<!-- Modal mesa -->
+<div class="modal-overlay" id="modal-mesa">
+  <div class="modal" style="max-width:360px">
+    <div class="modal-title" id="modal-mesa-title">Mesa —</div>
+    <input type="hidden" id="mesa-num">
+    <div class="form-group">
+      <label>Nº de Pessoas (Pax)</label>
+      <input type="number" id="mesa-pax" min="0" max="30">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Leitão Inteiro</label>
+        <input type="number" id="mesa-d1" min="0">
+      </div>
+      <div class="form-group">
+        <label>Meia dose (½)</label>
+        <input type="number" id="mesa-dm" min="0">
+      </div>
+      <div class="form-group">
+        <label>Quarto (¼)</label>
+        <input type="number" id="mesa-dq" min="0">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Observações</label>
+      <input type="text" id="mesa-obs" placeholder="ex: aniversário, menu especial...">
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal()">Cancelar</button>
+      <button class="btn btn-primary" id="btn-save-mesa">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<script src="/assets/api.js"></script>
+<script>
+Auth.requireLogin();
+renderTopbar();
+renderSidebar();
+
+let currentData = todayISO();
+let mesasData = {};
+
+document.getElementById('data-sel').value = currentData;
+
+function navDate(delta) {
+  const d = new Date(currentData + 'T12:00:00');
+  d.setDate(d.getDate() + delta);
+  currentData = d.toISOString().slice(0,10);
+  document.getElementById('data-sel').value = currentData;
+  loadMesas();
+}
+document.getElementById('btn-prev').onclick = () => navDate(-1);
+document.getElementById('btn-next').onclick = () => navDate(1);
+document.getElementById('data-sel').addEventListener('change', e => { currentData = e.target.value; loadMesas(); });
+
+async function loadMesas() {
+  const rows = await apiFetch(`/mesas?data=${currentData}`);
+  mesasData = {};
+  rows.forEach(r => mesasData[r.mesa_num] = r);
+
+  try {
+    const stats = await apiFetch(`/mesas/stats?data=${currentData}`);
+    document.getElementById('st-mesas').textContent  = stats.mesas_ocupadas || 0;
+    document.getElementById('st-pax').textContent    = stats.total_pax || 0;
+    document.getElementById('st-media').textContent  = stats.media_pax || '—';
+    document.getElementById('st-doses').textContent  = stats.total_doses ? parseFloat(stats.total_doses).toFixed(2) : 0;
+  } catch {}
+
+  renderGrid('grid-interior', 1, 8);
+  renderGrid('grid-exterior', 9, 21);
+}
+
+function renderGrid(id, from, to) {
+  const el = document.getElementById(id);
+  let html = '';
+  for (let n = from; n <= to; n++) {
+    const m = mesasData[n] || {};
+    const ocupada = m.pax > 0 ? 'ocupada' : '';
+    const doses = [
+      m.doses_1    ? `${m.doses_1}×1` : '',
+      m.doses_meio ? `${m.doses_meio}×½` : '',
+      m.doses_quarto ? `${m.doses_quarto}×¼` : ''
+    ].filter(Boolean).join(' ');
+    html += `<div class="mesa-card ${ocupada}" onclick="openMesa(${n})">
+      <div class="mesa-num">Mesa ${n}</div>
+      <div class="mesa-pax">${m.pax || 0} <span>pax</span></div>
+      ${doses ? `<div class="mesa-doses">🐷 ${doses}</div>` : ''}
+      ${m.obs ? `<div class="mesa-obs">${m.obs}</div>` : ''}
+    </div>`;
+  }
+  el.innerHTML = html;
+}
+
+function openMesa(n) {
+  const m = mesasData[n] || {};
+  document.getElementById('modal-mesa-title').textContent = `Mesa ${n}`;
+  document.getElementById('mesa-num').value  = n;
+  document.getElementById('mesa-pax').value  = m.pax || 0;
+  document.getElementById('mesa-d1').value   = m.doses_1 || 0;
+  document.getElementById('mesa-dm').value   = m.doses_meio || 0;
+  document.getElementById('mesa-dq').value   = m.doses_quarto || 0;
+  document.getElementById('mesa-obs').value  = m.obs || '';
+  document.getElementById('modal-mesa').classList.add('open');
+}
+function closeModal() {
+  document.getElementById('modal-mesa').classList.remove('open');
+}
+document.getElementById('modal-mesa').addEventListener('click', e => { if(e.target===e.currentTarget) closeModal(); });
+
+document.getElementById('btn-save-mesa').onclick = async () => {
+  const n = document.getElementById('mesa-num').value;
+  await apiFetch(`/mesas/${currentData}/${n}`, {
+    method: 'PUT',
+    body: {
+      pax:         parseInt(document.getElementById('mesa-pax').value)||0,
+      doses_1:     parseInt(document.getElementById('mesa-d1').value)||0,
+      doses_meio:  parseInt(document.getElementById('mesa-dm').value)||0,
+      doses_quarto:parseInt(document.getElementById('mesa-dq').value)||0,
+      obs:         document.getElementById('mesa-obs').value
+    }
+  });
+  closeModal();
+  loadMesas();
+};
+
+loadMesas();
+</script>
+</body>
+</html>

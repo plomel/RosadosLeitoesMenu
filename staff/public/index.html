@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Login — Rosa dos Leitões Staff</title>
+  <link rel="stylesheet" href="/assets/style.css">
+  <style>
+    .login-page { background: radial-gradient(ellipse at 30% 40%, #2a1a08 0%, var(--bg) 70%); }
+  </style>
+</head>
+<body>
+<div class="login-page">
+  <div class="login-box">
+    <div class="login-logo">
+      <img src="/assets/logo.svg" alt="Rosa dos Leitões" onerror="this.style.display='none'">
+      <h1>Rosa dos Leitões</h1>
+      <p>Área Reservada — Staff</p>
+    </div>
+
+    <div id="alert" class="alert alert-error" style="display:none"></div>
+
+    <form id="login-form">
+      <div class="form-group">
+        <label>Utilizador</label>
+        <input type="text" id="username" autocomplete="username" placeholder="ex: joao.silva" required>
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="password" autocomplete="current-password" placeholder="••••••••" required>
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center; margin-top:8px">
+        Entrar
+      </button>
+    </form>
+  </div>
+</div>
+
+<script src="/assets/api.js"></script>
+<script>
+  // Se já estiver logado, vai directo ao dashboard
+  if (Auth.isLoggedIn()) window.location.href = '/dashboard.html';
+
+  document.getElementById('login-form').onsubmit = async (e) => {
+    e.preventDefault();
+    const alert = document.getElementById('alert');
+    const btn = e.target.querySelector('button');
+    btn.disabled = true; btn.textContent = 'A entrar...';
+    try {
+      const data = await apiFetch('/auth/login', {
+        method: 'POST',
+        body: { username: document.getElementById('username').value.trim(), password: document.getElementById('password').value }
+      });
+      Auth.set(data.token, data.user);
+      window.location.href = '/dashboard.html';
+    } catch (err) {
+      showAlert(alert, err.message);
+      btn.disabled = false; btn.textContent = 'Entrar';
+    }
+  };
+</script>
+</body>
+</html>

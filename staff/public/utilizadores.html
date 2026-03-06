@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Utilizadores — Rosa dos Leitões Staff</title>
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-brand">
+    <img src="/assets/logo.svg" alt="" onerror="this.style.display='none'">
+    Rosa dos Leitões
+  </div>
+  <div class="topbar-spacer"></div>
+  <div class="topbar-user">
+    <span id="topbar-name"></span>
+    <span class="role-badge" id="topbar-role"></span>
+    <button class="btn-logout" id="btn-logout">Sair</button>
+  </div>
+</div>
+
+<div class="layout">
+  <nav class="sidebar"><div id="sidebar-nav"></div></nav>
+  <main class="main">
+
+    <div class="page-header">
+      <div>
+        <div class="page-title">👤 Utilizadores</div>
+        <div class="page-subtitle">Gestão de acessos da equipa</div>
+      </div>
+      <button class="btn btn-primary btn-sm" id="btn-add">+ Novo Utilizador</button>
+    </div>
+
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Nome</th><th>Username</th><th>Role</th><th>Estado</th><th></th></tr>
+          </thead>
+          <tbody id="tbl-users">
+            <tr><td colspan="5" style="text-align:center;color:var(--muted);padding:24px">A carregar...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- Modal utilizador -->
+<div class="modal-overlay" id="modal-user">
+  <div class="modal" style="max-width:420px">
+    <div class="modal-title" id="modal-user-title">Novo Utilizador</div>
+    <div id="alert-user" class="alert alert-error" style="display:none"></div>
+    <input type="hidden" id="user-id">
+
+    <div class="form-group">
+      <label>Nome completo *</label>
+      <input type="text" id="user-name" placeholder="ex: João Silva">
+    </div>
+    <div class="form-group">
+      <label>Username *</label>
+      <input type="text" id="user-username" placeholder="ex: joao.silva">
+    </div>
+    <div class="form-group" id="grp-password">
+      <label>Password *</label>
+      <input type="password" id="user-password" placeholder="Mínimo 6 caracteres">
+    </div>
+    <div class="form-group">
+      <label>Role / Função</label>
+      <select id="user-role">
+        <option value="sala">Sala</option>
+        <option value="cozinha">Cozinha</option>
+        <option value="limpeza">Limpeza</option>
+        <option value="escritorio">Escritório</option>
+        <option value="admin">Admin</option>
+      </select>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal()">Cancelar</button>
+      <button class="btn btn-primary" id="btn-save-user">Criar</button>
+    </div>
+  </div>
+</div>
+
+<script src="/assets/api.js"></script>
+<script>
+Auth.requireRole('admin');
+renderTopbar();
+renderSidebar();
+
+const ROLE_LABEL = { admin:'Admin', escritorio:'Escritório', sala:'Sala', cozinha:'Cozinha', limpeza:'Limpeza' };
+const ROLE_BADGE = { admin:'badge-red', escritorio:'badge-blue', sala:'badge-gold', cozinha:'badge-gold', limpeza:'badge-gold' };
+
+let usersList = [];
+
+async function loadUsers() {
+  usersList = await apiFetch('/auth/users');
+  const tbody = document.getElementById('tbl-users');
+  tbody.innerHTML = usersList.map(u => `
+    <tr>
+      <td><strong>${u.name}</strong></td>
+      <td style="color:var(--muted);font-size:12px">${u.username}</td>
+      <td><span class="badge ${ROLE_BADGE[u.role]||'badge-gold'}">${ROLE_LABEL[u.role]||u.role}</span></td>
+      <td>
+        <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px">
+          <input type="checkbox" ${u.active?'checked':''} onchange="toggleActive(${u.id}, this.checked)">
+          ${u.active ? '<span style="color:#66bb6a">Activo</span>' : '<span style="color:var(--muted)">Inactivo</span>'}
+        </label>
+      </td>
+      <td>
+        <button class="btn btn-outline btn-sm" onclick="resetPassword(${u.id}, '${u.name}')">🔑 Password</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function openModal() {
+  document.getElementById('modal-user').classList.add('open');
+  document.getElementById('alert-user').style.display = 'none';
+  document.getElementById('user-id').value = '';
+  document.getElementById('user-name').value = '';
+  document.getElementById('user-username').value = '';
+  document.getElementById('user-password').value = '';
+  document.getElementById('user-role').value = 'sala';
+  document.getElementById('grp-password').style.display = 'block';
+  document.getElementById('btn-save-user').textContent = 'Criar';
+}
+function closeModal() { document.getElementById('modal-user').classList.remove('open'); }
+document.getElementById('modal-user').addEventListener('click', e => { if(e.target===e.currentTarget) closeModal(); });
+document.getElementById('btn-add').onclick = openModal;
+
+document.getElementById('btn-save-user').onclick = async () => {
+  const name     = document.getElementById('user-name').value.trim();
+  const username = document.getElementById('user-username').value.trim();
+  const password = document.getElementById('user-password').value;
+  const role     = document.getElementById('user-role').value;
+
+  if (!name || !username || !password)
+    return showAlert(document.getElementById('alert-user'), 'Todos os campos são obrigatórios');
+  if (password.length < 6)
+    return showAlert(document.getElementById('alert-user'), 'Password deve ter pelo menos 6 caracteres');
+
+  try {
+    await apiFetch('/auth/users', { method: 'POST', body: { username, password, name, role } });
+    closeModal(); loadUsers();
+  } catch(err) { showAlert(document.getElementById('alert-user'), err.message); }
+};
+
+async function toggleActive(id, active) {
+  await apiFetch(`/auth/users/${id}/active`, { method: 'PUT', body: { active } });
+}
+
+async function resetPassword(id, name) {
+  const pw = prompt(`Nova password para ${name}:`);
+  if (!pw || pw.length < 6) return alert('Password deve ter pelo menos 6 caracteres');
+  await apiFetch(`/auth/users/${id}/password`, { method: 'PUT', body: { password: pw } });
+  alert('Password actualizada com sucesso');
+}
+
+loadUsers();
+</script>
+</body>
+</html>

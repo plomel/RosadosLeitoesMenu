@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard — Rosa dos Leitões Staff</title>
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+
+<!-- Topbar -->
+<div class="topbar">
+  <div class="topbar-brand">
+    <img src="/assets/logo.svg" alt="" onerror="this.style.display='none'">
+    Rosa dos Leitões
+  </div>
+  <div class="topbar-spacer"></div>
+  <div class="topbar-user">
+    <span id="topbar-name"></span>
+    <span class="role-badge" id="topbar-role"></span>
+    <button class="btn-logout" id="btn-logout">Sair</button>
+  </div>
+</div>
+
+<div class="layout">
+  <nav class="sidebar"><div id="sidebar-nav"></div></nav>
+  <main class="main">
+
+    <div class="page-header">
+      <div>
+        <div class="page-title">Dashboard</div>
+        <div class="page-subtitle" id="hoje-label"></div>
+      </div>
+    </div>
+
+    <!-- Stats do dia -->
+    <div class="stats" id="stats-dia">
+      <div class="stat"><div class="stat-val" id="st-enc">—</div><div class="stat-label">Encomendas hoje</div></div>
+      <div class="stat"><div class="stat-val" id="st-prox">—</div><div class="stat-label">Próximos 7 dias</div></div>
+      <div class="stat"><div class="stat-val" id="st-pax">—</div><div class="stat-label">Pax hoje</div></div>
+      <div class="stat"><div class="stat-val" id="st-doses">—</div><div class="stat-label">Doses leitão hoje</div></div>
+    </div>
+
+    <!-- Próximas encomendas -->
+    <div class="card" style="margin-bottom:16px">
+      <div class="card-title">📋 Próximas Encomendas (14 dias)</div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Data</th><th>Dia</th><th>Hora</th><th>Nome</th><th>Mesa/Tipo</th><th>Pax</th><th>Leitão</th><th>Obs</th>
+            </tr>
+          </thead>
+          <tbody id="tbl-proximas">
+            <tr><td colspan="8" style="text-align:center;color:var(--muted);padding:20px">A carregar...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script src="/assets/api.js"></script>
+<script>
+Auth.requireLogin();
+renderTopbar();
+renderSidebar();
+
+const hoje = todayISO();
+document.getElementById('hoje-label').textContent =
+  `${diaSemana(hoje)}, ${formatDate(hoje)}`;
+
+async function loadDashboard() {
+  try {
+    // Encomendas de hoje
+    const encHoje = await apiFetch(`/encomendas?data=${hoje}`);
+    document.getElementById('st-enc').textContent = encHoje.length;
+
+    // Próximas
+    const proximas = await apiFetch('/encomendas/proximas');
+    const em7 = proximas.filter(e => e.data > hoje && e.data <= new Date(Date.now()+7*86400000).toISOString().slice(0,10));
+    document.getElementById('st-prox').textContent = em7.length;
+
+    // Pax e doses hoje
+    const pax = encHoje.reduce((s,e) => s + (e.pax||0), 0);
+    const doses = encHoje.reduce((s,e) => s + (e.leitao_1||0) + (e.leitao_meio||0)*0.5 + (e.leitao_quarto||0)*0.25, 0);
+    document.getElementById('st-pax').textContent = pax || '—';
+    document.getElementById('st-doses').textContent = doses ? doses.toFixed(2) : '—';
+
+    // Tabela próximas
+    const tbody = document.getElementById('tbl-proximas');
+    if (!proximas.length) {
+      tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:20px">Sem encomendas nos próximos 14 dias</td></tr>';
+      return;
+    }
+    tbody.innerHTML = proximas.map(e => {
+      const leitao = [
+        e.leitao_1 ? `${e.leitao_1}×1` : '',
+        e.leitao_meio ? `${e.leitao_meio}×½` : '',
+        e.leitao_quarto ? `${e.leitao_quarto}×¼` : ''
+      ].filter(Boolean).join(' ');
+      const tipo = e.tipo === 'entrega' ? '<span class="badge badge-blue">Entrega</span>' : '<span class="badge badge-gold">Mesa ' + (e.mesa||'—') + '</span>';
+      const isHoje = e.data === hoje;
+      return `<tr style="${isHoje ? 'background:rgba(201,150,42,.06)' : ''}">
+        <td>${formatDate(e.data)}</td>
+        <td>${e.dia_semana || diaSemana(e.data)}</td>
+        <td>${e.hora||'—'}</td>
+        <td><strong>${e.nome}</strong>${e.contacto ? `<br><small style="color:var(--muted)">${e.contacto}</small>` : ''}</td>
+        <td>${tipo}</td>
+        <td>${e.pax||'—'}</td>
+        <td>${leitao||'—'}</td>
+        <td style="font-size:12px;color:var(--muted)">${e.obs||''}</td>
+      </tr>`;
+    }).join('');
+  } catch(err) {
+    console.error(err);
+  }
+}
+
+loadDashboard();
+</script>
+</body>
+</html>

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Faturas — Rosa dos Leitões Staff</title>
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-brand">
+    <img src="/assets/logo.svg" alt="" onerror="this.style.display='none'">
+    Rosa dos Leitões
+  </div>
+  <div class="topbar-spacer"></div>
+  <div class="topbar-user">
+    <span id="topbar-name"></span>
+    <span class="role-badge" id="topbar-role"></span>
+    <button class="btn-logout" id="btn-logout">Sair</button>
+  </div>
+</div>
+
+<div class="layout">
+  <nav class="sidebar"><div id="sidebar-nav"></div></nav>
+  <main class="main">
+
+    <div class="page-header">
+      <div>
+        <div class="page-title">💶 Registo de Faturas</div>
+        <div class="page-subtitle">Área restrita — Escritório</div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <input type="month" id="mes-sel" style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);padding:7px 12px;font-size:13px;outline:none">
+        <button class="btn btn-outline btn-sm" id="btn-export">⬇ Exportar CSV</button>
+        <button class="btn btn-primary btn-sm" id="btn-add">+ Fatura</button>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats">
+      <div class="stat"><div class="stat-val" id="st-total">—</div><div class="stat-label">Total do mês (€)</div></div>
+      <div class="stat"><div class="stat-val" id="st-num">—</div><div class="stat-label">Nº de faturas</div></div>
+    </div>
+
+    <!-- Tabela -->
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Fornecedor</th>
+              <th>Nº Fatura</th>
+              <th>Categoria</th>
+              <th style="text-align:right">Valor (€)</th>
+              <th>Obs</th>
+              <th>Registado por</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="tbl-faturas">
+            <tr><td colspan="8" style="text-align:center;color:var(--muted);padding:24px">A carregar...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- Modal fatura -->
+<div class="modal-overlay" id="modal-fat">
+  <div class="modal">
+    <div class="modal-title" id="modal-fat-title">Nova Fatura</div>
+    <div id="alert-fat" class="alert alert-error" style="display:none"></div>
+    <input type="hidden" id="fat-id">
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Data *</label>
+        <input type="date" id="fat-data">
+      </div>
+      <div class="form-group">
+        <label>Nº Fatura</label>
+        <input type="text" id="fat-num" placeholder="ex: FT 2026/123">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Fornecedor *</label>
+      <input type="text" id="fat-forn" placeholder="Nome do fornecedor">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Valor (€) *</label>
+        <input type="number" id="fat-valor" min="0" step="0.01" placeholder="0.00">
+      </div>
+      <div class="form-group">
+        <label>Categoria</label>
+        <select id="fat-cat">
+          <option value="">— Seleccionar —</option>
+          <option value="Matéria Prima">Matéria Prima</option>
+          <option value="Bebidas">Bebidas</option>
+          <option value="Limpeza">Limpeza</option>
+          <option value="Equipamento">Equipamento</option>
+          <option value="Serviços">Serviços</option>
+          <option value="Outro">Outro</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Observações</label>
+      <textarea id="fat-obs" rows="2" placeholder="Notas adicionais..."></textarea>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeFatModal()">Cancelar</button>
+      <button class="btn btn-primary" id="btn-save-fat">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<script src="/assets/api.js"></script>
+<script>
+Auth.requireRole('admin', 'escritorio');
+renderTopbar();
+renderSidebar();
+
+const hoje = todayISO();
+const mesAtual = hoje.slice(0,7);
+document.getElementById('mes-sel').value = mesAtual;
+
+let faturasList = [];
+
+async function loadFaturas() {
+  const mes = document.getElementById('mes-sel').value;
+  const data = await apiFetch(`/faturas?mes=${mes}`);
+  faturasList = data.rows;
+
+  document.getElementById('st-total').textContent = data.total != null ? data.total.toFixed(2)+'€' : '—';
+  document.getElementById('st-num').textContent   = faturasList.length;
+
+  const tbody = document.getElementById('tbl-faturas');
+  if (!faturasList.length) {
+    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:24px">Sem faturas para este mês</td></tr>';
+    return;
+  }
+  tbody.innerHTML = faturasList.map(f => `
+    <tr>
+      <td>${formatDate(f.data)}</td>
+      <td><strong>${f.fornecedor}</strong></td>
+      <td style="color:var(--muted);font-size:12px">${f.num_fatura||'—'}</td>
+      <td>${f.categoria ? `<span class="badge badge-gold">${f.categoria}</span>` : '—'}</td>
+      <td style="text-align:right;font-weight:700">${parseFloat(f.valor).toFixed(2)}€</td>
+      <td style="font-size:12px;color:var(--muted)">${f.obs||''}</td>
+      <td style="font-size:12px;color:var(--muted)">${f.criado_por||''}</td>
+      <td>
+        <button class="btn-icon" onclick="editFat(${f.id})">✏️</button>
+        <button class="btn-icon" onclick="deleteFat(${f.id})" style="color:var(--danger)">🗑</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+document.getElementById('mes-sel').addEventListener('change', loadFaturas);
+
+// Modal
+function openFatModal(f = null) {
+  document.getElementById('modal-fat').classList.add('open');
+  document.getElementById('alert-fat').style.display = 'none';
+  if (f) {
+    document.getElementById('modal-fat-title').textContent = 'Editar Fatura';
+    document.getElementById('fat-id').value    = f.id;
+    document.getElementById('fat-data').value  = f.data;
+    document.getElementById('fat-num').value   = f.num_fatura||'';
+    document.getElementById('fat-forn').value  = f.fornecedor;
+    document.getElementById('fat-valor').value = f.valor;
+    document.getElementById('fat-cat').value   = f.categoria||'';
+    document.getElementById('fat-obs').value   = f.obs||'';
+  } else {
+    document.getElementById('modal-fat-title').textContent = 'Nova Fatura';
+    document.getElementById('fat-id').value    = '';
+    document.getElementById('fat-data').value  = hoje;
+    document.getElementById('fat-num').value   = '';
+    document.getElementById('fat-forn').value  = '';
+    document.getElementById('fat-valor').value = '';
+    document.getElementById('fat-cat').value   = '';
+    document.getElementById('fat-obs').value   = '';
+  }
+}
+function closeFatModal() { document.getElementById('modal-fat').classList.remove('open'); }
+document.getElementById('modal-fat').addEventListener('click', e => { if(e.target===e.currentTarget) closeFatModal(); });
+
+document.getElementById('btn-add').onclick = () => openFatModal();
+function editFat(id) { openFatModal(faturasList.find(f=>f.id===id)); }
+
+document.getElementById('btn-save-fat').onclick = async () => {
+  const forn  = document.getElementById('fat-forn').value.trim();
+  const valor = parseFloat(document.getElementById('fat-valor').value);
+  const data  = document.getElementById('fat-data').value;
+  if (!forn || !data || isNaN(valor))
+    return showAlert(document.getElementById('alert-fat'), 'Fornecedor, data e valor obrigatórios');
+
+  const id = document.getElementById('fat-id').value;
+  const body = {
+    data, fornecedor: forn,
+    num_fatura: document.getElementById('fat-num').value.trim()||null,
+    valor, categoria: document.getElementById('fat-cat').value||null,
+    obs: document.getElementById('fat-obs').value.trim()||null
+  };
+  try {
+    if (id) await apiFetch(`/faturas/${id}`, { method: 'PUT', body });
+    else    await apiFetch('/faturas',        { method: 'POST', body });
+    closeFatModal(); loadFaturas();
+  } catch(err) { showAlert(document.getElementById('alert-fat'), err.message); }
+};
+
+async function deleteFat(id) {
+  if (!confirm('Apagar esta fatura?')) return;
+  await apiFetch(`/faturas/${id}`, { method: 'DELETE' });
+  loadFaturas();
+}
+
+// Export CSV
+document.getElementById('btn-export').onclick = () => {
+  if (!faturasList.length) return alert('Sem dados para exportar');
+  const header = ['Data','Fornecedor','Nº Fatura','Categoria','Valor','Obs'];
+  const rows = faturasList.map(f => [
+    f.data, f.fornecedor, f.num_fatura||'', f.categoria||'', f.valor, f.obs||''
+  ]);
+  const csv = [header, ...rows].map(r => r.map(v => `"${v}"`).join(',')).join('\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob(['\uFEFF'+csv], { type: 'text/csv;charset=utf-8' }));
+  a.download = `faturas-${document.getElementById('mes-sel').value}.csv`;
+  a.click();
+};
+
+loadFaturas();
+</script>
+</body>
+</html>
