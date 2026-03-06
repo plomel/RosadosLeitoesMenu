@@ -41,6 +41,19 @@
       <div class="stat"><div class="stat-val" id="st-doses">—</div><div class="stat-label">Doses leitão hoje</div></div>
     </div>
 
+    <!-- Calendário mini -->
+    <div class="card" style="margin-bottom:16px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <div class="card-title" style="margin-bottom:0">📅 Calendário</div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button class="btn btn-outline btn-sm" id="cal-prev">◀</button>
+          <span id="cal-label" style="font-size:14px;font-weight:600;min-width:130px;text-align:center"></span>
+          <button class="btn btn-outline btn-sm" id="cal-next">▶</button>
+        </div>
+      </div>
+      <div id="cal-grid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center"></div>
+    </div>
+
     <!-- Próximas encomendas -->
     <div class="card" style="margin-bottom:16px">
       <div class="card-title">📋 Próximas Encomendas (14 dias)</div>
@@ -119,6 +132,55 @@ async function loadDashboard() {
 }
 
 loadDashboard();
+
+// ─── Calendário ────────────────────────────────────────────────────────────
+const MESES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho',
+               'Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+const DIAS_ABREV = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+
+let calAno = new Date().getFullYear();
+let calMes = new Date().getMonth() + 1;
+
+async function renderCal() {
+  document.getElementById('cal-label').textContent = `${MESES[calMes-1]} ${calAno}`;
+  const dados = await apiFetch(`/encomendas/mes?ano=${calAno}&mes=${calMes}`).catch(() => []);
+  const mapa = {};
+  dados.forEach(d => { mapa[d.data] = d; });
+
+  const grid = document.getElementById('cal-grid');
+  let html = DIAS_ABREV.map(d => `<div style="font-size:10px;color:var(--muted);font-weight:600;padding:3px 0">${d}</div>`).join('');
+
+  const primeiro = new Date(calAno, calMes-1, 1).getDay();
+  for (let i=0; i<primeiro; i++) html += '<div></div>';
+
+  const diasNoMes = new Date(calAno, calMes, 0).getDate();
+  const hojeStr = todayISO();
+
+  for (let d=1; d<=diasNoMes; d++) {
+    const iso = `${calAno}-${String(calMes).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const info = mapa[iso];
+    const isHoje = iso === hojeStr;
+    const hasEnc = !!info;
+    let bg = isHoje ? 'rgba(201,150,42,.25)' : hasEnc ? 'rgba(201,150,42,.08)' : 'transparent';
+    let border = isHoje ? '1px solid var(--gold)' : hasEnc ? '1px solid rgba(201,150,42,.3)' : '1px solid transparent';
+    const dot = hasEnc ? `<div style="font-size:9px;color:var(--gold)">${info.total}enc</div>` : '';
+    html += `<div onclick="window.location='/encomendas.html?data=${iso}'"
+      style="background:${bg};border:${border};border-radius:6px;padding:4px 2px;cursor:${hasEnc||isHoje?'pointer':'default'};min-height:36px">
+      <div style="font-size:13px;font-weight:${isHoje?'700':'400'};color:${isHoje?'var(--gold)':'var(--text)'}">${d}</div>
+      ${dot}
+    </div>`;
+  }
+  grid.innerHTML = html;
+}
+
+document.getElementById('cal-prev').onclick = () => {
+  calMes--; if (calMes < 1) { calMes = 12; calAno--; } renderCal();
+};
+document.getElementById('cal-next').onclick = () => {
+  calMes++; if (calMes > 12) { calMes = 1; calAno++; } renderCal();
+};
+
+renderCal();
 </script>
 </body>
 </html>

@@ -91,7 +91,10 @@
           <input type="date" id="data-sel">
           <button class="btn btn-outline btn-sm" id="btn-next">▶</button>
         </div>
-        <button class="btn btn-outline btn-sm" id="btn-pdf">⬇ PDF</button>
+        <input type="search" id="enc-search" placeholder="🔍 Pesquisar nome / contacto"
+          style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+                 color:var(--text);padding:5px 10px;font-size:12px;outline:none;width:200px">
+        <button class="btn btn-outline btn-sm" id="btn-pdf">🖨 Imprimir</button>
         <button class="btn btn-primary btn-sm" id="btn-add">+ Encomenda</button>
       </div>
     </div>
@@ -348,7 +351,8 @@ Auth.requireLogin();
 renderTopbar();
 renderSidebar();
 
-let currentData = todayISO();
+const _urlData = new URLSearchParams(location.search).get('data');
+let currentData = _urlData || todayISO();
 document.getElementById('data-sel').value = currentData;
 
 function updateDiaLabel() {
@@ -418,20 +422,29 @@ document.getElementById('btn-save-dia').onclick = async () => {
 // ─── Lista de encomendas ───────────────────────────────────────────────────
 let encList = [];
 
+document.getElementById('enc-search').addEventListener('input', renderEncomendas);
+
 async function loadEncomendas() {
   encList = await apiFetch(`/encomendas?data=${currentData}`);
   renderEncomendas();
 }
 
 function renderEncomendas() {
+  const q = (document.getElementById('enc-search').value || '').toLowerCase().trim();
+  const list = q ? encList.filter(e =>
+    (e.nome||'').toLowerCase().includes(q) ||
+    (e.contacto||'').toLowerCase().includes(q) ||
+    (e.obs||'').toLowerCase().includes(q)
+  ) : encList;
+
   const tbody = document.getElementById('enc-tbody');
-  if (!encList.length) {
-    tbody.innerHTML = '<tr><td colspan="21" style="text-align:center;color:var(--muted);padding:24px">Sem encomendas para este dia. Clica em "+ Encomenda" para adicionar.</td></tr>';
+  if (!list.length) {
+    tbody.innerHTML = `<tr><td colspan="21" style="text-align:center;color:var(--muted);padding:24px">${q ? 'Nenhum resultado para "'+q+'".' : 'Sem encomendas para este dia. Clica em "+ Encomenda" para adicionar.'}</td></tr>`;
     document.getElementById('enc-totais').textContent = '';
     return;
   }
 
-  tbody.innerHTML = encList.map((e, i) => {
+  tbody.innerHTML = list.map((e, i) => {
     const leitao = [
       e.leitao_1    ? `<strong>${e.leitao_1}</strong>` : '—',
       e.leitao_meio ? `<strong>${e.leitao_meio}</strong>` : '—',
@@ -466,10 +479,11 @@ function renderEncomendas() {
   }).join('');
 
   // Totais
-  const totalDoses = encList.reduce((s,e) => s + (e.leitao_1||0) + (e.leitao_meio||0)*0.5 + (e.leitao_quarto||0)*0.25, 0);
-  const totalPax   = encList.reduce((s,e) => s + (e.pax||0), 0);
+  const totalDoses = list.reduce((s,e) => s + (e.leitao_1||0) + (e.leitao_meio||0)*0.5 + (e.leitao_quarto||0)*0.25, 0);
+  const totalPax   = list.reduce((s,e) => s + (e.pax||0), 0);
+  const suffix = q && list.length !== encList.length ? ` <span style="color:var(--muted)">(filtrado de ${encList.length})</span>` : '';
   document.getElementById('enc-totais').innerHTML =
-    `<span>Total: <strong>${encList.length}</strong> encomendas</span>
+    `<span>Total: <strong>${list.length}</strong> encomendas${suffix}</span>
      <span>Pax: <strong>${totalPax}</strong></span>
      <span>Doses leitão: <strong>${totalDoses.toFixed(2)}</strong></span>`;
 }

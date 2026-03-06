@@ -73,6 +73,27 @@ function renderTopbar() {
   document.getElementById('topbar-name').textContent = u.name;
   document.getElementById('topbar-role').textContent = roleLabel[u.role] || u.role;
   document.getElementById('btn-logout').onclick = () => { Auth.clear(); window.location.href = '/'; };
+
+  // Hamburger para mobile
+  const brand = document.querySelector('.topbar-brand');
+  if (brand && !document.getElementById('hamburger')) {
+    const btn = document.createElement('button');
+    btn.id = 'hamburger'; btn.className = 'hamburger'; btn.innerHTML = '☰'; btn.title = 'Menu';
+    document.querySelector('.topbar').insertBefore(btn, brand);
+
+    // Overlay
+    const overlay = document.createElement('div');
+    overlay.className = 'sidebar-overlay';
+    document.body.appendChild(overlay);
+
+    const sidebar = document.querySelector('.sidebar');
+    const toggle = () => {
+      sidebar && sidebar.classList.toggle('open');
+      overlay.classList.toggle('open');
+    };
+    btn.onclick = toggle;
+    overlay.onclick = toggle;
+  }
 }
 
 // ─── Render sidebar conforme role ─────────────────────────────────────────────

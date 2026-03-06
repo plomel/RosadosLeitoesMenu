@@ -62,6 +62,21 @@ router.get('/', (req, res) => {
   res.status(400).json({ error: 'Parâmetro data ou de/ate obrigatório' });
 });
 
+// GET /api/encomendas/mes?ano=2026&mes=3  (contagens por dia para calendário)
+router.get('/mes', (req, res) => {
+  const ano = parseInt(req.query.ano) || new Date().getFullYear();
+  const mes = parseInt(req.query.mes) || new Date().getMonth() + 1;
+  const de  = `${ano}-${String(mes).padStart(2,'0')}-01`;
+  const ate = `${ano}-${String(mes).padStart(2,'0')}-31`;
+  const rows = db.prepare(`
+    SELECT data, COUNT(*) as total,
+           SUM(leitao_1 + leitao_meio*0.5 + leitao_quarto*0.25) as doses
+    FROM encomendas WHERE data >= ? AND data <= ?
+    GROUP BY data ORDER BY data
+  `).all(de, ate);
+  res.json(rows);
+});
+
 // GET /api/encomendas/proximas  (próximos 14 dias — útil no telemóvel)
 router.get('/proximas', (req, res) => {
   const hoje = new Date().toISOString().slice(0, 10);
