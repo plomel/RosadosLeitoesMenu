@@ -39,6 +39,10 @@
       <div class="stat"><div class="stat-val" id="st-prox">—</div><div class="stat-label">Próximos 7 dias</div></div>
       <div class="stat"><div class="stat-val" id="st-pax">—</div><div class="stat-label">Pax hoje</div></div>
       <div class="stat"><div class="stat-val" id="st-doses">—</div><div class="stat-label">Doses leitão hoje</div></div>
+      <a href="/compras.html" class="stat" style="text-decoration:none">
+        <div class="stat-val" id="st-compras">—</div>
+        <div class="stat-label" id="st-compras-label">A comprar</div>
+      </a>
     </div>
 
     <!-- Calendário mini -->
@@ -52,6 +56,15 @@
         </div>
       </div>
       <div id="cal-grid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center"></div>
+    </div>
+
+    <!-- Widget compras urgentes -->
+    <div class="card" id="card-compras" style="margin-bottom:16px;display:none">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+        <div class="card-title" style="margin-bottom:0;color:var(--danger)">🔴 Compras Urgentes</div>
+        <a href="/compras.html" style="font-size:12px;color:var(--gold)">Ver tudo →</a>
+      </div>
+      <div id="list-urgentes" style="display:flex;flex-direction:column;gap:6px"></div>
     </div>
 
     <!-- Próximas encomendas -->
@@ -132,6 +145,37 @@ async function loadDashboard() {
 }
 
 loadDashboard();
+loadCompras();
+
+async function loadCompras() {
+  try {
+    const resumo = await apiFetch('/compras/resumo');
+    const stVal = document.getElementById('st-compras');
+    const stLabel = document.getElementById('st-compras-label');
+    stVal.textContent = resumo.total || '—';
+    if (resumo.urgentes > 0) {
+      stVal.style.color = 'var(--danger)';
+      stLabel.textContent = `A comprar (${resumo.urgentes} urgente${resumo.urgentes > 1 ? 's' : ''})`;
+    }
+    // Widget urgentes
+    if (resumo.urgentes > 0) {
+      const urgentes = await apiFetch('/compras?estado=pendente');
+      const urg = urgentes.filter(i => i.urgencia === 'urgente');
+      if (urg.length) {
+        document.getElementById('card-compras').style.display = 'block';
+        document.getElementById('list-urgentes').innerHTML = urg.map(i =>
+          `<div style="display:flex;align-items:center;gap:10px;padding:7px 10px;
+                       background:rgba(192,57,43,.07);border:1px solid rgba(192,57,43,.2);
+                       border-radius:var(--radius)">
+            <span style="font-size:14px;font-weight:600;flex:1">${i.item}</span>
+            ${i.quantidade ? `<span style="font-size:12px;color:var(--gold)">${i.quantidade}</span>` : ''}
+            <span style="font-size:11px;color:var(--muted)">${i.created_by_name||''}</span>
+          </div>`
+        ).join('');
+      }
+    }
+  } catch(e) { /* silencioso */ }
+}
 
 // ─── Calendário ────────────────────────────────────────────────────────────
 const MESES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho',

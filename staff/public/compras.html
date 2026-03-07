@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lista de Compras — Rosa dos Leitões Staff</title>
+  <link rel="stylesheet" href="/assets/style.css">
+  <style>
+    .item-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px 14px;
+      display: flex; align-items: flex-start; gap: 12px;
+      transition: border-color .15s;
+    }
+    .item-card.urgente { border-left: 3px solid var(--danger); }
+    .item-card.comprado { opacity: .55; }
+    .item-nome { font-size: 15px; font-weight: 600; color: var(--text); }
+    .item-quant { font-size: 13px; color: var(--gold); font-weight: 600; }
+    .item-meta  { font-size: 11px; color: var(--muted); margin-top: 3px; }
+    .item-obs   { font-size: 12px; color: var(--muted); margin-top: 4px; font-style: italic; }
+    .item-body  { flex: 1; min-width: 0; }
+    .item-actions { display: flex; gap: 6px; flex-shrink: 0; }
+    .list-section { display: flex; flex-direction: column; gap: 8px; }
+    .filter-bar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 16px; }
+    .filter-btn {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 20px; color: var(--muted);
+      padding: 4px 12px; font-size: 12px; cursor: pointer; transition: all .15s;
+    }
+    .filter-btn.active { background: var(--gold); border-color: var(--gold); color: #1a1000; font-weight: 600; }
+    .empty-state { text-align: center; color: var(--muted); padding: 40px 20px; }
+    .empty-state .empty-icon { font-size: 40px; margin-bottom: 10px; }
+    .badge-urgente { background: rgba(192,57,43,.2); color: #ef5350; border: 1px solid rgba(192,57,43,.3); }
+    .badge-cat {
+      font-size: 10px; font-weight: 600; letter-spacing: .5px; text-transform: uppercase;
+      padding: 2px 7px; border-radius: 20px;
+      background: var(--card); border: 1px solid var(--border); color: var(--muted);
+    }
+    .section-title {
+      font-size: 11px; font-weight: 600; letter-spacing: 1px;
+      text-transform: uppercase; color: var(--muted);
+      padding: 6px 0; margin-top: 4px;
+    }
+    @media print {
+      .topbar, .sidebar, .sidebar-overlay, .filter-bar,
+      .page-header > div:last-child, .item-actions,
+      #sec-comprados, .section-comprados { display: none !important; }
+      .layout { padding-top: 0; }
+      .main { margin-left: 0 !important; padding: 0 !important; }
+      .item-card { border: 1px solid #ccc !important; background: #fff !important; margin-bottom: 4px; break-inside: avoid; }
+      .item-nome, .item-quant, .item-meta { color: #000 !important; }
+      .item-obs { color: #555 !important; }
+      h2 { font-size: 16px; margin-bottom: 8px; }
+      @page { margin: 12mm; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Topbar -->
+<div class="topbar">
+  <div class="topbar-brand">
+    <img src="/assets/logo.svg" alt="" onerror="this.style.display='none'">
+    Rosa dos Leitões
+  </div>
+  <div class="topbar-spacer"></div>
+  <div class="topbar-user">
+    <span id="topbar-name"></span>
+    <span class="role-badge" id="topbar-role"></span>
+    <button class="btn-logout" id="btn-logout">Sair</button>
+  </div>
+</div>
+
+<div class="layout">
+  <nav class="sidebar"><div id="sidebar-nav"></div></nav>
+  <main class="main">
+
+    <!-- Page Header -->
+    <div class="page-header">
+      <div>
+        <div class="page-title">🛒 Lista de Compras</div>
+        <div class="page-subtitle">O que falta no stock — visível a toda a equipa</div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+        <button class="btn btn-outline btn-sm" onclick="window.print()">🖨 Imprimir</button>
+        <button class="btn btn-outline btn-sm" id="btn-limpar" style="display:none">🗑 Limpar Comprados</button>
+        <button class="btn btn-primary btn-sm" id="btn-add">+ Adicionar Item</button>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats" style="margin-bottom:16px">
+      <div class="stat">
+        <div class="stat-val" id="st-total">—</div>
+        <div class="stat-label">Itens a comprar</div>
+      </div>
+      <div class="stat" id="st-urg-card">
+        <div class="stat-val" id="st-urgentes" style="color:var(--danger)">—</div>
+        <div class="stat-label">Urgentes</div>
+      </div>
+    </div>
+
+    <!-- Filtros -->
+    <div class="filter-bar">
+      <span style="font-size:12px;color:var(--muted)">Filtrar:</span>
+      <button class="filter-btn active" data-f="todos">Todos</button>
+      <button class="filter-btn" data-f="urgente">🔴 Urgente</button>
+      <button class="filter-btn" data-f="cozinha">🍳 Cozinha</button>
+      <button class="filter-btn" data-f="limpeza">🧹 Limpeza</button>
+      <button class="filter-btn" data-f="sala">🪑 Sala</button>
+      <button class="filter-btn" data-f="bar">🍷 Bar</button>
+      <button class="filter-btn" data-f="escritorio">📁 Escritório</button>
+      <button class="filter-btn" data-f="geral">📦 Geral</button>
+    </div>
+
+    <!-- Lista pendentes -->
+    <div class="card" style="margin-bottom:16px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <div class="card-title" style="margin-bottom:0">A Comprar</div>
+        <span id="count-pendentes" style="font-size:12px;color:var(--muted)"></span>
+      </div>
+      <div id="list-pendentes" class="list-section">
+        <div style="text-align:center;color:var(--muted);padding:20px">A carregar...</div>
+      </div>
+    </div>
+
+    <!-- Lista comprados (colapsável) -->
+    <div class="card section-comprados" id="sec-comprados" style="display:none">
+      <div style="display:flex;align-items:center;justify-content:space-between;cursor:pointer" onclick="toggleComprados()">
+        <div class="card-title" style="margin-bottom:0">✅ Já Comprado</div>
+        <span id="btn-toggle-comp" style="font-size:12px;color:var(--muted)">▼ mostrar</span>
+      </div>
+      <div id="list-comprados" class="list-section" style="margin-top:12px;display:none"></div>
+    </div>
+
+  </main>
+</div>
+
+<!-- Modal adicionar item -->
+<div class="modal-overlay" id="modal-item">
+  <div class="modal" style="max-width:480px">
+    <div class="modal-title">Adicionar Item</div>
+    <div id="alert-modal" class="alert alert-error" style="display:none"></div>
+
+    <div class="form-group">
+      <label>Item *</label>
+      <input type="text" id="f-item" placeholder="ex: Sal grosso, Detergente, Guardanapos...">
+    </div>
+
+    <div class="form-row">
+      <div class="form-group" style="flex:1">
+        <label>Quantidade</label>
+        <input type="text" id="f-quant" placeholder="ex: 2 kg, 1 caixa, 3 un.">
+      </div>
+      <div class="form-group" style="flex:1">
+        <label>Urgência</label>
+        <select id="f-urgencia">
+          <option value="normal">Normal</option>
+          <option value="urgente">🔴 Urgente</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Categoria</label>
+      <select id="f-categoria">
+        <option value="geral">📦 Geral</option>
+        <option value="cozinha">🍳 Cozinha</option>
+        <option value="limpeza">🧹 Limpeza</option>
+        <option value="sala">🪑 Sala</option>
+        <option value="bar">🍷 Bar</option>
+        <option value="escritorio">📁 Escritório</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Observações</label>
+      <textarea id="f-obs" rows="2" placeholder="Marca preferida, onde comprar, detalhes..."></textarea>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal()">Cancelar</button>
+      <button class="btn btn-primary" id="btn-save">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<script src="/assets/api.js"></script>
+<script>
+Auth.requireLogin();
+renderTopbar();
+renderSidebar();
+
+const CAT_ICON = { cozinha:'🍳', limpeza:'🧹', sala:'🪑', bar:'🍷', escritorio:'📁', geral:'📦' };
+const CAT_LABEL = { cozinha:'Cozinha', limpeza:'Limpeza', sala:'Sala', bar:'Bar', escritorio:'Escritório', geral:'Geral' };
+
+let allPendentes = [];
+let allComprados = [];
+let filtroAtivo  = 'todos';
+const u = Auth.getUser();
+const isGestao = u && ['admin','escritorio'].includes(u.role);
+
+// Mostrar botões de gestão
+if (isGestao) document.getElementById('btn-limpar').style.display = 'inline-flex';
+
+// ─── Filtros ──────────────────────────────────────────────────────────────
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    filtroAtivo = btn.dataset.f;
+    renderPendentes();
+  };
+});
+
+// ─── Carregar dados ──────────────────────────────────────────────────────
+async function loadAll() {
+  const [pend, comp] = await Promise.all([
+    apiFetch('/compras?estado=pendente'),
+    apiFetch('/compras?estado=comprado')
+  ]);
+  allPendentes = pend;
+  allComprados = comp;
+  renderStats();
+  renderPendentes();
+  renderComprados();
+}
+
+function renderStats() {
+  document.getElementById('st-total').textContent = allPendentes.length;
+  const urg = allPendentes.filter(i => i.urgencia === 'urgente').length;
+  document.getElementById('st-urgentes').textContent = urg || '—';
+}
+
+// ─── Lista pendentes ─────────────────────────────────────────────────────
+function renderPendentes() {
+  let lista = allPendentes;
+  if (filtroAtivo === 'urgente') lista = lista.filter(i => i.urgencia === 'urgente');
+  else if (filtroAtivo !== 'todos') lista = lista.filter(i => i.categoria === filtroAtivo);
+
+  document.getElementById('count-pendentes').textContent =
+    lista.length ? `${lista.length} item${lista.length > 1 ? 's' : ''}` : '';
+
+  const el = document.getElementById('list-pendentes');
+  if (!lista.length) {
+    el.innerHTML = `<div class="empty-state">
+      <div class="empty-icon">${filtroAtivo === 'todos' ? '🛒' : '✅'}</div>
+      <div>${filtroAtivo === 'todos' ? 'Sem itens pendentes. Tudo em stock!' : 'Sem itens nesta categoria.'}</div>
+    </div>`;
+    return;
+  }
+  el.innerHTML = lista.map(i => renderItem(i, false)).join('');
+}
+
+// ─── Lista comprados ─────────────────────────────────────────────────────
+function renderComprados() {
+  const sec = document.getElementById('sec-comprados');
+  sec.style.display = allComprados.length ? 'block' : 'none';
+  document.getElementById('list-comprados').innerHTML = allComprados.map(i => renderItem(i, true)).join('');
+}
+
+function toggleComprados() {
+  const list = document.getElementById('list-comprados');
+  const btn  = document.getElementById('btn-toggle-comp');
+  const open = list.style.display === 'none';
+  list.style.display = open ? 'flex' : 'none';
+  list.style.flexDirection = 'column';
+  list.style.gap = '8px';
+  btn.textContent = open ? '▲ ocultar' : '▼ mostrar';
+}
+
+// ─── Render item ─────────────────────────────────────────────────────────
+function renderItem(i, comprado) {
+  const urgBadge = i.urgencia === 'urgente'
+    ? '<span class="badge badge-urgente" style="font-size:10px">🔴 URGENTE</span>' : '';
+  const catBadge = `<span class="badge-cat">${CAT_ICON[i.categoria]||''} ${CAT_LABEL[i.categoria]||i.categoria}</span>`;
+  const quant = i.quantidade ? `<span class="item-quant">${i.quantidade}</span>` : '';
+  const meta = comprado
+    ? `Pedido por <strong>${i.created_by_name||'?'}</strong> · Comprado por <strong>${i.comprado_by_name||'?'}</strong>`
+    : `Pedido por <strong>${i.created_by_name||'?'}</strong> · ${formatDatetime(i.created_at)}`;
+  const obs = i.obs ? `<div class="item-obs">${i.obs}</div>` : '';
+  const canDelete = isGestao || (u && u.id === i.created_by);
+
+  let actions = '';
+  if (!comprado && isGestao) {
+    actions += `<button class="btn btn-sm" style="background:var(--success);color:#fff;white-space:nowrap"
+      onclick="marcarComprado(${i.id})">✓ Comprado</button>`;
+  }
+  if (comprado && isGestao) {
+    actions += `<button class="btn btn-outline btn-sm" onclick="reabrir(${i.id})" title="Mover para pendente">↩</button>`;
+  }
+  if (canDelete) {
+    actions += `<button class="btn-icon" onclick="apagarItem(${i.id})" title="Apagar" style="color:var(--danger)">🗑</button>`;
+  }
+
+  return `<div class="item-card ${i.urgencia==='urgente'?'urgente':''} ${comprado?'comprado':''}">
+    <div class="item-body">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+        <span class="item-nome">${i.item}</span>
+        ${quant} ${urgBadge} ${catBadge}
+      </div>
+      ${obs}
+      <div class="item-meta">${meta}</div>
+    </div>
+    <div class="item-actions">${actions}</div>
+  </div>`;
+}
+
+function formatDatetime(dt) {
+  if (!dt) return '';
+  const d = new Date(dt.replace(' ','T') + 'Z');
+  return d.toLocaleDateString('pt-PT', { day:'2-digit', month:'2-digit' }) + ' ' +
+         d.toLocaleTimeString('pt-PT', { hour:'2-digit', minute:'2-digit' });
+}
+
+// ─── Acções ───────────────────────────────────────────────────────────────
+async function marcarComprado(id) {
+  await apiFetch(`/compras/${id}/comprado`, { method: 'PATCH' });
+  loadAll();
+}
+
+async function reabrir(id) {
+  await apiFetch(`/compras/${id}/reabrir`, { method: 'PATCH' });
+  loadAll();
+}
+
+async function apagarItem(id) {
+  if (!confirm('Apagar este item?')) return;
+  await apiFetch(`/compras/${id}`, { method: 'DELETE' });
+  loadAll();
+}
+
+document.getElementById('btn-limpar').onclick = async () => {
+  if (!confirm(`Apagar os ${allComprados.length} item(s) já comprados?`)) return;
+  await apiFetch('/compras/limpar-comprados', { method: 'DELETE' });
+  loadAll();
+};
+
+// ─── Modal ────────────────────────────────────────────────────────────────
+document.getElementById('btn-add').onclick = () => {
+  document.getElementById('f-item').value = '';
+  document.getElementById('f-quant').value = '';
+  document.getElementById('f-urgencia').value = 'normal';
+  document.getElementById('f-categoria').value = 'geral';
+  document.getElementById('f-obs').value = '';
+  document.getElementById('alert-modal').style.display = 'none';
+  document.getElementById('modal-item').classList.add('open');
+  setTimeout(() => document.getElementById('f-item').focus(), 100);
+};
+
+function closeModal() {
+  document.getElementById('modal-item').classList.remove('open');
+}
+document.getElementById('modal-item').addEventListener('click', e => {
+  if (e.target === e.currentTarget) closeModal();
+});
+
+document.getElementById('btn-save').onclick = async () => {
+  const item = document.getElementById('f-item').value.trim();
+  if (!item) {
+    showAlert(document.getElementById('alert-modal'), 'Nome do item obrigatório');
+    return;
+  }
+  try {
+    await apiFetch('/compras', {
+      method: 'POST',
+      body: {
+        item,
+        quantidade: document.getElementById('f-quant').value.trim() || null,
+        urgencia:   document.getElementById('f-urgencia').value,
+        categoria:  document.getElementById('f-categoria').value,
+        obs:        document.getElementById('f-obs').value.trim() || null
+      }
+    });
+    closeModal();
+    loadAll();
+  } catch(err) {
+    showAlert(document.getElementById('alert-modal'), err.message);
+  }
+};
+
+// Enter no campo item avança
+document.getElementById('f-item').addEventListener('keydown', e => {
+  if (e.key === 'Enter') document.getElementById('f-quant').focus();
+});
+
+loadAll();
+</script>
+</body>
+</html>

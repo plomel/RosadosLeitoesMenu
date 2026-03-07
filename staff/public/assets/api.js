@@ -109,6 +109,7 @@ function renderSidebar() {
     { section: 'Operações' },
     { href: '/encomendas.html',  icon: '📋', label: 'Encomendas',  roles: ['admin','escritorio','sala','cozinha'] },
     { href: '/mesas.html',       icon: '🪑', label: 'Mesas',       roles: ['admin','escritorio','sala','cozinha'] },
+    { href: '/compras.html',     icon: '🛒', label: 'Compras',     roles: ['admin','escritorio','sala','cozinha','limpeza'] },
     { section: 'Formação' },
     { href: '/guia.html',        icon: '📖', label: 'Guia Staff',  roles: ['admin','escritorio','sala','cozinha','limpeza'] },
     { section: 'Escritório', roles: ['admin','escritorio'] },

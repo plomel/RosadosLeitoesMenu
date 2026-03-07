@@ -121,6 +121,20 @@ db.exec(`
     created_by  INTEGER REFERENCES users(id),
     created_at  TEXT DEFAULT (datetime('now'))
   );
+
+  CREATE TABLE IF NOT EXISTS lista_compras (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    item        TEXT NOT NULL,
+    quantidade  TEXT,
+    categoria   TEXT DEFAULT 'geral' CHECK(categoria IN ('cozinha','limpeza','sala','bar','escritorio','geral')),
+    urgencia    TEXT DEFAULT 'normal' CHECK(urgencia IN ('urgente','normal')),
+    obs         TEXT,
+    estado      TEXT DEFAULT 'pendente' CHECK(estado IN ('pendente','comprado')),
+    created_by  INTEGER REFERENCES users(id),
+    created_at  TEXT DEFAULT (datetime('now')),
+    comprado_by INTEGER REFERENCES users(id),
+    comprado_at TEXT
+  );
 `);
 
 // ─── Criar admin por defeito se não existir ──────────────────────────────────

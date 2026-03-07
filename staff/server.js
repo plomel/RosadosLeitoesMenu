@@ -15,6 +15,7 @@ app.use('/api/encomendas', require('./routes/encomendas'));
 app.use('/api/mesas',      require('./routes/mesas'));
 app.use('/api/faturas',    require('./routes/faturas'));
 app.use('/api/guia',       require('./routes/guia'));
+app.use('/api/compras',    require('./routes/compras'));
 
 // ─── SPA fallback ────────────────────────────────────────────────────────────
 app.get('*', (req, res) => {
